@@ -12,7 +12,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-export function ForgotPasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export const ForgotPasswordForm = ({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) => {
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -25,7 +25,7 @@ export function ForgotPasswordForm({ className, ...props }: React.ComponentProps
     try {
       // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: 'http://localhost:5173/auth/updatepassword',
+        redirectTo: `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/auth/updatepassword`,
       })
       if (error) throw error
       setSuccess(true)
