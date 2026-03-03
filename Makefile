@@ -9,6 +9,12 @@ start-app:
 start-supabase:
 	npx supabase start
 
+supabase-migrate-database: ## apply the migrations to the database
+	npx supabase migration up
+
+supabase-reset-database: ## reset (and clear!) the database
+	npx supabase db reset
+
 stop-supabase:
 	npx supabase stop
 
