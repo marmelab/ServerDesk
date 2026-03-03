@@ -28,6 +28,13 @@ build:
 preview:
 	npm run preview
 
+prod-deploy: build supabase-deploy
+	npm run ghpages:deploy
+
+supabase-deploy:
+	npx supabase db push
+	npx supabase functions deploy
+	
 lint:
 	npm run lint
 
