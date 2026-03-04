@@ -31,6 +31,9 @@ jobs:
             exit 1
           fi
 
+      - name: Generate Test Env
+        run: npx supabase status -o env > .env.test
+
       - run: npm ci
 
       - run: npm run typecheck

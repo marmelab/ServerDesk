@@ -3,10 +3,12 @@ import { describe, beforeAll, test, expect } from 'vitest';
 import { clearAllUsers } from '@/lib/utils';
 
 describe('Test trigger of admin automatic assignation', () => {
-  const supabase = createClient(
-    import.meta.env.VITE_SUPABASE_URL,
-    import.meta.env.VITE_SUPABASE_SECRET_KEY,
-  );
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || process.env.API_URL;
+  const supabaseServiceKey =
+    import.meta.env.VITE_SUPABASE_SECRET_KEY || process.env.SERVICE_ROLE_KEY;
+
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
   beforeAll(async () => {
     //Clear user
     await supabase
