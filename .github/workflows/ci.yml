@@ -33,8 +33,8 @@ jobs:
 
       - name: Generate Test Env
         run: |
-         supabase status -o env > .env
-         source .env
+          supabase status -o env > .env
+          source .env
 
       - run: npm ci
 
