@@ -20,7 +20,18 @@ jobs:
           version: latest
 
       - name: Start Supabase local development setup
-        run: supabase start --wait
+        run: supabase start -x imgproxy,studio,logflare,vector,supavisor,realtime,edge-runtime
+
+      - name: Wait for Supabase to be ready
+        run: |
+          for i in {1..20}; do
+            if curl -s http://127.0.0.1:54321/rest/v1/ > /dev/null; then
+              echo "✅ Supabase ready !"
+              break
+            fi
+            echo "⏳ Waiting Supabase... ($i)"
+            sleep 3
+          done
 
       - name: Verify generated types are checked in
         run: |
