@@ -15,6 +15,22 @@ jobs:
           node-version: 22
           cache: npm
 
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase local development setup
+        run: supabase start -x imgproxy,studio,logflare,vector,supavisor,realtime,edge-runtime
+
+      - name: Verify generated types are checked in
+        run: |
+          supabase gen types typescript --local > types.gen.ts
+          if ! git diff --ignore-space-at-eol --exit-code --quiet types.gen.ts; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff
+            exit 1
+          fi
+
       - run: npm ci
 
       - run: npm run typecheck
@@ -23,4 +39,7 @@ jobs:
 
       - run: npm run format -- --check
 
-      - run: npm test -- --run
+      - run: npm run test -- --run
+        env:
+          API_URL: http://127.0.0.1:54321
+          SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
