@@ -20,7 +20,7 @@ const router = createBrowserRouter([
       { path: '/auth/updatepassword', element: <UpdatePasswordForm /> },
       { path: '/admin', element: <DashboardPage /> },
       { path: '/agent', element: <DashboardPage /> },
-      { path: '/tickets', element: <DashboardPage /> }
+      { path: '/tickets', element: <DashboardPage /> },
     ],
   },
 ]);
