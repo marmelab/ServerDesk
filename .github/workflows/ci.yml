@@ -20,7 +20,7 @@ jobs:
           version: latest
 
       - name: Start Supabase local development setup
-        run: supabase start
+        run: supabase start --wait
 
       - name: Verify generated types are checked in
         run: |
@@ -33,6 +33,12 @@ jobs:
 
       - name: Generate Test Env
         run: supabase status -o env > .env.test
+
+      - name: Check .env.test content
+        run: |
+          echo "--- Content of generated file ---"
+          cat .env.test
+          echo "--- End of file ---"
 
       - run: npm ci
 
