@@ -10,6 +10,8 @@ Install dependencies:
 make install
 ```
 
+Copy .env.dist to .env.local and fill it with your values
+
 Start the local Supabase instance and the dev server:
 
 ```bash
