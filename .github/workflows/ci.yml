@@ -43,5 +43,5 @@ jobs:
       - run: npm run format -- --check
 
       - run: |
-       source .env
-       npm test -- --run
+          source .env
+          npm test -- --run
