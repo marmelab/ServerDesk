@@ -30,7 +30,7 @@ jobs:
             git diff
             exit 1
           fi
-          
+
       - run: npm ci
 
       - run: npm run typecheck

@@ -10,9 +10,12 @@ export async function clearAllUsers(supabaseAdmin: any) {
   let page = 1;
 
   while (hasMore) {
-    const { data: { users }, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+    const {
+      data: { users },
+      error: listError,
+    } = await supabaseAdmin.auth.admin.listUsers({
       page: page,
-      perPage: 50
+      perPage: 50,
     });
 
     if (listError) throw listError;
@@ -21,10 +24,10 @@ export async function clearAllUsers(supabaseAdmin: any) {
       break;
     }
 
-    const deletePromises = users.map((user: any) => 
-      supabaseAdmin.auth.admin.deleteUser(user.id)
+    const deletePromises = users.map((user: any) =>
+      supabaseAdmin.auth.admin.deleteUser(user.id),
     );
-    
+
     await Promise.all(deletePromises);
 
     // Default length is 50
