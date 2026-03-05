@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   Card,
   CardContent,
@@ -20,57 +22,50 @@ export const LoginForm = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingUser, setIsLoading] = useState(false);
 
+  const { user, appUser, isLoading } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user && appUser?.role) {
+      const role = appUser.role;
+      if (role === 'admin') navigate('/admin');
+      else if (role === 'agent') navigate('/agent');
+      else navigate('/tickets');
+    }
+  }, [user, appUser, navigate]);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
 
     try {
-      const { data: authUser, error: authError } =
+      const { error: authError } =
         await supabase.auth.signInWithPassword({
           email,
           password,
         });
       if (authError) throw authError;
-
-      const { data: appUser, error: profileError } = await supabase
-        .from('app_user')
-        .select('role')
-        .eq('id', authUser?.user.id)
-        .maybeSingle();
-
-      if (!appUser) {
-        setError(
-          profileError instanceof Error
-            ? profileError.message
-            : 'No user registered',
-        );
-        return;
-      }
-      if (profileError) throw profileError;
-
-      switch (appUser?.role) {
-        case 'admin':
-          navigate('/admin');
-          break;
-
-        case 'agent':
-          navigate('/agent');
-          break;
-
-        default:
-          navigate('/tickets');
-          break;
-      }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <p className="text-muted-foreground animate-pulse">Session verifying...</p>
+      </div>
+    );
+  }
+
+  if (user) {
+    return null;
+  }
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -114,8 +109,8 @@ export const LoginForm = ({
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Logging in...' : 'Login'}
+              <Button type="submit" className="w-full" disabled={isLoadingUser}>
+                {isLoadingUser ? 'Logging in...' : 'Login'}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
