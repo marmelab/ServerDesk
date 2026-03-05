@@ -42,11 +42,10 @@ export const LoginForm = ({
     setError(null);
 
     try {
-      const { error: authError } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
       if (authError) throw authError;
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
@@ -58,7 +57,9 @@ export const LoginForm = ({
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p className="text-muted-foreground animate-pulse">Session verifying...</p>
+        <p className="text-muted-foreground animate-pulse">
+          Session verifying...
+        </p>
       </div>
     );
   }
