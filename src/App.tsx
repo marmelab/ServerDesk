@@ -6,6 +6,7 @@ import { SignUpForm } from './components/sign-up-form';
 import { UpdatePasswordForm } from './components/update-password-form';
 import { LoginForm } from './components/login-form';
 import DashboardPage from '@/pages/dashboard';
+import { ForgotPasswordForm } from './components/forgot-password-form';
 
 const queryClient = new QueryClient();
 
@@ -17,7 +18,8 @@ const router = createBrowserRouter([
       { path: '/companies', element: <CompaniesPage /> },
       { path: '/auth/signup', element: <SignUpForm /> },
       { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/auth/updatepassword', element: <UpdatePasswordForm /> },
+      { path: '/auth/update-password', element: <UpdatePasswordForm /> },
+      { path: '/auth/forgot-password', element: <ForgotPasswordForm /> },
       { path: '/admin', element: <DashboardPage /> },
       { path: '/agent', element: <DashboardPage /> },
       { path: '/tickets', element: <DashboardPage /> },

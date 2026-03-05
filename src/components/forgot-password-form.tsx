@@ -28,7 +28,7 @@ export const ForgotPasswordForm = ({
     try {
       // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/auth/updatepassword`,
+        redirectTo: `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/auth/update-password`,
       });
       if (error) throw error;
       setSuccess(true);
@@ -84,7 +84,7 @@ export const ForgotPasswordForm = ({
               </div>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{' '}
-                <a href="/login" className="underline underline-offset-4">
+                <a href="/" className="underline underline-offset-4">
                   Login
                 </a>
               </div>

@@ -39,14 +39,23 @@ describe('Test trigger of admin automatic assignation', () => {
     expect(profile1?.role).toBe('admin');
 
     //Second user
-    const { error: err2 } = await supabase.auth.admin.createUser({
+    const { data: user2, error: err2 } = await supabase.auth.admin.createUser({
       email: 'test2@test.fr',
       password: '123456',
       email_confirm: true,
       user_metadata: { name: 'Test2' },
     });
-    expect(err2).toBeDefined();
+    if (err2) throw err2;
+    /*expect(err2).toBeDefined();
     expect(err2?.status).toBe(500);
-    expect(err2?.code).toBe('unexpected_failure');
+    expect(err2?.code).toBe('unexpected_failure');*/
+    //Check role
+    const { data: profile2 } = await supabase
+      .from('app_user')
+      .select('role')
+      .eq('id', user2?.user.id)
+      .single();
+
+    expect(profile2?.role).toBe('agent');
   });
 });

@@ -29,12 +29,42 @@ export const LoginForm = ({
     setError(null);
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) throw error;
-      navigate('/dashboard');
+      const { data: authUser, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+      if (authError) throw authError;
+
+      const { data: appUser, error: profileError } = await supabase
+        .from('app_user')
+        .select('role')
+        .eq('id', authUser?.user.id)
+        .maybeSingle();
+
+      if (!appUser) {
+        setError(
+          profileError instanceof Error
+            ? profileError.message
+            : 'No user registered',
+        );
+        return;
+      }
+      if (profileError) throw profileError;
+
+      switch (appUser?.role) {
+        case 'admin':
+          navigate('/admin');
+          break;
+
+        case 'agent':
+          navigate('/agent');
+          break;
+
+        default:
+          navigate('/tickets');
+          break;
+      }
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
@@ -69,7 +99,7 @@ export const LoginForm = ({
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
                   <a
-                    href="/forgot-password"
+                    href="/auth/forgot-password"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
@@ -90,7 +120,7 @@ export const LoginForm = ({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{' '}
-              <a href="/sign-up" className="underline underline-offset-4">
+              <a href="/auth/signup" className="underline underline-offset-4">
                 Sign up
               </a>
             </div>
