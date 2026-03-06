@@ -13,7 +13,7 @@ export default function Layout() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     await queryClient.invalidateQueries();
-    window.location.href = '/';
+    window.location.href = '/auth/login';
   };
 
   return (

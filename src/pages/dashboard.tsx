@@ -1,11 +1,16 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
   const { user, appUser } = useAuth();
+  const navigate = useNavigate();
 
-  if (!user) {
-    return <p>Error while fetching user.</p>;
-  }
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth/login');
+    }
+  }, [user, navigate]);
 
   return (
     <div>

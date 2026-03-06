@@ -21,7 +21,7 @@ describe('Test trigger of admin automatic assignation', () => {
 
   test('First user is Admin, second one failed', async () => {
     //First user
-    const { data: user1, error: err1 } = await supabase.auth.admin.createUser({
+    const { data: firstUser, error: err1 } = await supabase.auth.admin.createUser({
       email: 'test1@test.fr',
       password: '123456',
       email_confirm: true,
@@ -33,27 +33,24 @@ describe('Test trigger of admin automatic assignation', () => {
     const { data: profile1 } = await supabase
       .from('app_user')
       .select('role')
-      .eq('id', user1.user.id)
+      .eq('id', firstUser.user.id)
       .single();
 
     expect(profile1?.role).toBe('admin');
 
     //Second user
-    const { data: user2, error: err2 } = await supabase.auth.admin.createUser({
+    const { data: secondUser, error: err2 } = await supabase.auth.admin.createUser({
       email: 'test2@test.fr',
       password: '123456',
       email_confirm: true,
       user_metadata: { name: 'Test2' },
     });
     if (err2) throw err2;
-    /*expect(err2).toBeDefined();
-    expect(err2?.status).toBe(500);
-    expect(err2?.code).toBe('unexpected_failure');*/
     //Check role
     const { data: profile2 } = await supabase
       .from('app_user')
       .select('role')
-      .eq('id', user2?.user.id)
+      .eq('id', secondUser?.user.id)
       .single();
 
     expect(profile2?.role).toBe('agent');
