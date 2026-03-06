@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
@@ -25,7 +24,6 @@ export const SignUpForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const navigate = useNavigate();
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -48,7 +46,6 @@ export const SignUpForm = ({
       });
       if (error) throw error;
       setSuccess(true);
-      navigate('/dashboard');
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
@@ -133,14 +130,12 @@ export const SignUpForm = ({
                   {isLoading ? 'Creating an account...' : 'Sign up'}
                 </Button>
               </div>
-              {/*
               <div className="mt-4 text-center text-sm">
                 Already have an account?{' '}
-                <a href="/login" className="underline underline-offset-4">
+                <a href="/" className="underline underline-offset-4">
                   Login
                 </a>
               </div>
-              */}
             </form>
           </CardContent>
         </Card>
