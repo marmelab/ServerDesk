@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -132,9 +133,9 @@ export const SignUpForm = ({
               </div>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{' '}
-                <a href="/" className="underline underline-offset-4">
+                <Link to="/auth/login" className="underline underline-offset-4">
                   Login
-                </a>
+                </Link>
               </div>
             </form>
           </CardContent>

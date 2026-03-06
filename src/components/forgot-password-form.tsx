@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -28,7 +29,7 @@ export const ForgotPasswordForm = ({
     try {
       // The url which will be included in the email. This URL needs to be configured in your redirect URLs in the Supabase dashboard at https://supabase.com/dashboard/project/_/auth/url-configuration
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${import.meta.env.VITE_APP_URL}:${import.meta.env.VITE_APP_PORT}/auth/update-password`,
+        redirectTo: `${import.meta.env.VITE_APP_HOST}:${import.meta.env.VITE_APP_PORT}${import.meta.env.BASE_URL}auth/update-password`,
       });
       if (error) throw error;
       setSuccess(true);
@@ -84,9 +85,9 @@ export const ForgotPasswordForm = ({
               </div>
               <div className="mt-4 text-center text-sm">
                 Already have an account?{' '}
-                <a href="/" className="underline underline-offset-4">
+                <Link to="/auth/login" className="underline underline-offset-4">
                   Login
-                </a>
+                </Link>
               </div>
             </form>
           </CardContent>

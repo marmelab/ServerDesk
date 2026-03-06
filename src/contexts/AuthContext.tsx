@@ -70,9 +70,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isLoading) return;
     if (!user) {
-      const isAuthPage = window.location.pathname.startsWith('/auth/');
+      const baseURL = `${import.meta.env.BASE_URL}auth/`.replace(/\/+/g, '/');
+      const isAuthPage = window.location.pathname.startsWith(baseURL);
       if (!isAuthPage) {
-        window.location.href = '/auth/login';
+        window.location.href = baseURL + 'login';
       }
     }
   }, [user, isLoading]);
