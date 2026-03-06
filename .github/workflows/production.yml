@@ -3,7 +3,7 @@ name: Deploy Migrations to Production
 on:
   push:
     branches:
-      - test/deployGHPages
+      - main
   workflow_dispatch:
 
 permissions:
