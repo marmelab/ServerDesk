@@ -39,8 +39,14 @@ export const UpdatePasswordForm = ({
   };
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
+    <div
+      className={cn(
+        'flex min-h-full justify-center px-6 py-12 lg:px-8',
+        className,
+      )}
+      {...props}
+    >
+      <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Reset Your Password</CardTitle>
           <CardDescription>
@@ -62,7 +68,11 @@ export const UpdatePasswordForm = ({
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={isLoading}
+              >
                 {isLoading ? 'Saving...' : 'Save new password'}
               </Button>
             </div>

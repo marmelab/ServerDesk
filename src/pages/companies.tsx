@@ -101,7 +101,9 @@ export default function CompaniesPage() {
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Add Company</Button>
+          <Button className="cursor-pointer my-10" variant="outline">
+            Add Company
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -123,7 +125,11 @@ export default function CompaniesPage() {
             </div>
           </div>
           <DialogFooter className="sm:justify-start">
-            <Button type="button" onClick={handleAddCompany}>
+            <Button
+              className="cursor-pointer"
+              type="button"
+              onClick={handleAddCompany}
+            >
               Add
             </Button>
           </DialogFooter>
