@@ -21,12 +21,13 @@ describe('Test trigger of admin automatic assignation', () => {
 
   test('First user is Admin, second one failed', async () => {
     //First user
-    const { data: firstUser, error: err1 } = await supabase.auth.admin.createUser({
-      email: 'test1@test.fr',
-      password: '123456',
-      email_confirm: true,
-      user_metadata: { name: 'Test1' },
-    });
+    const { data: firstUser, error: err1 } =
+      await supabase.auth.admin.createUser({
+        email: 'test1@test.fr',
+        password: '123456',
+        email_confirm: true,
+        user_metadata: { name: 'Test1' },
+      });
     if (err1) throw err1;
 
     //Check role
@@ -39,12 +40,13 @@ describe('Test trigger of admin automatic assignation', () => {
     expect(profile1?.role).toBe('admin');
 
     //Second user
-    const { data: secondUser, error: err2 } = await supabase.auth.admin.createUser({
-      email: 'test2@test.fr',
-      password: '123456',
-      email_confirm: true,
-      user_metadata: { name: 'Test2' },
-    });
+    const { data: secondUser, error: err2 } =
+      await supabase.auth.admin.createUser({
+        email: 'test2@test.fr',
+        password: '123456',
+        email_confirm: true,
+        user_metadata: { name: 'Test2' },
+      });
     if (err2) throw err2;
     //Check role
     const { data: profile2 } = await supabase
