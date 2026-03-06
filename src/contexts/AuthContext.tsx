@@ -21,7 +21,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FullUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const fillAuthUserInfos = async (authUser: User): Promise<FullUser | null> => {
+  const fillAuthUserInfos = async (
+    authUser: User,
+  ): Promise<FullUser | null> => {
     const { data: appUser } = await supabase
       .from('app_user')
       .select()
@@ -32,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       id: authUser.id,
       email: authUser.email,
     } as FullUser;
-  }
+  };
 
   // First check is user is connected
   useEffect(() => {
@@ -43,8 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } = await supabase.auth.getUser();
         if (authUser) {
           const fullUser = await fillAuthUserInfos(authUser);
-          if (fullUser)
-            setUser(fullUser);
+          if (fullUser) setUser(fullUser);
         }
       } catch (error) {
         console.error("Erreur d'initialisation auth:", error);
@@ -83,8 +84,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (data.user) {
       const fullUser = await fillAuthUserInfos(data.user);
-      if (fullUser)
-        setUser(fullUser);
+      if (fullUser) setUser(fullUser);
     }
   };
 
