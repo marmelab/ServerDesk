@@ -1,20 +1,22 @@
+import { buttonVariants } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/auth/login');
-    }
-  }, [user, navigate]);
 
   return (
     <div>
       <h1>Dashboard of {user?.role}</h1>
+
+      {user?.role == 'admin' && (
+        <Link
+          to="/admin/companies"
+          className={buttonVariants({ variant: 'outline', size: 'sm' })}
+        >
+          Companies List
+        </Link>
+      )}
     </div>
   );
 }
