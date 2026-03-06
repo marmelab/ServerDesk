@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
-  const { user, appUser } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export default function DashboardPage() {
 
   return (
     <div>
-      <h1>Dashboard of {appUser?.role}</h1>
+      <h1>Dashboard of {user?.role}</h1>
     </div>
   );
 }

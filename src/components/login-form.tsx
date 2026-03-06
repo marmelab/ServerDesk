@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -24,17 +23,17 @@ export const LoginForm = ({
   const [error, setError] = useState<string | null>(null);
   const [isLoadingUser, setIsLoading] = useState(false);
 
-  const { user, appUser, isLoading } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user && appUser?.role) {
-      const role = appUser.role;
+    if (user) {
+      const role = user.role;
       if (role === 'admin') navigate('/admin');
       else if (role === 'agent') navigate('/agent');
       else navigate('/tickets');
     }
-  }, [user, appUser, navigate]);
+  }, [user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,27 +41,15 @@ export const LoginForm = ({
     setError(null);
 
     try {
-      const { error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      await login({
+        email: email,
+        password: password,
       });
-      if (authError) throw authError;
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
+    } catch (err: any) {
+      setError(err.message || 'Invalid credentials');
       setIsLoading(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <p className="text-muted-foreground animate-pulse">
-          Session verifying...
-        </p>
-      </div>
-    );
-  }
 
   if (user) {
     return null;

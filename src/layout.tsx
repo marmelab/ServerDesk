@@ -1,19 +1,13 @@
 import { Outlet } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
-import { supabase } from './lib/supabase';
 import { Button } from './components/ui/button';
 import { LogOut } from 'lucide-react';
-import { useQueryClient } from '@tanstack/react-query';
 
 export default function Layout() {
-  const { user, isLoading } = useAuth();
-
-  const queryClient = useQueryClient();
+  const { user, logout } = useAuth();
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    await queryClient.invalidateQueries();
-    window.location.href = '/auth/login';
+    await logout();
   };
 
   return (
@@ -21,7 +15,7 @@ export default function Layout() {
       <header className="border-b px-6 h-14 flex items-center justify-between">
         <span className="font-semibold text-lg">ServerDesk</span>
 
-        {!isLoading && user && (
+        {user && (
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">{user.email}</span>
             <Button

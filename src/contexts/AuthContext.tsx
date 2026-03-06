@@ -1,63 +1,103 @@
 import { createContext, ReactNode, useContext } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { User } from '@supabase/supabase-js';
+import { SignInWithPasswordCredentials } from '@supabase/supabase-js';
 import { AppUser } from '@/types';
+import { router } from '@/App';
+
+export type FullUser = Omit<AppUser, 'id'> & { id: string; email: string | undefined };
 
 interface AuthContextType {
-  user: User | null;
-  appUser: AppUser | null;
-  isLoading: boolean;
+  user: FullUser | null;
+  login: (credentials: SignInWithPasswordCredentials) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const queryClient = useQueryClient();
+  const [user, setUser] = useState<FullUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['auth-user'],
-    queryFn: async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        return { user: null, appUser: null };
+  // First check is user is connected
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        const {
+          data: { user: authUser },
+        } = await supabase.auth.getUser();
+
+        if (authUser) {
+          const { data: appUser } = await supabase
+            .from('app_user')
+            .select()
+            .eq('id', authUser.id)
+            .maybeSingle<AppUser>();
+          setUser({
+            ...appUser,
+            id: authUser.id,
+            email: authUser.email
+          } as FullUser);
+        }
+      } catch (error) {
+        console.error("Erreur d'initialisation auth:", error);
+      } finally {
+        setIsLoading(false);
       }
+    };
+
+    initializeAuth();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user) {
+      const isAuthPage = window.location.pathname.startsWith('/auth/');
+      if (!isAuthPage) {
+        router.navigate('/auth/login', { replace: true });
+      }
+    }
+  }, [user, isLoading]);
+
+  const login = async (credentials: SignInWithPasswordCredentials) => {
+    const { data, error: authError } =
+      await supabase.auth.signInWithPassword(credentials);
+    if (authError) throw authError;
+
+    if (data.user) {
       const { data: appUser } = await supabase
         .from('app_user')
         .select()
-        .eq('id', user.id)
+        .eq('id', data.user.id)
         .maybeSingle();
-      console.log('found user');
-      return { user, appUser };
-    },
-    staleTime: Infinity,
-  });
-
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event) => {
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        queryClient.invalidateQueries({ queryKey: ['auth-user'] });
-      }
-
-      if (event === 'SIGNED_OUT') {
-        queryClient.setQueryData(['auth_user'], { user: null, appUser: null });
-        queryClient.clear();
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [queryClient]);
-
-  const value: AuthContextType = {
-    user: data?.user ?? null,
-    appUser: data?.appUser ?? null,
-    isLoading,
+      setUser({
+        ...appUser,
+        id: data.user.id,
+        email: data.user.email
+      });
+    }
   };
 
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+  };
+
+  const value = {
+    user,
+    login,
+    logout,
+  };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

@@ -10,7 +10,7 @@ import { ForgotPasswordForm } from './components/forgot-password-form';
 
 const queryClient = new QueryClient();
 
-const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     element: <Layout />,
     children: [
