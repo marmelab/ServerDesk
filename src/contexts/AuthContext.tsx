@@ -1,9 +1,8 @@
 import { createContext, ReactNode, useContext } from 'react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { SignInWithPasswordCredentials } from '@supabase/supabase-js';
+import { SignInWithPasswordCredentials, User } from '@supabase/supabase-js';
 import { AppUser } from '@/types';
-import { router } from '@/App';
 
 export type FullUser = Omit<AppUser, 'id'> & {
   id: string;
@@ -22,6 +21,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FullUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const fillAuthUserInfos = async (authUser: User): Promise<FullUser | null> => {
+    const { data: appUser } = await supabase
+      .from('app_user')
+      .select()
+      .eq('id', authUser.id)
+      .maybeSingle<AppUser>();
+    return {
+      ...appUser,
+      id: authUser.id,
+      email: authUser.email,
+    } as FullUser;
+  }
+
   // First check is user is connected
   useEffect(() => {
     const initializeAuth = async () => {
@@ -29,18 +41,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const {
           data: { user: authUser },
         } = await supabase.auth.getUser();
-
         if (authUser) {
-          const { data: appUser } = await supabase
-            .from('app_user')
-            .select()
-            .eq('id', authUser.id)
-            .maybeSingle<AppUser>();
-          setUser({
-            ...appUser,
-            id: authUser.id,
-            email: authUser.email,
-          } as FullUser);
+          const fullUser = await fillAuthUserInfos(authUser);
+          if (fullUser)
+            setUser(fullUser);
         }
       } catch (error) {
         console.error("Erreur d'initialisation auth:", error);
@@ -67,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) {
       const isAuthPage = window.location.pathname.startsWith('/auth/');
       if (!isAuthPage) {
-        router.navigate('/auth/login', { replace: true });
+        window.location.href = '/auth/login';
       }
     }
   }, [user, isLoading]);
@@ -78,16 +82,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (authError) throw authError;
 
     if (data.user) {
-      const { data: appUser } = await supabase
-        .from('app_user')
-        .select()
-        .eq('id', data.user.id)
-        .maybeSingle();
-      setUser({
-        ...appUser,
-        id: data.user.id,
-        email: data.user.email,
-      });
+      const fullUser = await fillAuthUserInfos(data.user);
+      if (fullUser)
+        setUser(fullUser);
     }
   };
 
