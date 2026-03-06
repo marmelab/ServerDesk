@@ -56,8 +56,14 @@ export const LoginForm = ({
   }
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
-      <Card>
+    <div
+      className={cn(
+        'flex min-h-full justify-center px-6 py-12 lg:px-8',
+        className,
+      )}
+      {...props}
+    >
+      <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
@@ -97,7 +103,11 @@ export const LoginForm = ({
                 />
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoadingUser}>
+              <Button
+                type="submit"
+                className="w-full cursor-pointer"
+                disabled={isLoadingUser}
+              >
                 {isLoadingUser ? 'Logging in...' : 'Login'}
               </Button>
             </div>

@@ -55,9 +55,15 @@ export const SignUpForm = ({
   };
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div
+      className={cn(
+        'flex min-h-full justify-center px-6 py-12 lg:px-8',
+        className,
+      )}
+      {...props}
+    >
       {success ? (
-        <Card>
+        <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">
               Thank you for signing up!
@@ -72,7 +78,7 @@ export const SignUpForm = ({
           </CardContent>
         </Card>
       ) : (
-        <Card>
+        <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Sign up</CardTitle>
             <CardDescription>Create a new account</CardDescription>
@@ -127,7 +133,11 @@ export const SignUpForm = ({
                   />
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isLoading}
+                >
                   {isLoading ? 'Creating an account...' : 'Sign up'}
                 </Button>
               </div>
