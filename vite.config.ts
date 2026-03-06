@@ -10,6 +10,7 @@ export default defineConfig({
     globals: true,
   },
   plugins: [react(), tailwindcss()],
+  base: '/ServerDesk/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
