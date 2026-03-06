@@ -25,8 +25,12 @@ export const router = createBrowserRouter([
       { path: '/agent', element: <DashboardPage /> },
       { path: '/tickets', element: <DashboardPage /> },
     ],
+
   },
-]);
+],
+  {
+    basename: import.meta.env.BASE_URL
+  });
 
 export default function App() {
   return (
