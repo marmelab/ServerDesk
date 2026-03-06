@@ -5,7 +5,10 @@ import { SignInWithPasswordCredentials } from '@supabase/supabase-js';
 import { AppUser } from '@/types';
 import { router } from '@/App';
 
-export type FullUser = Omit<AppUser, 'id'> & { id: string; email: string | undefined };
+export type FullUser = Omit<AppUser, 'id'> & {
+  id: string;
+  email: string | undefined;
+};
 
 interface AuthContextType {
   user: FullUser | null;
@@ -36,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser({
             ...appUser,
             id: authUser.id,
-            email: authUser.email
+            email: authUser.email,
           } as FullUser);
         }
       } catch (error) {
@@ -83,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser({
         ...appUser,
         id: data.user.id,
-        email: data.user.email
+        email: data.user.email,
       });
     }
   };
