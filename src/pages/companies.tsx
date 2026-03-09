@@ -35,7 +35,7 @@ export default function CompaniesPage() {
   const {
     data: companies = [],
     isPending,
-    error,
+    error: queryError,
   } = useQuery({
     queryKey: ['companies'],
     queryFn: fetchCompanies,
@@ -43,6 +43,7 @@ export default function CompaniesPage() {
 
   const [company, setCompany] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState('');
 
   const handleAddCompany = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +55,11 @@ export default function CompaniesPage() {
       queryClient.invalidateQueries({ queryKey: ['companies'] });
       setCompany('');
       setIsOpen(false);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      const message = err?.message || err?.error_description || 'Error unknown';
+      setError('Error while adding entry');
+      console.log(message);
+      setIsOpen(false);
     }
   };
 
@@ -64,9 +68,9 @@ export default function CompaniesPage() {
       <h1 className="text-2xl font-bold mb-6">Companies</h1>
 
       {isPending && <p className="text-muted-foreground">Loading...</p>}
-      {error && <p className="text-destructive">{error.message}</p>}
+      {queryError && <p className="text-destructive">{queryError.message}</p>}
 
-      {!isPending && !error && (
+      {!isPending && !queryError && (
         <Table>
           <TableHeader>
             <TableRow>
@@ -99,6 +103,7 @@ export default function CompaniesPage() {
         </Table>
       )}
 
+      {error && <p className="text-destructive">{error}</p>}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button className="cursor-pointer my-10" variant="outline">
