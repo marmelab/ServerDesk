@@ -52,7 +52,7 @@ describe('CompaniesPage', () => {
   it('opens dialog and adds a new company to the list', async () => {
     const user = userEvent.setup();
     render(<CompaniesPage />, { wrapper: Wrapper });
-    const buttonAddCompany = screen.getByRole('button', {
+    const buttonAddCompany = await screen.findByRole('button', {
       name: /add company/i,
     });
     await user.click(buttonAddCompany);
