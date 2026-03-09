@@ -119,6 +119,7 @@ export default function CompaniesPage() {
               </Label>
               <Input
                 type="text"
+                id="link"
                 value={company}
                 onChange={(e) => setCompany(e.target.value)}
               />
