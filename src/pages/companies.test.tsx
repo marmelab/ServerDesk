@@ -70,7 +70,10 @@ describe('CompaniesPage', () => {
     });
     await user.click(buttonInsertCompany);
 
-    screen.debug();
     expect(await screen.findByText('New company')).toBeInTheDocument();
+
+    // Verify dialog is closed
+    const dialogTitle = screen.queryByText(/add a new company/i);
+    expect(dialogTitle).not.toBeInTheDocument();
   });
 });
