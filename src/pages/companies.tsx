@@ -37,8 +37,7 @@ export default function CompaniesPage() {
   const [company, setCompany] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleAddCompany = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddCompany = async () => {
     try {
       const { error } = await supabase
         .from('companies')
@@ -113,34 +112,45 @@ export default function CompaniesPage() {
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Add a new company</DialogTitle>
-              </DialogHeader>
-              <DialogDescription>
-                Enter the name of the company you want to add.
-              </DialogDescription>
-              <div className="flex items-center gap-2">
-                <div className="grid flex-1 gap-2">
-                  <Label htmlFor="link" className="sr-only">
-                    Company
-                  </Label>
-                  <Input
-                    type="text"
-                    id="link"
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                  />
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleAddCompany();
+                }}
+              >
+                <DialogHeader>
+                  <DialogTitle className="text-xl font-semibold tracking-tight">
+                    Add a new company
+                  </DialogTitle>
+                </DialogHeader>
+                <DialogDescription className="text-muted-foreground pt-1">
+                  Enter the name of the company you want to add.
+                </DialogDescription>
+                <div className="flex items-center gap-2">
+                  <div className="grid flex-1 gap-2">
+                    <Label htmlFor="link" className="sr-only">
+                      Company
+                    </Label>
+                    <Input
+                      type="text"
+                      id="link"
+                      value={company}
+                      onChange={(e) => setCompany(e.target.value)}
+                      autoFocus
+                      required
+                    />
+                  </div>
                 </div>
-              </div>
-              <DialogFooter className="sm:justify-start">
-                <Button
-                  className="cursor-pointer"
-                  type="button"
-                  onClick={handleAddCompany}
-                >
-                  Add
-                </Button>
-              </DialogFooter>
+                <DialogFooter className="sm:justify-start">
+                  <Button
+                    className="cursor-pointer my-5"
+                    type="submit"
+                    disabled={isPending}
+                  >
+                    Add
+                  </Button>
+                </DialogFooter>
+              </form>
             </DialogContent>
           </Dialog>
         </div>
