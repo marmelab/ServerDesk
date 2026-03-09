@@ -50,7 +50,7 @@ export default function CompaniesPage() {
     } catch (err: any) {
       const message = err?.message || err?.error_description || 'Error unknown';
       setError('Error while adding entry');
-      console.log(message);
+      console.error(message);
       setIsOpen(false);
     }
   };
