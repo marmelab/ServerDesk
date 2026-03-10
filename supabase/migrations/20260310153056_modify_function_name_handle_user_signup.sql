@@ -1,4 +1,4 @@
-drop function if exists "public"."handle_first_admin"();
+DROP TRIGGER IF EXISTS handle_first_user ON auth.users;
 
 CREATE OR REPLACE FUNCTION public.handle_user_signup()
  RETURNS trigger
@@ -46,3 +46,10 @@ begin
   return new;
 end;$function$
 ;
+
+CREATE TRIGGER handle_user_signup
+  AFTER INSERT ON auth.users
+  FOR EACH ROW 
+  EXECUTE FUNCTION public.handle_user_signup();
+
+drop function if exists "public"."handle_first_admin"();
