@@ -28,7 +28,7 @@ export default function CompaniesPage() {
   const {
     data: companies = [],
     isPending,
-    error,
+    error: queryError,
   } = useQuery({
     queryKey: ['companies'],
     queryFn: fetchCompanies,
@@ -36,6 +36,7 @@ export default function CompaniesPage() {
 
   const [company, setCompany] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState('');
 
   const handleAddCompany = async () => {
     try {
@@ -46,17 +47,20 @@ export default function CompaniesPage() {
       queryClient.invalidateQueries({ queryKey: ['companies'] });
       setCompany('');
       setIsOpen(false);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      const message = err?.message || err?.error_description || 'Error unknown';
+      setError('Error while adding entry');
+      console.error(message);
+      setIsOpen(false);
     }
   };
 
   return (
     <div className="container mx-auto py-10">
       {isPending && <p className="text-muted-foreground">Loading...</p>}
-      {error && <p className="text-destructive">{error.message}</p>}
+      {queryError && <p className="text-destructive">{queryError.message}</p>}
 
-      {!isPending && !error && (
+      {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
           <header className="mb-12 text-center">
             <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl">
@@ -105,6 +109,8 @@ export default function CompaniesPage() {
             ))}
             {companies.length === 0 && <h2>No companies found.</h2>}
           </div>
+
+          {error && <p className="text-destructive">{error}</p>}
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button className="cursor-pointer my-10" variant="outline">
