@@ -12,9 +12,17 @@ export function useInviteManager() {
     setInviteToken(null);
 
     try {
+      const now = new Date();
+      // 7 days
+      const expiredAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
       const { data, error: supabaseError } = await supabase
         .from('invite_tokens')
-        .insert([{ company_id: companyId }])
+        .insert([
+          {
+            company_id: companyId,
+            expired_at: expiredAt.toISOString(),
+          },
+        ])
         .select('token')
         .single();
 

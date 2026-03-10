@@ -49,6 +49,7 @@ describe('SignupPage with Invite Token', () => {
           select: vi.fn().mockReturnThis(),
           eq: vi.fn().mockReturnThis(),
           is: vi.fn().mockReturnThis(),
+          gt: vi.fn().mockReturnThis(),
           single: vi.fn().mockResolvedValue({
             data: {
               id: 'invit-123',

@@ -25,11 +25,11 @@ export function useInviteToken(token: string | null) {
           .from('invite_tokens')
           .select('*, companies(name)')
           .eq('token', token)
-          .is('used_at', null)
+          .gt('expired_at', new Date().toISOString())
           .single();
 
         if (error || !data) {
-          setInviteError('Token already used or invalid');
+          setInviteError('Token already used, expired or invalid');
         } else {
           setInviteData(data);
         }
