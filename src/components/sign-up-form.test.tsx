@@ -24,12 +24,10 @@ describe('SignupPage with Invite Token', () => {
     mockSupabase.mockReturnValue({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      maybeSingle: vi
-        .fn()
-        .mockResolvedValue({
-          data: null,
-          error: { message: 'Token already used or invalid' },
-        }),
+      maybeSingle: vi.fn().mockResolvedValue({
+        data: null,
+        error: { message: 'Token already used or invalid' },
+      }),
     } as any);
 
     render(
