@@ -1,4 +1,4 @@
-DROP TRIGGER IF EXISTS handle_first_user ON auth.users;
+DROP TRIGGER IF EXISTS handle_first_admin ON auth.users;
 
 CREATE OR REPLACE FUNCTION public.handle_user_signup()
  RETURNS trigger
