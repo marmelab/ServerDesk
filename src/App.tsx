@@ -7,6 +7,7 @@ import { UpdatePasswordForm } from './components/update-password-form';
 import { LoginForm } from './components/login-form';
 import DashboardPage from '@/pages/dashboard';
 import { ForgotPasswordForm } from './components/forgot-password-form';
+import TicketsPage from '@/pages/tickets';
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,7 @@ export const router = createBrowserRouter(
         { path: '/auth/forgot-password', element: <ForgotPasswordForm /> },
         { path: '/admin', element: <DashboardPage /> },
         { path: '/agent', element: <DashboardPage /> },
-        { path: '/tickets', element: <DashboardPage /> },
+        { path: '/tickets', element: <TicketsPage /> },
       ],
     },
   ],

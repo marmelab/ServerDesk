@@ -11,7 +11,8 @@
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "format": "prettier --write .",
     "test": "vitest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update-types": "supabase gen types typescript --local > supabase/types.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",

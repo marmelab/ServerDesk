@@ -6,35 +6,20 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export async function clearAllUsers(supabaseAdmin: any) {
-  let hasMore = true;
-  let page = 1;
-
-  while (hasMore) {
+  while (true) {
     const {
       data: { users },
       error: listError,
     } = await supabaseAdmin.auth.admin.listUsers({
-      page: page,
+      page: 1,
       perPage: 50,
     });
 
     if (listError) throw listError;
-    if (!users || users.length === 0) {
-      hasMore = false;
-      break;
-    }
+    if (!users || users.length === 0) break;
 
-    const deletePromises = users.map((user: any) =>
-      supabaseAdmin.auth.admin.deleteUser(user.id),
+    await Promise.all(
+      users.map((user: any) => supabaseAdmin.auth.admin.deleteUser(user.id))
     );
-
-    await Promise.all(deletePromises);
-
-    // Default length is 50
-    if (users.length < 50) {
-      hasMore = false;
-    } else {
-      page++;
-    }
   }
 }

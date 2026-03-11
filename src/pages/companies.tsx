@@ -91,7 +91,7 @@ export default function CompaniesPage() {
                 className="group relative flex flex-col gap-2 overflow-hidden pt-0"
               >
                 <CardHeader className="flex-1 pt-4">
-                  <CardTitle className="text-xl font-semibold text-balance">
+                  <CardTitle className="text-2xl font-semibold text-balance">
                     {company.name}
                   </CardTitle>
                 </CardHeader>
@@ -99,7 +99,7 @@ export default function CompaniesPage() {
                 <CardFooter className="flex-col items-start space-y-4 pt-4">
                   <div className="flex w-full items-baseline justify-between">
                     <div>
-                      <span className="text-foreground text-2xl font-bold">
+                      <span className="text-foreground text-xl font-bold">
                         {new Date(company.created_at).toLocaleDateString()}
                       </span>
                     </div>

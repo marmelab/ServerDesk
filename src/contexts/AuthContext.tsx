@@ -7,6 +7,7 @@ import { AppUser } from '@/types';
 export type FullUser = Omit<AppUser, 'id'> & {
   id: string;
   email: string | undefined;
+  company_ids: number[];
 };
 
 interface AuthContextType {
@@ -28,11 +29,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .from('app_user')
       .select()
       .eq('id', authUser.id)
-      .maybeSingle<AppUser>();
+      .maybeSingle();
+
+    const { data: userCompanies } = await supabase
+      .from('user_companies')
+      .select('company_id')
+      .eq('user_id', authUser.id);
+
+    if (!appUser) return null;
     return {
       ...appUser,
       id: authUser.id,
       email: authUser.email,
+      company_ids: userCompanies?.map((uc) => uc.company_id) || [],
     } as FullUser;
   };
 

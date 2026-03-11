@@ -11,15 +11,10 @@ describe('Test trigger of admin automatic assignation', () => {
 
   beforeAll(async () => {
     //Clear user
-    await supabase
-      .from('app_user')
-      .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000');
-
     await clearAllUsers(supabase);
   });
 
-  test('First user is Admin, second one failed', async () => {
+  test('First user is Admin, second one agent, third one customer manager', async () => {
     //First user
     const { data: firstUser, error: err1 } =
       await supabase.auth.admin.createUser({
@@ -56,5 +51,42 @@ describe('Test trigger of admin automatic assignation', () => {
       .single();
 
     expect(profile2?.role).toBe('agent');
+
+    //Third user : customer manager
+
+    //Insert token first
+    const now = new Date();
+    const expiredAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const { data: inviteToken } = await supabase
+      .from('invite_tokens')
+      .insert([
+        {
+          company_id: '1',
+          expired_at: expiredAt.toISOString(),
+        },
+      ])
+      .select('token')
+      .single();
+
+    const { data: thirdUser, error: err3 } =
+      await supabase.auth.admin.createUser({
+        email: 'test3@test.fr',
+        password: '123456',
+        email_confirm: true,
+        user_metadata: {
+          name: 'Test3',
+          invite_token: inviteToken?.token,
+          company_id: '1',
+        },
+      });
+    if (err3) throw err3;
+    //Check role
+    const { data: profile3 } = await supabase
+      .from('app_user')
+      .select('role')
+      .eq('id', thirdUser?.user.id)
+      .single();
+
+    expect(profile3?.role).toBe('customer_manager');
   });
 });
