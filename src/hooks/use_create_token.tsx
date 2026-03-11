@@ -28,7 +28,7 @@ export function useInviteManager() {
 
       if (supabaseError) throw supabaseError;
 
-      const inviteLink = `${import.meta.env.VITE_APP_HOST}:${import.meta.env.VITE_APP_PORT}${import.meta.env.BASE_URL}auth/signup?invite=${data.token}`;
+      const inviteLink = `${window.location.origin}${import.meta.env.BASE_URL}auth/signup?invite=${data.token}`;
       setInviteToken(inviteLink);
     } catch (err: any) {
       const msg = err.message || 'Failed to generate invite token';
