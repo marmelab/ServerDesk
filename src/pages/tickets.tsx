@@ -157,7 +157,7 @@ export default function TicketsPage() {
                       required
                     />
                   </div>
-                  <div className="grid grid-cols-[100px-1fr] items-center gap-4">
+                  <div className="grid grid-cols-[100px_1fr] items-center gap-4">
                     <Label htmlFor="description" className="text-right mt-2">
                       Description
                     </Label>
@@ -169,7 +169,7 @@ export default function TicketsPage() {
                       rows={4}
                     />
                   </div>
-                  <div className="grid grid-cols-[100px-1fr] items-center gap-4">
+                  <div className="grid grid-cols-[100px_1fr] items-center gap-4">
                     <Label htmlFor="priority" className="text-right">
                       Priority
                     </Label>
@@ -186,6 +186,9 @@ export default function TicketsPage() {
                         {Priorities.map((p) => (
                           <SelectItem key={p.value} value={p.value}>
                             <div className="flex items-center gap-2">
+                              <span
+                                className={`h-2 w-2 rounded-full ${p.color}`}
+                              />
                               {p.label}
                             </div>
                           </SelectItem>
