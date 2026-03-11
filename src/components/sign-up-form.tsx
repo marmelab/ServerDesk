@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useInviteToken } from '@/hooks/use_invite_token';
 
 export const SignUpForm = ({
   className,
@@ -24,6 +25,12 @@ export const SignUpForm = ({
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const [searchParam] = useSearchParams();
+  const inviteToken = searchParam.get('invite');
+
+  const { inviteData, inviteValidating, inviteError } =
+    useInviteToken(inviteToken);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,10 +49,13 @@ export const SignUpForm = ({
         options: {
           data: {
             name: name,
+            company_id: inviteData?.company_id,
+            invite_token: inviteToken,
           },
         },
       });
       if (error) throw error;
+
       setSuccess(true);
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred');
@@ -53,6 +63,27 @@ export const SignUpForm = ({
       setIsLoading(false);
     }
   };
+
+  if (inviteValidating) {
+    return <div className="flex justify-center p-12">Verifying token...</div>;
+  }
+
+  if (inviteToken && inviteError) {
+    return (
+      <div
+        className={cn('flex min-h-full justify-center px-6 py-12', className)}
+      >
+        <Card className="w-full max-w-sm border-red-200 shadow-sm">
+          <CardHeader>
+            <CardTitle className="text-2xl text-red-600">
+              Invalid Token
+            </CardTitle>
+            <CardDescription>{inviteError}</CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -108,6 +139,18 @@ export const SignUpForm = ({
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
+                {inviteToken && (
+                  <div className="grid gap-2">
+                    <Label htmlFor="email">Company</Label>
+                    <Input
+                      id="company"
+                      type="text"
+                      required
+                      value={inviteData?.companies.name}
+                      disabled={true}
+                    />
+                  </div>
+                )}
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
