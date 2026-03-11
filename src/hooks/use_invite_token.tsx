@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 
 interface InviteData {
   id: string;
-  company_id: string;
-  token: string;
+  company_id: number;
+  token: string | null;
   companies: {
     name: string;
   };

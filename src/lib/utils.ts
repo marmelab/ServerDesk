@@ -19,7 +19,7 @@ export async function clearAllUsers(supabaseAdmin: any) {
     if (!users || users.length === 0) break;
 
     await Promise.all(
-      users.map((user: any) => supabaseAdmin.auth.admin.deleteUser(user.id))
+      users.map((user: any) => supabaseAdmin.auth.admin.deleteUser(user.id)),
     );
   }
 }
