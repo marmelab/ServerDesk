@@ -18,10 +18,6 @@ alter table "public"."tickets" alter column priority type "public"."ticket_prior
 
 alter table "public"."tickets" alter column status type "public"."ticket_status" using status::text::"public"."ticket_status";
 
-alter table "public"."tickets" alter column "priority" set default 'Medium'::public.ticket_priority;
-
-alter table "public"."tickets" alter column "status" set default 'Open'::public.ticket_status;
-
 drop type "public"."ticket_priority__old_version_to_be_dropped";
 
 drop type "public"."ticket_status__old_version_to_be_dropped";
