@@ -21,11 +21,24 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Ticket, TicketInsert, TicketPriority, Priorities, Statutes } from '@/types';
+import {
+  Ticket,
+  TicketInsert,
+  TicketPriority,
+  Priorities,
+  Statutes,
+} from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { handleSupabaseError } from '@/lib/error_handler';
 import { toast } from 'sonner';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 async function fetchTickets(): Promise<Ticket[]> {
   const { data, error } = await supabase.from('tickets').select('*');
@@ -91,9 +104,7 @@ export default function TicketsPage() {
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
           <header className="mb-8 flex items-center justify-between">
-            <h2 className="text-3xl font-bold tracking-tight">
-              Tickets
-            </h2>
+            <h2 className="text-3xl font-bold tracking-tight">Tickets</h2>
             {user?.role == 'customer_manager' && (
               <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
@@ -125,7 +136,10 @@ export default function TicketsPage() {
                         />
                       </div>
                       <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-                        <Label htmlFor="description" className="text-right mt-2">
+                        <Label
+                          htmlFor="description"
+                          className="text-right mt-2"
+                        >
                           Description
                         </Label>
                         <Textarea
@@ -183,44 +197,51 @@ export default function TicketsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className='w-[400px]'>
-                    Subject
-                  </TableHead>
-                  <TableHead>
-                    Created At
-                  </TableHead>
-                  <TableHead>
-                    Priority
-                  </TableHead>
-                  <TableHead>
-                    Status
-                  </TableHead>
+                  <TableHead className="w-[400px]">Subject</TableHead>
+                  <TableHead>Created At</TableHead>
+                  <TableHead>Priority</TableHead>
+                  <TableHead>Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {tickets.map((ticket) => {
-                  const priorityInfo = Priorities.find(p => p.value === ticket.priority);
-                  const statusInfo = Statutes.find(p => p.value === ticket.status);
+                  const priorityInfo = Priorities.find(
+                    (p) => p.value === ticket.priority,
+                  );
+                  const statusInfo = Statutes.find(
+                    (p) => p.value === ticket.status,
+                  );
                   return (
-                    <TableRow key={ticket.id} className='cursor-pointer hover:bg-muted/50'>
-                      <TableCell className='font-medium'>
-                        <div className='flex flex-col'>
+                    <TableRow
+                      key={ticket.id}
+                      className="cursor-pointer hover:bg-muted/50"
+                    >
+                      <TableCell className="font-medium">
+                        <div className="flex flex-col">
                           <span>{ticket.subject}</span>
                         </div>
                       </TableCell>
-                      <TableCell className='text-muted-foreground'>
+                      <TableCell className="text-muted-foreground">
                         {new Date(ticket.created_at).toLocaleDateString()}
                       </TableCell>
                       <TableCell>
-                        <div className='flex items-center gap-2'>
-                          <span className={`h-2 w-2 rounded-full ${priorityInfo?.color}`} />
-                          <span className="capitalize text-sm">{ticket.priority}</span>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`h-2 w-2 rounded-full ${priorityInfo?.color}`}
+                          />
+                          <span className="capitalize text-sm">
+                            {ticket.priority}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className='flex items-center gap-2'>
-                          <span className={`h-2 w-2 rounded-full ${statusInfo?.color}`} />
-                          <span className="capitalize text-sm">{ticket.status}</span>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`h-2 w-2 rounded-full ${statusInfo?.color}`}
+                          />
+                          <span className="capitalize text-sm">
+                            {ticket.status}
+                          </span>
                         </div>
                       </TableCell>
                     </TableRow>
