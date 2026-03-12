@@ -26,7 +26,7 @@ import {
   TicketInsert,
   TicketPriority,
   Priorities,
-  Statutes,
+  Statuses,
 } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { handleSupabaseError } from '@/lib/error_handler';
@@ -208,7 +208,7 @@ export default function TicketsPage() {
                   const priorityInfo = Priorities.find(
                     (p) => p.value === ticket.priority,
                   );
-                  const statusInfo = Statutes.find(
+                  const statusInfo = Statuses.find(
                     (p) => p.value === ticket.status,
                   );
                   return (

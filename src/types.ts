@@ -25,7 +25,7 @@ interface StatusOption {
   color: string;
 }
 // For Tailwind : bg-teal-500, bg-blue-500, bg-gray-600
-export const Statutes: StatusOption[] = [
+export const Statuses: StatusOption[] = [
   { value: 'open', label: 'Open', color: 'bg-teal-500' },
   { value: 'in_progress', label: 'In Progress', color: 'bg-blue-500' },
   {
