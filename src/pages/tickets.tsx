@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,19 +21,26 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabase';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Ticket, TicketInsert, TicketPriority, Priorities } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
+import { handleSupabaseError } from '@/lib/error_handler';
+import { toast } from 'sonner';
 
 async function fetchTickets(): Promise<Ticket[]> {
   const { data, error } = await supabase.from('tickets').select('*');
-  if (error) throw error;
-  return data;
+  if (error) handleSupabaseError(error);
+  return data || [];
 }
 
 export default function TicketsPage() {
   const queryClient = useQueryClient();
-  const user = useAuth();
+  const { user } = useAuth();
+
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [subject, setSubject] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
+  const [priority, setPriority] = useState<TicketPriority>('medium');
 
   const {
     data: tickets = [],
@@ -44,48 +51,42 @@ export default function TicketsPage() {
     queryFn: fetchTickets,
   });
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [subject, setSubject] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
-  const [priority, setPriority] = useState<TicketPriority>('medium');
-
   const resetTicket = () => {
     setSubject('');
     setDescription('');
     setIsOpen(false);
   };
 
-  const handleAddTicket = async () => {
-    try {
-      if (!user.user?.company_ids || user.user.company_ids.length === 0) {
-        console.error('User has no companies linked.');
-        return;
-      }
-
-      const newTicket: TicketInsert = {
-        subject: subject,
-        description: description,
-        priority: priority,
-        company_id: user.user?.company_ids[0],
-        customer_id: user.user?.id,
-      };
+  const { mutate: addTicket, isPending: isAdding } = useMutation({
+    mutationFn: async (newTicket: TicketInsert) => {
       const { error } = await supabase.from('tickets').insert(newTicket);
-      if (error) throw error;
+      if (error) handleSupabaseError(error);
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tickets'] });
       resetTicket();
-    } catch (err: any) {
-      const message = err?.message || err?.error_description || 'Unknow error';
-      setError('Error while adding ticket');
-      console.error(message);
-      setIsOpen(false);
+      toast.success('Ticket created successfully!');
+    },
+  });
+
+  const handleAddTicket = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user?.company_ids?.length) {
+      toast.error('You are not linked to any company.');
+      return;
     }
+    addTicket({
+      subject,
+      description,
+      priority,
+      company_id: user?.company_ids[0],
+      customer_id: user?.id,
+    });
   };
 
   return (
     <div className="container mx-auto py-10">
       {isPending && <p className="text-muted-foreground">Loading...</p>}
-      {queryError && <p className="text-destructive">{queryError.message}</p>}
 
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
@@ -121,8 +122,6 @@ export default function TicketsPage() {
             {tickets.length === 0 && <h2>No tickets found.</h2>}
           </div>
 
-          {error && <p className="text-destructive">{error}</p>}
-
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button className="cursor-pointer my-10" variant="outline">
@@ -130,12 +129,7 @@ export default function TicketsPage() {
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleAddTicket();
-                }}
-              >
+              <form onSubmit={handleAddTicket}>
                 <DialogHeader>
                   <DialogTitle className="text-xl font-semibold tracking-tight">
                     Add a new ticket
@@ -201,9 +195,9 @@ export default function TicketsPage() {
                   <Button
                     className="cursor-pointer my-5"
                     type="submit"
-                    disabled={isPending}
+                    disabled={isAdding}
                   >
-                    Add
+                    {isAdding ? 'Creating...' : 'Add Ticket'}
                   </Button>
                 </DialogFooter>
               </form>

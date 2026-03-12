@@ -17,7 +17,6 @@ interface InviteManagerDialogProps {
   onOpenChange: (open: boolean) => void;
   inviteToken: string | null;
   isGenerating: boolean;
-  error: string | null;
 }
 
 export function InviteManagerDialog({
@@ -25,7 +24,6 @@ export function InviteManagerDialog({
   open,
   onOpenChange,
   isGenerating,
-  error,
 }: InviteManagerDialogProps) {
   const [copied, setCopied] = useState(false);
 
@@ -51,19 +49,6 @@ export function InviteManagerDialog({
               <p className="text-sm text-muted-foreground">
                 Generating link...
               </p>
-            </div>
-          ) : error ? (
-            <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-md">
-              <p className="text-sm text-destructive font-medium">Error</p>
-              <p className="text-xs text-destructive/80">{error}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-3 w-full"
-                onClick={() => onOpenChange(false)}
-              >
-                Close
-              </Button>
             </div>
           ) : (
             <div className="flex items-center space-x-2">

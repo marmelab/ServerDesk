@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { SignInWithPasswordCredentials, User } from '@supabase/supabase-js';
 import { AppUser } from '@/types';
+import { handleSupabaseError } from '@/lib/error_handler';
 
 export type FullUser = Omit<AppUser, 'id'> & {
   id: string;
@@ -25,17 +26,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fillAuthUserInfos = async (
     authUser: User,
   ): Promise<FullUser | null> => {
-    const { data: appUser } = await supabase
+    const { data: appUser, error: userError } = await supabase
       .from('app_user')
       .select()
       .eq('id', authUser.id)
       .maybeSingle();
-
-    const { data: userCompanies } = await supabase
+    if (userError) handleSupabaseError(userError);
+    const { data: userCompanies, error: uesrCompanyError } = await supabase
       .from('user_companies')
       .select('company_id')
       .eq('user_id', authUser.id);
-
+    if (uesrCompanyError) handleSupabaseError(uesrCompanyError);
     if (!appUser) return null;
     return {
       ...appUser,
@@ -51,7 +52,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const {
           data: { user: authUser },
+          error: authError,
         } = await supabase.auth.getUser();
+        if (authError) {
+          console.error('Auth init error:', authError);
+          return;
+        }
         if (authUser) {
           const fullUser = await fillAuthUserInfos(authUser);
           if (fullUser) setUser(fullUser);
@@ -90,11 +96,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (credentials: SignInWithPasswordCredentials) => {
     const { data, error: authError } =
       await supabase.auth.signInWithPassword(credentials);
-    if (authError) throw authError;
+    if (authError) {
+      handleSupabaseError(authError);
+      return;
+    }
 
     if (data.user) {
       const fullUser = await fillAuthUserInfos(data.user);
-      if (fullUser) setUser(fullUser);
+      if (fullUser) {
+        setUser(fullUser);
+      } else {
+        throw new Error('User profile not found in database.');
+      }
     }
   };
 

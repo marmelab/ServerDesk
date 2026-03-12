@@ -12,30 +12,32 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useMutation } from '@tanstack/react-query';
+import { handleSupabaseError } from '@/lib/error_handler';
 
 export const UpdatePasswordForm = ({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<'div'>) => {
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  const { mutate: updatePassword, isPending } = useMutation({
+    mutationFn: async (newPassword: string) => {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+      if (error) handleSupabaseError(error);
+    },
+    onSuccess: () => {
+      navigate('/Dashboard');
+    },
+  });
+
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
-      navigate('/Dashboard');
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+    updatePassword(password);
   };
 
   return (
@@ -67,13 +69,12 @@ export const UpdatePasswordForm = ({
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
               <Button
                 type="submit"
                 className="w-full cursor-pointer"
-                disabled={isLoading}
+                disabled={isPending}
               >
-                {isLoading ? 'Saving...' : 'Save new password'}
+                {isPending ? 'Saving...' : 'Save new password'}
               </Button>
             </div>
           </form>

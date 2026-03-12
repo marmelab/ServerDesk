@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { Company } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -19,15 +19,28 @@ import {
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
+import { handleSupabaseError } from '@/lib/error_handler';
+import { toast } from 'sonner';
 
 async function fetchCompanies(): Promise<Company[]> {
   const { data, error } = await supabase.from('companies').select('*');
-  if (error) throw error;
-  return data;
+  if (error) {
+    handleSupabaseError(error);
+  }
+  return data || [];
 }
 
 export default function CompaniesPage() {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
+
+  const [company, setCompany] = useState('');
+  const [isAddCompanyOpen, setIsAddCompanyOpen] = useState(false);
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
+
+  const { createInvite, isGenerating, inviteToken, resetInvite } =
+    useInviteManager();
+
   const {
     data: companies = [],
     isPending,
@@ -37,45 +50,35 @@ export default function CompaniesPage() {
     queryFn: fetchCompanies,
   });
 
-  const [company, setCompany] = useState('');
-  const [isAddCompanyOpen, setIsAddCompanyOpen] = useState(false);
-  const [isInviteOpen, setIsInviteOpen] = useState(false);
-  const [error, setError] = useState('');
-
-  const { createInvite, isGenerating, inviteToken, tokenError, resetInvite } =
-    useInviteManager();
-
-  const { user } = useAuth();
-
-  const handleAddCompany = async () => {
-    try {
-      const { error } = await supabase
-        .from('companies')
-        .insert({ name: company });
-      if (error) throw error;
+  const { mutate: addCompany, isPending: isAdding } = useMutation({
+    mutationFn: async (name: string) => {
+      const { error } = await supabase.from('companies').insert({ name });
+      if (error) handleSupabaseError(error);
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['companies'] });
       setCompany('');
       setIsAddCompanyOpen(false);
-    } catch (err: any) {
-      const message = err?.message || err?.error_description || 'Error unknown';
-      setError('Error while adding entry');
-      console.error(message);
-      setIsAddCompanyOpen(false);
-    }
+      toast.success('Company added successfully!');
+    },
+  });
+
+  const handleAddCompany = async (e: React.FormEvent) => {
+    e.preventDefault();
+    addCompany(company);
   };
 
   const handleOpenInvite = async (company: Company) => {
     setIsInviteOpen(true);
     resetInvite();
-
     await createInvite(company.id);
   };
 
+  if (isPending)
+    return <p className="text-muted-foreground p-10">Loading...</p>;
+
   return (
     <div className="container mx-auto py-10">
-      {isPending && <p className="text-muted-foreground">Loading...</p>}
-      {queryError && <p className="text-destructive">{queryError.message}</p>}
-
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
           <header className="mb-12 text-center">
@@ -131,7 +134,6 @@ export default function CompaniesPage() {
             {companies.length === 0 && <h2>No companies found.</h2>}
           </div>
 
-          {error && <p className="text-destructive">{error}</p>}
           <Dialog open={isAddCompanyOpen} onOpenChange={setIsAddCompanyOpen}>
             <DialogTrigger asChild>
               <Button className="cursor-pointer my-10" variant="outline">
@@ -139,12 +141,7 @@ export default function CompaniesPage() {
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleAddCompany();
-                }}
-              >
+              <form onSubmit={handleAddCompany}>
                 <DialogHeader>
                   <DialogTitle className="text-xl font-semibold tracking-tight">
                     Add a new company
@@ -172,7 +169,7 @@ export default function CompaniesPage() {
                   <Button
                     className="cursor-pointer my-5"
                     type="submit"
-                    disabled={isPending}
+                    disabled={isAdding}
                   >
                     Add
                   </Button>
@@ -186,7 +183,6 @@ export default function CompaniesPage() {
             onOpenChange={setIsInviteOpen}
             inviteToken={inviteToken}
             isGenerating={isGenerating}
-            error={tokenError}
           />
         </div>
       )}

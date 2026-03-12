@@ -1,47 +1,36 @@
+import { handleSupabaseError } from '@/lib/error_handler';
 import { supabase } from '@/lib/supabase';
-import { useEffect, useState } from 'react';
-
-interface InviteData {
-  id: string;
-  company_id: number;
-  token: string | null;
-  companies: {
-    name: string;
-  };
-}
+import { useQuery } from '@tanstack/react-query';
 
 export function useInviteToken(token: string | null) {
-  const [inviteValidating, setInviteValidating] = useState(false);
-  const [inviteError, setInviteError] = useState<any>(null);
-  const [inviteData, setInviteData] = useState<InviteData | null>(null);
+  const query = useQuery({
+    queryKey: ['invite-token', token],
+    queryFn: async () => {
+      if (!token) return null;
 
-  useEffect(() => {
-    if (!token) return;
+      const { data, error } = await supabase
+        .from('invite_tokens')
+        .select('*, companies(name)')
+        .eq('token', token)
+        .gt('expired_at', new Date().toISOString())
+        .maybeSingle();
 
-    const validateToken = async () => {
-      setInviteValidating(false);
-      try {
-        const { data, error } = await supabase
-          .from('invite_tokens')
-          .select('*, companies(name)')
-          .eq('token', token)
-          .gt('expired_at', new Date().toISOString())
-          .single();
+      if (error) handleSupabaseError(error);
 
-        if (error || !data) {
-          setInviteError('Token already used, expired or invalid');
-        } else {
-          setInviteData(data);
-        }
-      } catch (err) {
-        setInviteError('Error while checking token');
-      } finally {
-        setInviteValidating(false);
+      if (!data) {
+        throw new Error(
+          'This invitation link is already used, invalid or has expired.',
+        );
       }
-    };
 
-    validateToken();
-  }, [token]);
-
-  return { inviteData, inviteValidating, inviteError };
+      return data;
+    },
+    enabled: !!token,
+    retry: false,
+  });
+  return {
+    inviteData: query.data,
+    inviteValidating: query.isLoading,
+    inviteError: query.error?.message,
+  };
 }
