@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import { toast } from 'sonner';
 
 export class AppError extends Error {
   constructor(
