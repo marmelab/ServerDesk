@@ -102,7 +102,7 @@ export default function CompaniesPage() {
                 <CardFooter className="flex-col items-start space-y-4 pt-4">
                   <div className="flex w-full items-baseline justify-between">
                     <div>
-                      <span className="text-foreground text-xl font-bold">
+                      <span className="text-foreground text-sm font-bold">
                         {new Date(company.created_at).toLocaleDateString()}
                       </span>
                     </div>

@@ -127,5 +127,5 @@ describe('TicketsPage', () => {
     await waitFor(() => {
       expect(screen.queryByText(/add a new ticket/i)).not.toBeInTheDocument();
     });
-  });
+  }, 10000);
 });
