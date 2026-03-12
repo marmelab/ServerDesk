@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useMutation } from '@tanstack/react-query';
 
 export const LoginForm = ({
   className,
@@ -20,35 +20,28 @@ export const LoginForm = ({
 }: React.ComponentPropsWithoutRef<'div'>) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isLoadingUser, setIsLoading] = useState(false);
 
   const { user, login } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      const role = user.role;
-      if (role === 'admin') navigate('/admin');
-      else if (role === 'agent') navigate('/agent');
-      else navigate('/tickets');
-    }
-  }, [user, navigate]);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      await login({
+  const { mutate: handleLoginAction, isPending } = useMutation({
+    mutationFn: async () => {
+      return await login({
         email: email,
         password: password,
       });
-    } catch (err: any) {
-      setError(err.message || 'Invalid credentials');
-      setIsLoading(false);
-    }
+    },
+    onSuccess: (loggedUser) => {
+      const role = loggedUser.role;
+      if (role === 'admin') navigate('/admin');
+      else if (role === 'agent') navigate('/agent');
+      else navigate('/tickets');
+    },
+  });
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    handleLoginAction();
   };
 
   if (user) {
@@ -102,13 +95,12 @@ export const LoginForm = ({
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
               <Button
                 type="submit"
                 className="w-full cursor-pointer"
-                disabled={isLoadingUser}
+                disabled={isPending}
               >
-                {isLoadingUser ? 'Logging in...' : 'Login'}
+                {isPending ? 'Logging in...' : 'Login'}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">

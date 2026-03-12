@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from './lib/query-client';
+import { QueryClientProvider } from '@tanstack/react-query';
 import Layout from '@/layout';
 import CompaniesPage from '@/pages/companies';
 import { SignUpForm } from './components/sign-up-form';
@@ -7,13 +8,14 @@ import { UpdatePasswordForm } from './components/update-password-form';
 import { LoginForm } from './components/login-form';
 import DashboardPage from '@/pages/dashboard';
 import { ForgotPasswordForm } from './components/forgot-password-form';
-
-const queryClient = new QueryClient();
+import TicketsPage from '@/pages/tickets';
+import { ErrorFallback } from './components/error-fallback';
 
 export const router = createBrowserRouter(
   [
     {
       element: <Layout />,
+      errorElement: <ErrorFallback />,
       children: [
         { path: '/', element: <DashboardPage /> },
         { path: '/admin/companies', element: <CompaniesPage /> },
@@ -24,7 +26,7 @@ export const router = createBrowserRouter(
         { path: '/auth/forgot-password', element: <ForgotPasswordForm /> },
         { path: '/admin', element: <DashboardPage /> },
         { path: '/agent', element: <DashboardPage /> },
-        { path: '/tickets', element: <DashboardPage /> },
+        { path: '/tickets', element: <TicketsPage /> },
       ],
     },
   ],

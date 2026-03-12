@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { Button } from './components/ui/button';
 import { LogOut } from 'lucide-react';
@@ -13,7 +13,7 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b px-6 h-14 flex items-center justify-between">
-        <span className="font-semibold text-lg">ServerDesk</span>
+        <Link to="/">ServerDesk</Link>
 
         {user && (
           <div className="flex items-center gap-4">

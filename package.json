@@ -11,7 +11,8 @@
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "format": "prettier --write .",
     "test": "vitest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "update-types": "supabase gen types typescript --local > supabase/types.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",
@@ -23,7 +24,9 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-error-boundary": "^6.1.1",
     "react-router-dom": "^7.13.1",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1"
   },

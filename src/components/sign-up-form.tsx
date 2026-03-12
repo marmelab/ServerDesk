@@ -13,6 +13,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useInviteToken } from '@/hooks/use_invite_token';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { handleSupabaseError } from '@/lib/error_handler';
 
 export const SignUpForm = ({
   className,
@@ -22,8 +25,6 @@ export const SignUpForm = ({
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
   const [searchParam] = useSearchParams();
@@ -32,21 +33,16 @@ export const SignUpForm = ({
   const { inviteData, inviteValidating, inviteError } =
     useInviteToken(inviteToken);
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (password !== repeatPassword) {
-      setError('Passwords do not match');
-      return;
-    }
-    setIsLoading(true);
-
-    try {
-      const { error } = await supabase.auth.signUp({
+  const { mutate: signUp, isPending } = useMutation({
+    mutationFn: async () => {
+      if (password !== repeatPassword) {
+        throw new Error('Passwords do not match');
+      }
+      await supabase.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/ServerDesk/auth/login`,
           data: {
             name: name,
             company_id: inviteData?.company_id,
@@ -54,14 +50,22 @@ export const SignUpForm = ({
           },
         },
       });
-      if (error) throw error;
-
+    },
+    onSuccess: () => {
       setSuccess(true);
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
-    } finally {
-      setIsLoading(false);
-    }
+    },
+    onError: (error: any) => {
+      if (error.code === 'user_already_exists' || error.status === 400) {
+        toast.error('This email is already taken.');
+        return;
+      }
+      handleSupabaseError(error);
+    },
+  });
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    signUp();
   };
 
   if (inviteValidating) {
@@ -141,7 +145,7 @@ export const SignUpForm = ({
                 </div>
                 {inviteToken && (
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Company</Label>
+                    <Label htmlFor="company">Company</Label>
                     <Input
                       id="company"
                       type="text"
@@ -175,13 +179,12 @@ export const SignUpForm = ({
                     onChange={(e) => setRepeatPassword(e.target.value)}
                   />
                 </div>
-                {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button
                   type="submit"
                   className="w-full cursor-pointer"
-                  disabled={isLoading}
+                  disabled={isPending}
                 >
-                  {isLoading ? 'Creating an account...' : 'Sign up'}
+                  {isPending ? 'Creating an account...' : 'Sign up'}
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">

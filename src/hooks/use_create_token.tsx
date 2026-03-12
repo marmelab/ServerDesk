@@ -1,20 +1,17 @@
-import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
 export function useInviteManager() {
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [inviteToken, setInviteToken] = useState<string | null>(null);
-  const [tokenError, setTokenError] = useState<string | null>(null);
-
-  const createInvite = async (companyId: number) => {
-    setIsGenerating(true);
-    setTokenError(null);
-    setInviteToken(null);
-
-    try {
+  const {
+    mutateAsync: createInviteAction,
+    isPending: isGenerating,
+    data: inviteLink,
+    reset: resetInvite,
+  } = useMutation({
+    mutationFn: async (companyId: number) => {
       const now = new Date();
-      // 7 days
       const expiredAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
       const { data, error: supabaseError } = await supabase
         .from('invite_tokens')
         .insert([
@@ -28,26 +25,14 @@ export function useInviteManager() {
 
       if (supabaseError) throw supabaseError;
 
-      const inviteLink = `${window.location.origin}${import.meta.env.BASE_URL}auth/signup?invite=${data.token}`;
-      setInviteToken(inviteLink);
-    } catch (err: any) {
-      const msg = err.message || 'Failed to generate invite token';
-      setTokenError(msg);
-      return null;
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-  const resetInvite = () => {
-    setInviteToken(null);
-    setTokenError(null);
-  };
+      return `${window.location.origin}${import.meta.env.BASE_URL}auth/signup?invite=${data?.token}`;
+    },
+  });
 
   return {
-    createInvite,
+    createInvite: createInviteAction,
     isGenerating,
-    inviteToken,
-    tokenError,
+    inviteToken: inviteLink || null,
     resetInvite,
   };
 }
