@@ -4,7 +4,8 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { supabase } from '@/lib/supabase';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { SignUpForm } from './sign-up-form';
-import { renderWithProviders } from '@/lib/utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render } from '@testing-library/react';
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
@@ -14,6 +15,16 @@ vi.mock('@/lib/supabase', () => ({
     },
   },
 }));
+
+export function renderWithProviders(ui: React.ReactElement) {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+  );
+}
 
 describe('SignupPage with Invite Token', () => {
   beforeEach(() => {

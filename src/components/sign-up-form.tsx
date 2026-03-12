@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label';
 import { useInviteToken } from '@/hooks/use_invite_token';
 import { useMutation } from '@tanstack/react-query';
 import { handleSupabaseError } from '@/lib/error_handler';
+import { toast } from 'sonner';
 
 export const SignUpForm = ({
   className,
@@ -53,6 +54,15 @@ export const SignUpForm = ({
     },
     onSuccess: () => {
       setSuccess(true);
+    },
+    onError: (error: any) => {
+      if (error.code === 'user_already_exists' || error.status === 400) {
+        toast.error('This email is already taken.');
+        return;
+      }
+
+      const genericMessage = handleSupabaseError(error);
+      toast.error(genericMessage);
     },
   });
 

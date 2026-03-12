@@ -17,43 +17,20 @@ export const handleSupabaseError = (error: any): never => {
 
   switch (status) {
     // HTTP Errors
-    case 400:
-      if (error.message.includes('already registered')) {
-        message = 'This email is already taken.';
-      } else {
-        message = 'Invalid request. Please check your inputs.';
-      }
-      break;
     case 401:
       message = 'Session expired. Please log in again.';
       break;
-    case 404:
-      message = 'The requested resource was not found.';
-      break;
+    case 403:
     case 406:
-      message = 'Not acceptable request or rights. Please try again.';
-      break;
-    case 422:
-      message = 'Validation failed. Some data is incorrect or missing.';
-      break;
-    case 429:
-      message = 'Too many requests.';
-      break;
-
-    // Supabase/Postgres Specific Codes
-    case '23505': // Unique violation
-      message = 'This record already exists.';
-      break;
-    case 'PGRST116': // JSON object requested but none returned
-      message = 'Resource not found.';
-      break;
-    case '42P01':
-      message = 'Database configuration error.';
+      message = "You don't have permission to do this.";
       break;
 
     default:
-      if (status?.toString().startsWith('5')) {
+      const statusNumber = status ? Number(status) : null;
+      if (statusNumber && statusNumber >= 500 && statusNumber < 600) {
         message = 'Internal server error.';
+      } else if (error.code === '23505') {
+        message = 'This record already exists.';
       }
   }
 

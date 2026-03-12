@@ -59,6 +59,7 @@ export default function TicketsPage() {
     data: tickets = [],
     isPending,
     error: queryError,
+    refetch,
   } = useQuery({
     queryKey: ['tickets'],
     queryFn: fetchTickets,
@@ -67,6 +68,7 @@ export default function TicketsPage() {
   const resetTicket = () => {
     setSubject('');
     setDescription('');
+    setPriority('medium');
     setIsOpen(false);
   };
 
@@ -101,11 +103,22 @@ export default function TicketsPage() {
     <div className="container mx-auto py-10">
       {isPending && <p className="text-muted-foreground">Loading...</p>}
 
+      {queryError && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <h3 className="text-xl font-semibold italic">
+            Failed to load tickets
+          </h3>
+          <Button variant="outline" className="mt-6" onClick={() => refetch()}>
+            Try again
+          </Button>
+        </div>
+      )}
+
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
           <header className="mb-8 flex items-center justify-between">
             <h2 className="text-3xl font-bold tracking-tight">Tickets</h2>
-            {user?.role == 'customer_manager' && (
+            {user?.role === 'customer_manager' && (
               <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                   <Button className="cursor-pointer my-10" variant="outline">
@@ -247,9 +260,17 @@ export default function TicketsPage() {
                     </TableRow>
                   );
                 })}
+                {tickets.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={4} className="h-32 text-center">
+                      <div className="flex flex-col items-center justify-center text-muted-foreground">
+                        <p className="text-lg font-medium">No tickets found</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
-            {tickets.length === 0 && <h2>No tickets found.</h2>}
           </div>
         </div>
       )}
