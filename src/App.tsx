@@ -9,11 +9,13 @@ import { LoginForm } from './components/login-form';
 import DashboardPage from '@/pages/dashboard';
 import { ForgotPasswordForm } from './components/forgot-password-form';
 import TicketsPage from '@/pages/tickets';
+import { ErrorFallback } from './components/error-fallback';
 
 export const router = createBrowserRouter(
   [
     {
       element: <Layout />,
+      errorElement: <ErrorFallback />,
       children: [
         { path: '/', element: <DashboardPage /> },
         { path: '/admin/companies', element: <CompaniesPage /> },
