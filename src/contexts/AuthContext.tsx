@@ -13,7 +13,7 @@ export type FullUser = Omit<AppUser, 'id'> & {
 
 interface AuthContextType {
   user: FullUser | null;
-  login: (credentials: SignInWithPasswordCredentials) => Promise<void>;
+  login: (credentials: SignInWithPasswordCredentials) => Promise<FullUser>;
   logout: () => Promise<void>;
 }
 
@@ -63,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (fullUser) setUser(fullUser);
         }
       } catch (error) {
-        console.error("Erreur d'initialisation auth:", error);
+        console.error('Initialization auth error:', error);
       } finally {
         setIsLoading(false);
       }
@@ -84,31 +84,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!user) {
-      const baseURL = `${import.meta.env.BASE_URL}auth/`.replace(/\/+/g, '/');
-      const isAuthPage = window.location.pathname.startsWith(baseURL);
-      if (!isAuthPage) {
-        window.location.href = baseURL + 'login';
-      }
+    const baseURL = `${import.meta.env.BASE_URL}auth/`.replace(/\/+/g, '/');
+    const isAuthPage = window.location.pathname.startsWith(baseURL);
+    if (!user && !isAuthPage) {
+      window.location.href = baseURL + 'login';
+    } else if (user && isAuthPage) {
+      window.location.href = '/';
     }
   }, [user, isLoading]);
 
-  const login = async (credentials: SignInWithPasswordCredentials) => {
+  const login = async (
+    credentials: SignInWithPasswordCredentials,
+  ): Promise<FullUser> => {
     const { data, error: authError } =
       await supabase.auth.signInWithPassword(credentials);
     if (authError) {
       handleSupabaseError(authError);
-      return;
+      throw authError;
     }
 
     if (data.user) {
       const fullUser = await fillAuthUserInfos(data.user);
       if (fullUser) {
         setUser(fullUser);
-      } else {
-        throw new Error('User profile not found in database.');
+        return fullUser;
       }
     }
+    throw new Error('User profile not found in database.');
   };
 
   const logout = async () => {

@@ -77,6 +77,7 @@ describe('TicketsPage', () => {
   });
 
   it('opens dialog and adds a new ticket to the list', async () => {
+    mockUser.role = 'customer_manager';
     const user = userEvent.setup();
     render(<TicketsPage />, { wrapper: Wrapper });
     const buttonAddTicket = await screen.findByRole('button', {

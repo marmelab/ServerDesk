@@ -26,13 +26,13 @@ export const LoginForm = ({
 
   const { mutate: handleLoginAction, isPending } = useMutation({
     mutationFn: async () => {
-      await login({
+      return await login({
         email: email,
         password: password,
       });
     },
-    onSuccess: () => {
-      const role = user?.role;
+    onSuccess: (loggedUser) => {
+      const role = loggedUser.role;
       if (role === 'admin') navigate('/admin');
       else if (role === 'agent') navigate('/agent');
       else navigate('/tickets');
