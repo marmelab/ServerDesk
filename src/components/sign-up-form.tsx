@@ -14,8 +14,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useInviteToken } from '@/hooks/use_invite_token';
 import { useMutation } from '@tanstack/react-query';
-import { handleSupabaseError } from '@/lib/error_handler';
 import { toast } from 'sonner';
+import { handleSupabaseError } from '@/lib/error_handler';
 
 export const SignUpForm = ({
   className,
@@ -38,7 +38,7 @@ export const SignUpForm = ({
       if (password !== repeatPassword) {
         throw new Error('Passwords do not match');
       }
-      const { error } = await supabase.auth.signUp({
+      await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -50,7 +50,6 @@ export const SignUpForm = ({
           },
         },
       });
-      if (error) handleSupabaseError(error);
     },
     onSuccess: () => {
       setSuccess(true);
@@ -60,9 +59,7 @@ export const SignUpForm = ({
         toast.error('This email is already taken.');
         return;
       }
-
-      const genericMessage = handleSupabaseError(error);
-      toast.error(genericMessage);
+      handleSupabaseError(error);
     },
   });
 

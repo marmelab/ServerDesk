@@ -29,7 +29,6 @@ import {
   Statuses,
 } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
-import { handleSupabaseError } from '@/lib/error_handler';
 import { toast } from 'sonner';
 import {
   Table,
@@ -42,7 +41,7 @@ import {
 
 async function fetchTickets(): Promise<Ticket[]> {
   const { data, error } = await supabase.from('tickets').select('*');
-  if (error) handleSupabaseError(error);
+  if (error) throw error;
   return data || [];
 }
 
@@ -75,7 +74,7 @@ export default function TicketsPage() {
   const { mutate: addTicket, isPending: isAdding } = useMutation({
     mutationFn: async (newTicket: TicketInsert) => {
       const { error } = await supabase.from('tickets').insert(newTicket);
-      if (error) handleSupabaseError(error);
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tickets'] });

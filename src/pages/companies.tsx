@@ -19,13 +19,13 @@ import {
   DialogFooter,
   DialogDescription,
 } from '@/components/ui/dialog';
-import { handleSupabaseError } from '@/lib/error_handler';
+
 import { toast } from 'sonner';
 
 async function fetchCompanies(): Promise<Company[]> {
   const { data, error } = await supabase.from('companies').select('*');
   if (error) {
-    handleSupabaseError(error);
+    throw error;
   }
   return data || [];
 }
@@ -53,7 +53,7 @@ export default function CompaniesPage() {
   const { mutate: addCompany, isPending: isAdding } = useMutation({
     mutationFn: async (name: string) => {
       const { error } = await supabase.from('companies').insert({ name });
-      if (error) handleSupabaseError(error);
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['companies'] });

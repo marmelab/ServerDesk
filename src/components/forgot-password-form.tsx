@@ -13,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useMutation } from '@tanstack/react-query';
-import { handleSupabaseError } from '@/lib/error_handler';
 
 export const ForgotPasswordForm = ({
   className,
@@ -28,7 +27,7 @@ export const ForgotPasswordForm = ({
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${import.meta.env.VITE_APP_HOST}:${import.meta.env.VITE_APP_PORT}${import.meta.env.BASE_URL}auth/update-password`,
       });
-      if (error) handleSupabaseError(error);
+      if (error) throw error;
     },
     onSuccess: () => {
       setSuccess(true);

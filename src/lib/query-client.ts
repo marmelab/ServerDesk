@@ -1,17 +1,17 @@
 import { QueryClient, QueryCache, MutationCache } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { handleSupabaseError } from './error_handler';
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error: any) => {
       // For global fetch errors
-      toast.error(error.message);
+      handleSupabaseError(error.message);
     },
   }),
   mutationCache: new MutationCache({
     onError: (error: any) => {
       // For global create/update/delete errors
-      toast.error(error.message);
+      handleSupabaseError(error.message);
     },
   }),
 });

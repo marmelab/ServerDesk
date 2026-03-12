@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 export class AppError extends Error {
   constructor(
     public message: string,
@@ -9,7 +11,7 @@ export class AppError extends Error {
   }
 }
 
-export const handleSupabaseError = (error: any): never => {
+export const handleSupabaseError = (error: any): AppError => {
   if (!error) throw new AppError('An unknown error occurred.');
 
   const status = error.status || error.code;
@@ -33,6 +35,6 @@ export const handleSupabaseError = (error: any): never => {
         message = 'This record already exists.';
       }
   }
-
-  throw new AppError(message, status, error);
+  toast.error(message);
+  return new AppError(message, status, error);
 };

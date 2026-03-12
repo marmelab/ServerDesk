@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import { handleSupabaseError } from '@/lib/error_handler';
 
 export function useInviteManager() {
   const {
@@ -24,7 +23,7 @@ export function useInviteManager() {
         .select('token')
         .single();
 
-      if (supabaseError) handleSupabaseError(supabaseError);
+      if (supabaseError) throw supabaseError;
 
       return `${window.location.origin}${import.meta.env.BASE_URL}auth/signup?invite=${data?.token}`;
     },

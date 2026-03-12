@@ -1,4 +1,3 @@
-import { handleSupabaseError } from '@/lib/error_handler';
 import { supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
 
@@ -15,7 +14,7 @@ export function useInviteToken(token: string | null) {
         .gt('expired_at', new Date().toISOString())
         .maybeSingle();
 
-      if (error) handleSupabaseError(error);
+      if (error) throw error;
 
       if (!data) {
         throw new Error(

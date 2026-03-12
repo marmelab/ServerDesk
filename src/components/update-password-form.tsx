@@ -13,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useMutation } from '@tanstack/react-query';
-import { handleSupabaseError } from '@/lib/error_handler';
 
 export const UpdatePasswordForm = ({
   className,
@@ -28,7 +27,7 @@ export const UpdatePasswordForm = ({
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
-      if (error) handleSupabaseError(error);
+      if (error) throw error;
     },
     onSuccess: () => {
       navigate('/Dashboard');
