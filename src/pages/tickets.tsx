@@ -10,7 +10,6 @@ import {
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -22,10 +21,11 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Ticket, TicketInsert, TicketPriority, Priorities } from '@/types';
+import { Ticket, TicketInsert, TicketPriority, Priorities, Statutes } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { handleSupabaseError } from '@/lib/error_handler';
 import { toast } from 'sonner';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 async function fetchTickets(): Promise<Ticket[]> {
   const { data, error } = await supabase.from('tickets').select('*');
@@ -90,121 +90,146 @@ export default function TicketsPage() {
 
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
-          <header className="mb-12 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl">
+          <header className="mb-8 flex items-center justify-between">
+            <h2 className="text-3xl font-bold tracking-tight">
               Tickets
             </h2>
+            {user?.role == 'customer_manager' && (
+              <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogTrigger asChild>
+                  <Button className="cursor-pointer my-10" variant="outline">
+                    Add Ticket
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <form onSubmit={handleAddTicket}>
+                    <DialogHeader>
+                      <DialogTitle className="text-xl font-semibold tracking-tight">
+                        Add a new ticket
+                      </DialogTitle>
+                    </DialogHeader>
+                    <DialogDescription className="text-muted-foreground pt-1">
+                      Fill the informations of the ticket.
+                    </DialogDescription>
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                        <Label htmlFor="subject" className="text-right">
+                          Subject
+                        </Label>
+                        <Input
+                          type="text"
+                          id="subject"
+                          value={subject}
+                          onChange={(e) => setSubject(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                        <Label htmlFor="description" className="text-right mt-2">
+                          Description
+                        </Label>
+                        <Textarea
+                          id="description"
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          required
+                          rows={4}
+                        />
+                      </div>
+                      <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                        <Label htmlFor="priority" className="text-right">
+                          Priority
+                        </Label>
+                        <Select
+                          value={priority}
+                          onValueChange={(val) =>
+                            setPriority(val as TicketPriority)
+                          }
+                        >
+                          <SelectTrigger id="priority" className="w-full">
+                            <SelectValue placeholder="Choose priority" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Priorities.map((p) => (
+                              <SelectItem key={p.value} value={p.value}>
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={`h-2 w-2 rounded-full ${p.color}`}
+                                  />
+                                  {p.label}
+                                </div>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <DialogFooter className="sm:justify-start">
+                      <Button
+                        className="cursor-pointer my-5"
+                        type="submit"
+                        disabled={isAdding}
+                      >
+                        {isAdding ? 'Creating...' : 'Add Ticket'}
+                      </Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
+            )}
           </header>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {tickets.map((ticket) => (
-              <Card
-                key={ticket.id}
-                className="group relative flex flex-col gap-2 overflow-hidden pt-0"
-              >
-                <CardHeader className="flex-1 pt-4">
-                  <CardTitle className="text-2xl font-semibold text-balance">
-                    {ticket.subject}
-                  </CardTitle>
-                </CardHeader>
-
-                <CardFooter className="flex-col items-start space-y-4 pt-4">
-                  <div className="flex w-full items-baseline justify-between">
-                    <div>
-                      <span className="text-foreground text-xl font-bold">
+          <div className="rounded-md border bg-card">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className='w-[400px]'>
+                    Subject
+                  </TableHead>
+                  <TableHead>
+                    Created At
+                  </TableHead>
+                  <TableHead>
+                    Priority
+                  </TableHead>
+                  <TableHead>
+                    Status
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {tickets.map((ticket) => {
+                  const priorityInfo = Priorities.find(p => p.value === ticket.priority);
+                  const statusInfo = Statutes.find(p => p.value === ticket.status);
+                  return (
+                    <TableRow key={ticket.id} className='cursor-pointer hover:bg-muted/50'>
+                      <TableCell className='font-medium'>
+                        <div className='flex flex-col'>
+                          <span>{ticket.subject}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className='text-muted-foreground'>
                         {new Date(ticket.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                </CardFooter>
-              </Card>
-            ))}
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex items-center gap-2'>
+                          <span className={`h-2 w-2 rounded-full ${priorityInfo?.color}`} />
+                          <span className="capitalize text-sm">{ticket.priority}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex items-center gap-2'>
+                          <span className={`h-2 w-2 rounded-full ${statusInfo?.color}`} />
+                          <span className="capitalize text-sm">{ticket.status}</span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
             {tickets.length === 0 && <h2>No tickets found.</h2>}
           </div>
-
-          {user?.role == 'customer_manager' && (
-            <Dialog open={isOpen} onOpenChange={setIsOpen}>
-              <DialogTrigger asChild>
-                <Button className="cursor-pointer my-10" variant="outline">
-                  Add Ticket
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <form onSubmit={handleAddTicket}>
-                  <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold tracking-tight">
-                      Add a new ticket
-                    </DialogTitle>
-                  </DialogHeader>
-                  <DialogDescription className="text-muted-foreground pt-1">
-                    Fill the informations of the ticket.
-                  </DialogDescription>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-                      <Label htmlFor="subject" className="text-right">
-                        Subject
-                      </Label>
-                      <Input
-                        type="text"
-                        id="subject"
-                        value={subject}
-                        onChange={(e) => setSubject(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-                      <Label htmlFor="description" className="text-right mt-2">
-                        Description
-                      </Label>
-                      <Textarea
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                        rows={4}
-                      />
-                    </div>
-                    <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-                      <Label htmlFor="priority" className="text-right">
-                        Priority
-                      </Label>
-                      <Select
-                        value={priority}
-                        onValueChange={(val) =>
-                          setPriority(val as TicketPriority)
-                        }
-                      >
-                        <SelectTrigger id="priority" className="w-full">
-                          <SelectValue placeholder="Choose priority" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {Priorities.map((p) => (
-                            <SelectItem key={p.value} value={p.value}>
-                              <div className="flex items-center gap-2">
-                                <span
-                                  className={`h-2 w-2 rounded-full ${p.color}`}
-                                />
-                                {p.label}
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <DialogFooter className="sm:justify-start">
-                    <Button
-                      className="cursor-pointer my-5"
-                      type="submit"
-                      disabled={isAdding}
-                    >
-                      {isAdding ? 'Creating...' : 'Add Ticket'}
-                    </Button>
-                  </DialogFooter>
-                </form>
-              </DialogContent>
-            </Dialog>
-          )}
         </div>
       )}
     </div>
