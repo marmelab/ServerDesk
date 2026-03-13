@@ -68,6 +68,12 @@ describe('Test trigger of admin automatic assignation', () => {
       .select('token')
       .single();
 
+    const { data: company } = await supabase
+      .from('companies')
+      .insert([{ name: 'Test Company' }])
+      .select()
+      .single();
+
     const { data: thirdUser, error: err3 } =
       await supabase.auth.admin.createUser({
         email: 'test3@test.fr',
@@ -76,7 +82,7 @@ describe('Test trigger of admin automatic assignation', () => {
         user_metadata: {
           name: 'Test3',
           invite_token: inviteToken?.token,
-          company_id: '1',
+          company_id: company.id,
         },
       });
     if (err3) throw err3;
