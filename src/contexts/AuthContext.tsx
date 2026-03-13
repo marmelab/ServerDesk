@@ -32,11 +32,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .eq('id', authUser.id)
       .maybeSingle();
     if (userError) handleSupabaseError(userError);
-    const { data: userCompanies, error: uesrCompanyError } = await supabase
+    const { data: userCompanies, error: userCompanyError } = await supabase
       .from('user_companies')
       .select('company_id')
       .eq('user_id', authUser.id);
-    if (uesrCompanyError) handleSupabaseError(uesrCompanyError);
+    if (userCompanyError) handleSupabaseError(userCompanyError);
     if (!appUser) return null;
     return {
       ...appUser,

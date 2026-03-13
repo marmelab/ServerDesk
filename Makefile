@@ -48,3 +48,9 @@ format:
 
 test:
 	npm run test
+
+seed:
+	npm run db:seed
+
+prod-seed:
+	npm run db:seed:prod
