@@ -93,6 +93,6 @@ describe('Test trigger of admin automatic assignation', () => {
       .eq('id', thirdUser?.user.id)
       .single();
 
-    expect(profile3?.role).toBe('agent');
+    expect(profile3?.role).toBe('customer_manager');
   });
 });
