@@ -30,7 +30,12 @@ export function AvatarDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          aria-label="User menu"
+        >
           <Avatar>
             <AvatarFallback className="bg-primary text-primary-foreground">
               {getInitials(user?.name)}
@@ -38,9 +43,14 @@ export function AvatarDropdown() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-32">
+      <DropdownMenuContent className="w-45 mx-8">
         <div className="flex flex-col space-y-1 p-2">
-          <p className="text-sm font-medium leading-none">{user?.email}</p>
+          <p
+            className="text-sm font-medium leading-none truncate"
+            title={user?.email}
+          >
+            {user?.email}
+          </p>
         </div>
         <DropdownMenuSeparator />
         {user?.role && (
