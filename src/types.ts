@@ -44,4 +44,16 @@ export type CompanyInsert = Database['public']['Tables']['companies']['Insert'];
 // User
 export type AppUser = Database['public']['Tables']['app_user']['Row'];
 
+interface AppRoleOption {
+  value: AppUserRole;
+  label: string;
+}
+
+export const AppRoles: AppRoleOption[] = [
+  { value: 'admin', label: 'Administrator' },
+  { value: 'agent', label: 'Agent' },
+  { value: 'customer_manager', label: 'Customer Manager' },
+  { value: 'customer', label: 'Customer' },
+];
+
 export type AppUserRole = Database['public']['Enums']['app_role'];
