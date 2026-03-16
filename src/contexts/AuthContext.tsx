@@ -13,6 +13,7 @@ export type FullUser = Omit<AppUser, 'id'> & {
 
 interface AuthContextType {
   user: FullUser | null;
+  isLoading: boolean;
   login: (credentials: SignInWithPasswordCredentials) => Promise<FullUser>;
   logout: () => Promise<void>;
 }
@@ -120,6 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = {
     user,
+    isLoading,
     login,
     logout,
   };

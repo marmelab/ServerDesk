@@ -23,7 +23,9 @@ import {
 import { toast } from 'sonner';
 
 async function fetchCompanies(): Promise<Company[]> {
-  const { data, error } = await supabase.from('companies').select('*');
+  const { data, error } = await supabase
+    .from('companies')
+    .select('id, name, created_at');
   if (error) {
     throw error;
   }
@@ -71,7 +73,10 @@ export default function CompaniesPage() {
   const handleOpenInvite = async (company: Company) => {
     setIsInviteOpen(true);
     resetInvite();
-    await createInvite(company.id);
+    await createInvite({
+      company_id: [company.id],
+      app_role: 'customer_manager',
+    });
   };
 
   if (isPending)
