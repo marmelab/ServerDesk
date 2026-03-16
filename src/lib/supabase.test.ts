@@ -67,7 +67,7 @@ describe('Test trigger of admin automatic assignation', () => {
       .from('invite_tokens')
       .insert([
         {
-          datas: { app_role: 'customer_manager', company_id: [company.id] },
+          metadata: { app_role: 'customer_manager', company_id: [company.id] },
           expired_at: expiredAt.toISOString(),
         },
       ])

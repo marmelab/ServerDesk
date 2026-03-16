@@ -25,11 +25,12 @@ export function useInviteToken(token: string | null) {
 
       const metadata = invite.datas as unknown as InviteTokenInput;
 
-      const { data: company } = await supabase
+      const { data: company, error } = await supabase
         .from('companies')
         .select('name')
         .in('id', metadata.company_id);
 
+      if (error) throw error;
       return { ...invite, companies: company };
     },
     enabled: !!token,
