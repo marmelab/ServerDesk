@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
+import { Database } from 'supabase/types';
+import { TicketInsert } from '@/types';
 
 dotenv.config();
 
@@ -12,7 +14,7 @@ if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
   process.exit(1);
 }
 
-const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY, {
+const supabase = createClient<Database>(SUPABASE_URL, SERVICE_ROLE_KEY, {
   auth: {
     autoRefreshToken: false,
     persistSession: false,
@@ -89,12 +91,14 @@ async function runSeed() {
     if (error) console.error('❌ Error:', error.message);
 
     for (let i = 0; i < 5; i++) {
-      const { error } = await supabase.from('tickets').insert({
+      const newTicket: TicketInsert = {
         subject: faker.hacker.phrase(),
         description: faker.lorem.paragraph(),
-        company_id: companyData?.company_id,
-        customer_id: userData.user?.id,
-      });
+        company_id: companyData?.id as number,
+        customer_id: userData.user?.id as string,
+      };
+
+      const { error } = await supabase.from('tickets').insert(newTicket);
       if (error) console.error('❌ Error:', error.message);
     }
   }
