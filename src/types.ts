@@ -60,3 +60,4 @@ export const AppRoles: AppRoleOption[] = [
 ];
 
 export type AppUserRole = Enums<'app_role'>;
+export type AgentDetails = Tables<'agent_details'>;
