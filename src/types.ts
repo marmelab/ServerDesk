@@ -5,6 +5,9 @@ export type Ticket = Tables<'tickets'>;
 export type TicketInsert = Database['public']['Tables']['tickets']['Insert'];
 export type TicketPriority = Database['public']['Enums']['ticket_priority'];
 export type TicketStatus = Database['public']['Enums']['ticket_status'];
+export type TicketWithCompany = Ticket & {
+  company: Company | null;
+};
 
 interface PriorityOption {
   value: TicketPriority;

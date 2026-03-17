@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
+import { InviteTokenInput } from './use_create_token';
 
 export function useInviteToken(token: string | null) {
   const query = useQuery({
@@ -7,22 +8,30 @@ export function useInviteToken(token: string | null) {
     queryFn: async () => {
       if (!token) return null;
 
-      const { data, error } = await supabase
+      const { data: invite, error: inviteError } = await supabase
         .from('invite_tokens')
-        .select('*, companies(name)')
+        .select('*')
         .eq('token', token)
         .gt('expired_at', new Date().toISOString())
         .maybeSingle();
 
-      if (error) throw error;
+      if (inviteError) throw inviteError;
 
-      if (!data) {
+      if (!invite) {
         throw new Error(
           'This invitation link is already used, invalid or has expired.',
         );
       }
 
-      return data;
+      const metadata = invite.datas as unknown as InviteTokenInput;
+
+      const { data: company, error } = await supabase
+        .from('companies')
+        .select('name')
+        .in('id', metadata.company_id);
+
+      if (error) throw error;
+      return { ...invite, companies: company };
     },
     enabled: !!token,
     retry: false,

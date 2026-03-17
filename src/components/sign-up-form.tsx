@@ -45,7 +45,6 @@ export const SignUpForm = ({
           emailRedirectTo: `${window.location.origin}/ServerDesk/auth/login`,
           data: {
             name: name,
-            company_id: inviteData?.company_id,
             invite_token: inviteToken,
           },
         },
@@ -150,7 +149,7 @@ export const SignUpForm = ({
                       id="company"
                       type="text"
                       required
-                      value={inviteData?.companies.name}
+                      value={inviteData?.companies?.[0]?.name}
                       disabled={true}
                     />
                   </div>

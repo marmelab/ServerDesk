@@ -64,12 +64,22 @@ describe('SignupPage with Invite Token', () => {
           maybeSingle: vi.fn().mockResolvedValue({
             data: {
               id: 'invit-123',
-              company_id: '1',
+              datas: { company_id: [1], app_role: 'customer_manager' },
               token: 'invit-123',
-              companies: { name: 'acme' },
             },
             error: null,
           }),
+        } as any;
+      }
+      if (table === 'companies') {
+        return {
+          select: vi.fn().mockReturnThis(),
+          in: vi.fn().mockReturnThis(),
+          then: (resolve: any) =>
+            resolve({
+              data: [{ name: 'acme' }],
+              error: null,
+            }),
         } as any;
       }
 
@@ -116,7 +126,6 @@ describe('SignupPage with Invite Token', () => {
         options: expect.objectContaining({
           data: expect.objectContaining({
             name: 'new-manager',
-            company_id: '1',
             invite_token: 'invit-123',
           }),
           emailRedirectTo: expect.stringContaining('/auth/login'),

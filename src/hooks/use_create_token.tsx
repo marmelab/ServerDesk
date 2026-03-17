@@ -1,5 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import { AppUserRole } from '@/types';
+
+export interface InviteTokenInput {
+  company_id: number[];
+  app_role: AppUserRole;
+}
 
 export function useInviteManager() {
   const {
@@ -8,7 +14,7 @@ export function useInviteManager() {
     data: inviteLink,
     reset: resetInvite,
   } = useMutation({
-    mutationFn: async (companyId: number) => {
+    mutationFn: async ({ company_id, app_role }: InviteTokenInput) => {
       const now = new Date();
       const expiredAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
@@ -16,7 +22,10 @@ export function useInviteManager() {
         .from('invite_tokens')
         .insert([
           {
-            company_id: companyId,
+            datas: {
+              company_id: company_id,
+              app_role: app_role,
+            },
             expired_at: expiredAt.toISOString(),
           },
         ])

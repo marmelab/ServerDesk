@@ -22,11 +22,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  Ticket,
   TicketInsert,
   TicketPriority,
   Priorities,
   Statuses,
+  TicketWithCompany,
 } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -39,10 +39,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-async function fetchTickets(): Promise<Ticket[]> {
-  const { data, error } = await supabase.from('tickets').select('*');
+async function fetchTickets(): Promise<TicketWithCompany[]> {
+  const { data, error } = await supabase
+    .from('tickets')
+    .select('*, company:companies(name)');
   if (error) throw error;
-  return data || [];
+  return (data as TicketWithCompany[]) || [];
 }
 
 export default function TicketsPage() {
@@ -213,6 +215,9 @@ export default function TicketsPage() {
                   <TableHead>Created At</TableHead>
                   <TableHead>Priority</TableHead>
                   <TableHead>Status</TableHead>
+                  {(user?.role === 'admin' || user?.role === 'agent') && (
+                    <TableHead>Company</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -256,6 +261,9 @@ export default function TicketsPage() {
                           </span>
                         </div>
                       </TableCell>
+                      {(user?.role === 'admin' || user?.role === 'agent') && (
+                        <TableCell>{ticket.company?.name}</TableCell>
+                      )}
                     </TableRow>
                   );
                 })}
