@@ -23,6 +23,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FullUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLogout, setIsLogout] = useState(false);
 
   const fillAuthUserInfos = async (
     authUser: User,
@@ -115,8 +116,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    setIsLogout(true);
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      handleSupabaseError(error);
+      setIsLogout(false);
+      throw error;
+    }
     setUser(null);
+    window.location.href = '/';
   };
 
   const value = {
@@ -125,7 +133,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     login,
     logout,
   };
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {isLoading || isLogout ? (
+        <div className="flex h-screen w-screen items-center justify-center">
+          <div className="animate-pulse text-sm font-medium">
+            {isLogout ? 'Signing out' : 'Handling user'}...
+          </div>
+        </div>
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
+  );
 }
 
 export const useAuth = () => {

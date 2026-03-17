@@ -1,7 +1,7 @@
-import { Database } from 'supabase/types.ts';
+import { Database, Enums, Tables } from 'supabase/types.ts';
 
 // Tickets
-export type Ticket = Database['public']['Tables']['tickets']['Row'];
+export type Ticket = Tables<'tickets'>;
 export type TicketInsert = Database['public']['Tables']['tickets']['Insert'];
 export type TicketPriority = Database['public']['Enums']['ticket_priority'];
 export type TicketStatus = Database['public']['Enums']['ticket_status'];
@@ -41,10 +41,22 @@ export const Statuses: StatusOption[] = [
 ];
 
 // Companies
-export type Company = Database['public']['Tables']['companies']['Row'];
+export type Company = Tables<'companies'>;
 export type CompanyInsert = Database['public']['Tables']['companies']['Insert'];
 
 // User
-export type AppUser = Database['public']['Tables']['app_user']['Row'];
+export type AppUser = Tables<'app_user'>;
 
-export type AppUserRole = Database['public']['Enums']['app_role'];
+interface AppRoleOption {
+  value: AppUserRole;
+  label: string;
+}
+
+export const AppRoles: AppRoleOption[] = [
+  { value: 'admin', label: 'Administrator' },
+  { value: 'agent', label: 'Agent' },
+  { value: 'customer_manager', label: 'Customer Manager' },
+  { value: 'customer', label: 'Customer' },
+];
+
+export type AppUserRole = Enums<'app_role'>;

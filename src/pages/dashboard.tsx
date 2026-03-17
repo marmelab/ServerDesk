@@ -23,10 +23,7 @@ export default function DashboardPage() {
         <div>
           <h2 className="text-3xl font-bold tracking-tight flex items-center gap-2">
             <LayoutDashboard className="h-8 w-8 text-primary" />
-            Dashboard of{' '}
-            <span className="font-medium text-foreground">{user?.email}</span>
-            with role{' '}
-            <span className="font-medium text-foreground">{user?.role}</span>
+            Dashboard
           </h2>
         </div>
       </div>
