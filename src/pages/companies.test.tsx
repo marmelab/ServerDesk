@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import CompaniesPage from './companies';
 import userEvent from '@testing-library/user-event';
 
-const { mockSupabase, mockCompanies } = vi.hoisted(() => {
+const { mockSupabase } = vi.hoisted(() => {
   const companies = [
     { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' },
   ];
