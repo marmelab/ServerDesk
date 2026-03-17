@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { toast } from 'sonner';
-import { fetchCompanies } from '@/lib/utils';
+import { fetchCompanies } from '@/services/companies';
 
 export default function CompaniesPage() {
   const queryClient = useQueryClient();
