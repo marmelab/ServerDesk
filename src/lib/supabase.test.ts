@@ -55,23 +55,23 @@ describe('Test trigger of admin automatic assignation', () => {
     //Third user : customer manager
 
     //Insert token first
+    const { data: company } = await supabase
+      .from('companies')
+      .insert([{ name: 'Test Company' }])
+      .select()
+      .single();
+
     const now = new Date();
     const expiredAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
     const { data: inviteToken } = await supabase
       .from('invite_tokens')
       .insert([
         {
-          company_id: '1',
+          metadata: { app_role: 'customer_manager', company_id: [company.id] },
           expired_at: expiredAt.toISOString(),
         },
       ])
       .select('token')
-      .single();
-
-    const { data: company } = await supabase
-      .from('companies')
-      .insert([{ name: 'Test Company' }])
-      .select()
       .single();
 
     const { data: thirdUser, error: err3 } =
@@ -82,7 +82,6 @@ describe('Test trigger of admin automatic assignation', () => {
         user_metadata: {
           name: 'Test3',
           invite_token: inviteToken?.token,
-          company_id: company.id,
         },
       });
     if (err3) throw err3;

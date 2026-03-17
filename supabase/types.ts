@@ -47,70 +47,59 @@ export type Database = {
       };
       invite_tokens: {
         Row: {
-          company_id: number;
           created_at: string;
+          datas: Json;
           expired_at: string | null;
           id: string;
-          role: Database['public']['Enums']['app_role'] | null;
           token: string | null;
         };
         Insert: {
-          company_id: number;
           created_at?: string;
+          datas?: Json;
           expired_at?: string | null;
           id?: string;
-          role?: Database['public']['Enums']['app_role'] | null;
           token?: string | null;
         };
         Update: {
-          company_id?: number;
           created_at?: string;
+          datas?: Json;
           expired_at?: string | null;
           id?: string;
-          role?: Database['public']['Enums']['app_role'] | null;
           token?: string | null;
         };
-        Relationships: [
-          {
-            foreignKeyName: 'invite_tokens_company_id_fkey';
-            columns: ['company_id'];
-            isOneToOne: false;
-            referencedRelation: 'companies';
-            referencedColumns: ['id'];
-          },
-        ];
+        Relationships: [];
       };
       tickets: {
         Row: {
-          company_id: number;
+          company_id: number | null;
           created_at: string;
-          customer_id: string;
-          description: string;
+          customer_id: string | null;
+          description: string | null;
           id: number;
-          priority: Database['public']['Enums']['ticket_priority'];
-          status: Database['public']['Enums']['ticket_status'];
+          priority: Database['public']['Enums']['ticket_priority'] | null;
+          status: Database['public']['Enums']['ticket_status'] | null;
           subject: string;
           updated_at: string | null;
         };
         Insert: {
-          company_id: number;
+          company_id?: number | null;
           created_at?: string;
-          customer_id: string;
-          description: string;
+          customer_id?: string | null;
+          description?: string | null;
           id?: number;
-          priority?: Database['public']['Enums']['ticket_priority'];
-          status?: Database['public']['Enums']['ticket_status'];
+          priority?: Database['public']['Enums']['ticket_priority'] | null;
+          status?: Database['public']['Enums']['ticket_status'] | null;
           subject: string;
           updated_at?: string | null;
         };
         Update: {
-          company_id?: number;
+          company_id?: number | null;
           created_at?: string;
-          customer_id?: string;
-          description?: string;
+          customer_id?: string | null;
+          description?: string | null;
           id?: number;
-          priority?: Database['public']['Enums']['ticket_priority'];
-          status?: Database['public']['Enums']['ticket_status'];
+          priority?: Database['public']['Enums']['ticket_priority'] | null;
+          status?: Database['public']['Enums']['ticket_status'] | null;
           subject?: string;
           updated_at?: string | null;
         };
@@ -133,7 +122,7 @@ export type Database = {
         Insert: {
           company_id: number;
           created_at?: string;
-          user_id: string;
+          user_id?: string;
         };
         Update: {
           company_id?: number;
