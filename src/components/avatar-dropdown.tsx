@@ -9,16 +9,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
+import { getInitials } from '@/lib/utils';
 import { AppRoles } from '@/types';
-
-export function getInitials(name: string | undefined | null): string {
-  if (!name) return 'U';
-
-  const parts = name.trim().split(/\s+/);
-  if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-
-  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
-}
 
 export function AvatarDropdown() {
   const { user, logout } = useAuth();
