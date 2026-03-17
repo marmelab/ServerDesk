@@ -4,57 +4,64 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import CompaniesPage from './companies';
 import userEvent from '@testing-library/user-event';
 
-let mockUser: any = null;
+const { mockSupabase, mockCompanies } = vi.hoisted(() => {
+  const companies = [
+    { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' },
+  ];
+
+  const internalMock = {
+    from: vi.fn().mockReturnThis(),
+    insert: vi.fn().mockImplementation((newData) => {
+      const dataToInsert = Array.isArray(newData) ? newData[0] : newData;
+      if (dataToInsert?.name) {
+        companies.push({
+          id: Math.random(),
+          name: dataToInsert.name,
+          created_at: new Date().toISOString(),
+        });
+      }
+      return Object.assign(
+        Promise.resolve({ data: dataToInsert, error: null }),
+        internalMock,
+      );
+    }),
+    select: vi.fn().mockImplementation((columns) => {
+      if (columns === 'token') return internalMock;
+      return Promise.resolve({ data: companies, error: null });
+    }),
+    single: vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve({ data: { token: 'mock-token-123' }, error: null }),
+      ),
+    match: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+  };
+
+  return { mockSupabase: internalMock, mockCompanies: companies };
+});
+
+vi.mock('@/lib/supabase', () => ({
+  supabase: mockSupabase,
+}));
+
+const { mockState } = vi.hoisted(() => ({
+  mockState: { user: null as any },
+}));
+
 vi.mock('@/contexts/AuthContext', () => ({
   useAuth: () => ({
-    user: mockUser,
+    user: mockState.user,
     login: vi.fn(),
     logout: vi.fn(),
   }),
 }));
 
-vi.mock('@/hooks/use_create_token', () => ({
-  useInviteManager: vi.fn(() => ({
-    createInvite: vi.fn(),
-    isGenerating: false,
-    inviteToken: 'http://localhost:5173/auth/signup?invite=mock-token-123',
-    error: null,
-    resetInvite: vi.fn(),
-  })),
-}));
-
-let mockCompanies = [
-  { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' },
-];
-
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn().mockImplementation(() =>
-        Promise.resolve({
-          data: mockCompanies,
-          error: null,
-        }),
-      ),
-      insert: vi.fn((newData) => {
-        const record = Array.isArray(newData) ? newData[0] : newData;
-        const newEntry = {
-          id: Math.random(),
-          name: record.name,
-          created_at: new Date().toISOString(),
-        };
-
-        mockCompanies.push(newEntry);
-        return Promise.resolve({ data: [newEntry], error: null });
-      }),
-    })),
-  },
-}));
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { retry: false, gcTime: 0 } },
+});
 
 function Wrapper({ children }: { children: React.ReactNode }) {
-  const queryClient = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
@@ -101,7 +108,7 @@ describe('CompaniesPage', () => {
   });
 
   it('Show Invite Manager button only if user is admin', async () => {
-    mockUser = { id: '1', role: 'admin', name: 'Boss' };
+    mockState.user = { id: '1', role: 'admin', name: 'Boss' };
     const user = userEvent.setup();
     render(<CompaniesPage />, { wrapper: Wrapper });
     expect(await screen.findByText('Companies')).toBeInTheDocument();
@@ -124,7 +131,7 @@ describe('CompaniesPage', () => {
   });
 
   it('Do not show Invite Manager button if user is not admin', async () => {
-    mockUser = { id: '1', role: 'agent', name: 'Agent' };
+    mockState.user = { id: '1', role: 'agent', name: 'Agent' };
 
     render(<CompaniesPage />, { wrapper: Wrapper });
     expect(await screen.findByText('Companies')).toBeInTheDocument();
