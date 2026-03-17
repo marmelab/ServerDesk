@@ -1,5 +1,5 @@
-npx lint
-npx format
-npx typecheck
+make lint
+make format
+make typecheck
 npx lint-staged
-npm test
+make test

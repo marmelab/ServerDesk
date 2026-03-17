@@ -1,5 +1,6 @@
 import { Check, ChevronsUpDown } from 'lucide-react';
-import { cn, fetchCompanies } from '@/lib/utils';
+import { cn } from '@/lib/utils';
+import { fetchCompanies } from '@/services/companies';
 import { Button } from '@/components/ui/button';
 import {
   Command,
