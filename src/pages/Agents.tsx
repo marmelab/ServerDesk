@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import type { AgentDetails } from '@/types';
+import { type AgentDetails } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserPlus } from 'lucide-react';
+import { useState } from 'react';
+import { InviteDialog } from '@/components/InviteDialog';
 
 async function fetchAgents(): Promise<AgentDetails[]> {
   const { data, error } = await supabase.from('agent_details').select('*');
@@ -14,6 +16,8 @@ async function fetchAgents(): Promise<AgentDetails[]> {
 }
 
 export default function AgentsPage() {
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
+
   const {
     data: agents = [],
     isPending,
@@ -23,7 +27,9 @@ export default function AgentsPage() {
     queryFn: fetchAgents,
   });
 
-  const handleOpenInvite = async () => {};
+  const handleOpenInvite = async () => {
+    setIsInviteOpen(true);
+  };
 
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
@@ -67,6 +73,13 @@ export default function AgentsPage() {
             ))}
             {agents.length === 0 && <h2>No agents found.</h2>}
           </div>
+
+          <InviteDialog
+            open={isInviteOpen}
+            onOpenChange={setIsInviteOpen}
+            initialCompanyId={null}
+            appRole={'agent'}
+          />
         </div>
       )}
     </div>

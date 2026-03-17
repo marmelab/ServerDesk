@@ -23,7 +23,7 @@ export function useInviteToken(token: string | null) {
         );
       }
 
-      const metadata = invite.datas as unknown as InviteTokenInput;
+      const metadata = invite.metadata as unknown as InviteTokenInput;
 
       const { data: company, error } = await supabase
         .from('companies')

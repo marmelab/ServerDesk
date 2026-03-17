@@ -1,5 +1,7 @@
+import { Company } from '@/types';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { supabase } from './supabase';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,4 +33,14 @@ export function getInitials(name: string | undefined | null): string {
   if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
 
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+export async function fetchCompanies(): Promise<Company[]> {
+  const { data, error } = await supabase
+    .from('companies')
+    .select('id, name, created_at');
+  if (error) {
+    throw error;
+  }
+  return data || [];
 }

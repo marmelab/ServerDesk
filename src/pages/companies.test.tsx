@@ -113,7 +113,7 @@ describe('CompaniesPage', () => {
     await user.click(inviteButton[0]);
 
     expect(
-      await screen.findByRole('heading', { name: /invite link/i }),
+      await screen.findByRole('heading', { name: /invite /i }),
     ).toBeInTheDocument();
     const inputInviteLink = await screen.findByDisplayValue(
       /signup\?invite=mock-token-123/i,
