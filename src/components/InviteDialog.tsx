@@ -64,10 +64,7 @@ export function InviteDialog({
               onChange={setSelectedIds}
             />
 
-            <Button
-              disabled={selectedIds.length === 0}
-              onClick={() => handleGenerate(selectedIds)}
-            >
+            <Button onClick={() => handleGenerate(selectedIds)}>
               Generate Invite Link
             </Button>
           </div>
