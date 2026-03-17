@@ -2,8 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { type AgentDetails } from '@/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { UserPlus } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { InviteDialog } from '@/components/InviteDialog';
 
@@ -66,9 +73,22 @@ export default function AgentsPage() {
                   <CardTitle className="text-2xl font-semibold text-balance">
                     {agent.name}
                   </CardTitle>
+                  <CardDescription>{agent.email}</CardDescription>
                 </CardHeader>
 
-                <CardFooter className="flex-col items-start space-y-4 pt-4"></CardFooter>
+                <CardFooter className="flex flex-row flex-wrap gap-2 pt-4">
+                  {((agent.company_names as string[]) || []).map(
+                    (companyName) => (
+                      <Badge
+                        key={companyName}
+                        variant="secondary"
+                        className="whitespace-nowrap"
+                      >
+                        {companyName}
+                      </Badge>
+                    ),
+                  )}
+                </CardFooter>
               </Card>
             ))}
             {agents.length === 0 && <h2>No agents found.</h2>}
