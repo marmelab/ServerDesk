@@ -1,2 +1,5 @@
+npx lint
+npx format
+npx typecheck
 npx lint-staged
 npm test
