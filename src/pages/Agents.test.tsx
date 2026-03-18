@@ -20,6 +20,13 @@ const { mockSupabase } = vi.hoisted(() => {
       role: 'agent',
       companies: [{ id: 2, name: 'looney' }],
     },
+    {
+      id: '2',
+      name: 'AgentTest2',
+      email: 'agent2@test.com',
+      role: 'agent',
+      companies: [],
+    },
   ];
   const companies = [
     { id: 1, name: 'acme' },
@@ -37,6 +44,7 @@ const { mockSupabase } = vi.hoisted(() => {
         }
         return Promise.resolve({ data: [], error: null });
       }),
+      delete: vi.fn().mockReturnThis(),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
           single: vi.fn().mockResolvedValue({
@@ -125,6 +133,39 @@ describe('AgentsPage', () => {
 
     await waitFor(() => {
       expect(screen.queryByText(/generate/i)).not.toBeInTheDocument();
+    });
+  });
+
+  it('opens dialog and assign companies', async () => {
+    const user = userEvent.setup();
+    render(
+      <QueryClientProvider client={queryClient}>
+        <AgentsPage />
+      </QueryClientProvider>,
+    );
+    const buttonsInviteAgent = await screen.findAllByRole('button', {
+      name: /assign/i,
+    });
+    await user.click(buttonsInviteAgent[0]);
+
+    const labelAgent = await screen.findByText(
+      /assign companies to agent agenttest/i,
+    );
+    expect(labelAgent).toBeInTheDocument();
+
+    const selectTrigger = await screen.findByText(/companies selected/i);
+    await user.click(selectTrigger);
+
+    const companyOption = await screen.findByText('acme');
+    await user.click(companyOption);
+
+    const saveAssign = await screen.findByRole('button', {
+      name: /save/i,
+    });
+    await user.click(saveAssign);
+
+    await waitFor(() => {
+      expect(screen.queryByText(/save/i)).not.toBeInTheDocument();
     });
   });
 });
