@@ -1,4 +1,4 @@
-alter table "public"."agent_details" rename column 'company_names' to 'companies';
+alter table "public"."agent_details" rename column "company_names" to "companies";
 
 create or replace view "public"."agent_details" as  SELECT COALESCE(au.id, '00000000-0000-0000-0000-000000000000'::uuid) AS id,
     u.email,
