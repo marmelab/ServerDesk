@@ -25,7 +25,7 @@ export function AvatarDropdown() {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className="rounded-full cursor-pointer"
           aria-label="User menu"
         >
           <Avatar>
@@ -35,26 +35,19 @@ export function AvatarDropdown() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-45 mx-8">
+      <DropdownMenuContent className="min-w-30 max-w-70 mx-8">
         <div className="flex flex-col space-y-1 p-2">
           <p
             className="text-sm font-medium leading-none truncate"
-            title={user?.email}
+            title={user?.name}
           >
+            {user?.name}
+          </p>
+          <p className="text-muted-foreground leading-none truncate pt-2">
             {user?.email}
           </p>
         </div>
         <DropdownMenuSeparator />
-        {user?.role && (
-          <>
-            <DropdownMenuGroup>
-              <DropdownMenuItem className="cursor-default">
-                Role: {AppRoles.find((r) => r.value === user?.role)?.label}
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-          </>
-        )}
         <DropdownMenuItem
           className="cursor-pointer text-destructive focus:text-destructive"
           onSelect={handleSignOut}
