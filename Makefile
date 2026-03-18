@@ -9,6 +9,10 @@ start-app:
 start-supabase:
 	npx supabase start
 
+name ?= auto_generated_migration
+supabase-update-migration:
+	npx supabase db diff --schema public --use-migra -f $(name)
+
 supabase-migrate-database: ## apply the migrations to the database
 	npx supabase migration up
 
