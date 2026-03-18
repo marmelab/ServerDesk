@@ -12,17 +12,20 @@ interface AssignCompaniesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   agentId: string | null;
+  initialCompanies: number[];
 }
 
 export function AssignCompaniesDialog({
   open,
   onOpenChange,
   agentId,
+  initialCompanies,
 }: AssignCompaniesDialogProps) {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   useEffect(() => {
     if (open) {
+      setSelectedIds(initialCompanies);
     }
   });
 

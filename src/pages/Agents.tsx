@@ -13,11 +13,13 @@ import { useState } from 'react';
 import { InviteDialog } from '@/components/InviteDialog';
 import { fetchAgents } from '@/services/Agents';
 import { AssignCompaniesDialog } from '@/components/AssignCompaniesDialog';
+import { CompanyJson } from '@/types';
 
 export default function AgentsPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [isAssignCompaniesOpen, setIsAssignCompaniesOpen] = useState(false);
   const [agentId, setAgentId] = useState<string | null>(null);
+  const [agentCompaniesIds, setAgentCompaniesIds] = useState<number[]>([]);
 
   const {
     data: agents = [],
@@ -32,8 +34,12 @@ export default function AgentsPage() {
     setIsInviteOpen(true);
   };
 
-  const handleAssignCompanies = (agentId: string | null) => {
+  const handleAssignCompanies = (
+    agentId: string | null,
+    agentCompanies: number[],
+  ) => {
     setAgentId(agentId);
+    setAgentCompaniesIds(agentCompanies);
     setIsAssignCompaniesOpen(true);
   };
 
@@ -82,20 +88,29 @@ export default function AgentsPage() {
                   </CardHeader>
 
                   <CardFooter className="flex flex-row flex-wrap gap-2 pt-4">
-                    {((agent.company_names as string[]) || []).map(
-                      (companyName) => (
+                    {(agent.companies as CompanyJson[])?.length > 0 ? (
+                      (agent.companies as CompanyJson[]).map((company) => (
                         <Badge
-                          key={companyName}
+                          key={company.name}
                           variant="secondary"
                           className="whitespace-nowrap"
                         >
-                          {companyName}
+                          {company.name}
                         </Badge>
-                      ),
+                      ))
+                    ) : (
+                      <span className="text-sm text-muted-foreground">
+                        No companies assigned
+                      </span>
                     )}
                     <Button
                       className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
-                      onClick={() => handleAssignCompanies(agent.id)}
+                      onClick={() => {
+                        const currentCompanies =
+                          (agent.companies as CompanyJson[]) ?? [];
+                        const companyIds = currentCompanies.map((c) => c.id);
+                        handleAssignCompanies(agent.id, companyIds);
+                      }}
                     >
                       Assign companies
                       <svg
@@ -128,6 +143,7 @@ export default function AgentsPage() {
             open={isAssignCompaniesOpen}
             onOpenChange={setIsAssignCompaniesOpen}
             agentId={agentId}
+            initialCompanies={agentCompaniesIds}
           />
         </div>
       )}

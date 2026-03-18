@@ -18,7 +18,7 @@ const { mockSupabase } = vi.hoisted(() => {
       name: 'AgentTest',
       email: 'agent@test.com',
       role: 'agent',
-      company_names: ['looney'],
+      companies: [{ id: 2, name: 'looney' }],
     },
   ];
   const companies = [
