@@ -13,13 +13,12 @@ import { useState } from 'react';
 import { InviteDialog } from '@/components/InviteDialog';
 import { fetchAgents } from '@/services/Agents';
 import { AssignCompaniesDialog } from '@/components/AssignCompaniesDialog';
-import { CompanyJson } from '@/types';
+import { AgentDetails, CompanyJson } from '@/types';
 
 export default function AgentsPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
   const [isAssignCompaniesOpen, setIsAssignCompaniesOpen] = useState(false);
-  const [agentId, setAgentId] = useState<string | null>(null);
-  const [agentCompaniesIds, setAgentCompaniesIds] = useState<number[]>([]);
+  const [agent, setAgent] = useState<AgentDetails>();
 
   const {
     data: agents = [],
@@ -34,12 +33,8 @@ export default function AgentsPage() {
     setIsInviteOpen(true);
   };
 
-  const handleAssignCompanies = (
-    agentId: string | null,
-    agentCompanies: number[],
-  ) => {
-    setAgentId(agentId);
-    setAgentCompaniesIds(agentCompanies);
+  const handleAssignCompanies = (agent: AgentDetails) => {
+    setAgent(agent);
     setIsAssignCompaniesOpen(true);
   };
 
@@ -105,12 +100,7 @@ export default function AgentsPage() {
                     )}
                     <Button
                       className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
-                      onClick={() => {
-                        const currentCompanies =
-                          (agent.companies as CompanyJson[]) ?? [];
-                        const companyIds = currentCompanies.map((c) => c.id);
-                        handleAssignCompanies(agent.id, companyIds);
-                      }}
+                      onClick={() => handleAssignCompanies(agent)}
                     >
                       Assign companies
                       <svg
@@ -142,8 +132,7 @@ export default function AgentsPage() {
           <AssignCompaniesDialog
             open={isAssignCompaniesOpen}
             onOpenChange={setIsAssignCompaniesOpen}
-            agentId={agentId}
-            initialCompanies={agentCompaniesIds}
+            agent={agent!}
           />
         </div>
       )}

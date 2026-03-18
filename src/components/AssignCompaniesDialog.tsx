@@ -7,33 +7,53 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog';
+import { Button } from './ui/button';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
+import { updateAgentCompanies } from '@/services/Agents';
+import { AgentDetails } from '@/types';
 
 interface AssignCompaniesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  agentId: string | null;
-  initialCompanies: number[];
+  agent: AgentDetails | null;
 }
 
 export function AssignCompaniesDialog({
   open,
   onOpenChange,
-  agentId,
-  initialCompanies,
+  agent,
 }: AssignCompaniesDialogProps) {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+  const queryClient = useQueryClient();
+
+  const { mutate: handleSave, isPending } = useMutation({
+    mutationFn: () => updateAgentCompanies(agent?.id!, selectedIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['agents'] });
+      onOpenChange(false);
+      toast.success('Companies assigned successfully!');
+    },
+  });
+
   useEffect(() => {
     if (open) {
-      setSelectedIds(initialCompanies);
+      setSelectedIds(
+        ((agent?.companies as { id: number; name: string }[]) ?? []).map(
+          (c) => c.id,
+        ),
+      );
     }
-  });
+  }, [open, agent?.companies]);
+
+  if (!agent) return;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent aria-label="Assign companies dialog">
         <DialogHeader>
-          <DialogTitle>Assign companies to agent {agentId}</DialogTitle>
+          <DialogTitle>Assign companies to agent {agent.name}</DialogTitle>
           <DialogDescription />
         </DialogHeader>
         <div className="space-y-4">
@@ -41,6 +61,17 @@ export function AssignCompaniesDialog({
             selectedIds={selectedIds}
             onChange={setSelectedIds}
           />
+        </div>
+        <div className="flex justify-end gap-2 mt-4">
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleSave()}
+            disabled={isPending || !agent.id}
+          >
+            {isPending ? 'Saving...' : 'Save Changes'}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
