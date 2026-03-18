@@ -48,24 +48,24 @@ export type Database = {
       invite_tokens: {
         Row: {
           created_at: string;
-          datas: Json;
-          expired_at: string | null;
+          expired_at: string;
           id: string;
-          token: string | null;
+          metadata: Json;
+          token: string;
         };
         Insert: {
           created_at?: string;
-          datas?: Json;
-          expired_at?: string | null;
+          expired_at: string;
           id?: string;
-          token?: string | null;
+          metadata?: Json;
+          token?: string;
         };
         Update: {
           created_at?: string;
-          datas?: Json;
-          expired_at?: string | null;
+          expired_at?: string;
           id?: string;
-          token?: string | null;
+          metadata?: Json;
+          token?: string;
         };
         Relationships: [];
       };
@@ -141,7 +141,15 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      agent_details: {
+        Row: {
+          company_names: Json | null;
+          email: string | null;
+          id: string | null;
+          name: string | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       [_ in never]: never;

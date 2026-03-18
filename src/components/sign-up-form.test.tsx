@@ -64,7 +64,7 @@ describe('SignupPage with Invite Token', () => {
           maybeSingle: vi.fn().mockResolvedValue({
             data: {
               id: 'invit-123',
-              datas: { company_id: [1], app_role: 'customer_manager' },
+              metadata: { company_id: [1], app_role: 'customer_manager' },
               token: 'invit-123',
             },
             error: null,

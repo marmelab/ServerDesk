@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
-import { InviteTokenInput } from './use_create_token';
+import { InviteTokenInput } from './UseCreateToken';
 
 export function useInviteToken(token: string | null) {
   const query = useQuery({
@@ -23,7 +23,7 @@ export function useInviteToken(token: string | null) {
         );
       }
 
-      const metadata = invite.datas as unknown as InviteTokenInput;
+      const metadata = invite.metadata as unknown as InviteTokenInput;
 
       const { data: company, error } = await supabase
         .from('companies')

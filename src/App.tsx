@@ -3,6 +3,7 @@ import { queryClient } from './lib/query-client';
 import { QueryClientProvider } from '@tanstack/react-query';
 import Layout from '@/layout';
 import CompaniesPage from '@/pages/companies';
+import AgentsPage from './pages/Agents';
 import { SignUpForm } from './components/sign-up-form';
 import { UpdatePasswordForm } from './components/update-password-form';
 import { LoginForm } from './components/login-form';
@@ -19,6 +20,7 @@ export const router = createBrowserRouter(
       children: [
         { path: '/', element: <DashboardPage /> },
         { path: '/admin/companies', element: <CompaniesPage /> },
+        { path: '/admin/agents', element: <AgentsPage /> },
         { path: '/auth/signup', element: <SignUpForm /> },
         { path: '/dashboard', element: <DashboardPage /> },
         { path: '/auth/login', element: <LoginForm /> },

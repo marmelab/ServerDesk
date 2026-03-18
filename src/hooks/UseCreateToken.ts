@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
-import { AppUserRole } from '@/types';
+import { AppUserRole, InviteTokenInsert } from '@/types';
 
 export interface InviteTokenInput {
   company_id: number[];
@@ -12,7 +12,7 @@ export function useInviteManager() {
     mutateAsync: createInviteAction,
     isPending: isGenerating,
     data: inviteLink,
-    reset: resetInvite,
+    reset,
   } = useMutation({
     mutationFn: async ({ company_id, app_role }: InviteTokenInput) => {
       const now = new Date();
@@ -22,18 +22,17 @@ export function useInviteManager() {
         .from('invite_tokens')
         .insert([
           {
-            datas: {
+            metadata: {
               company_id: company_id,
               app_role: app_role,
             },
             expired_at: expiredAt.toISOString(),
           },
-        ])
+        ] as InviteTokenInsert[])
         .select('token')
         .single();
 
       if (supabaseError) throw supabaseError;
-
       return `${window.location.origin}${import.meta.env.BASE_URL}auth/signup?invite=${data?.token}`;
     },
   });
@@ -41,7 +40,7 @@ export function useInviteManager() {
   return {
     createInvite: createInviteAction,
     isGenerating,
-    inviteToken: inviteLink || null,
-    resetInvite,
+    inviteToken: inviteLink ?? null,
+    reset,
   };
 }

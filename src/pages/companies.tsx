@@ -1,13 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import React, { useState } from 'react';
-import type { Company } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useInviteManager } from '@/hooks/use_create_token';
-import { InviteManagerDialog } from '@/components/invite-manager-dialog';
+import { InviteDialog } from '@/components/InviteDialog';
 import { useAuth } from '@/contexts/AuthContext';
 
 import {
@@ -21,16 +19,7 @@ import {
 } from '@/components/ui/dialog';
 
 import { toast } from 'sonner';
-
-async function fetchCompanies(): Promise<Company[]> {
-  const { data, error } = await supabase
-    .from('companies')
-    .select('id, name, created_at');
-  if (error) {
-    throw error;
-  }
-  return data || [];
-}
+import { fetchCompanies } from '@/services/companies';
 
 export default function CompaniesPage() {
   const queryClient = useQueryClient();
@@ -39,9 +28,7 @@ export default function CompaniesPage() {
   const [company, setCompany] = useState('');
   const [isAddCompanyOpen, setIsAddCompanyOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
-
-  const { createInvite, isGenerating, inviteToken, resetInvite } =
-    useInviteManager();
+  const [inviteCompanyId, setInviteCompanyId] = useState<number | null>(null);
 
   const {
     data: companies = [],
@@ -70,13 +57,9 @@ export default function CompaniesPage() {
     addCompany(company);
   };
 
-  const handleOpenInvite = async (company: Company) => {
+  const handleOpenInvite = async (companyId: number) => {
+    setInviteCompanyId(companyId);
     setIsInviteOpen(true);
-    resetInvite();
-    await createInvite({
-      company_id: [company.id],
-      app_role: 'customer_manager',
-    });
   };
 
   if (isPending)
@@ -115,7 +98,7 @@ export default function CompaniesPage() {
                   {user?.role == 'admin' && (
                     <Button
                       className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
-                      onClick={() => handleOpenInvite(company)}
+                      onClick={() => handleOpenInvite(company.id)}
                     >
                       Invite Manager
                       <svg
@@ -183,11 +166,11 @@ export default function CompaniesPage() {
             </DialogContent>
           </Dialog>
 
-          <InviteManagerDialog
+          <InviteDialog
             open={isInviteOpen}
             onOpenChange={setIsInviteOpen}
-            inviteToken={inviteToken}
-            isGenerating={isGenerating}
+            initialCompanyId={inviteCompanyId}
+            appRole={'customer_manager'}
           />
         </div>
       )}
