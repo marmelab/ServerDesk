@@ -13,6 +13,7 @@ import { UserPlus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { InviteDialog } from '@/components/InviteDialog';
+import { AssignCompaniesDialog } from '@/components/AssignCompaniesDialog';
 
 async function fetchAgents(): Promise<AgentDetails[]> {
   const { data, error } = await supabase.from('agent_details').select('*');
@@ -24,6 +25,8 @@ async function fetchAgents(): Promise<AgentDetails[]> {
 
 export default function AgentsPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [isAssignCompaniesOpen, setIsAssignCompaniesOpen] = useState(false);
+  const [agentId, setAgentId] = useState<string | null>(null);
 
   const {
     data: agents = [],
@@ -36,6 +39,11 @@ export default function AgentsPage() {
 
   const handleOpenInvite = async () => {
     setIsInviteOpen(true);
+  };
+
+  const handleAssignCompanies = (agentId: string | null) => {
+    setAgentId(agentId);
+    setIsAssignCompaniesOpen(true);
   };
 
   if (isPending)
@@ -95,6 +103,25 @@ export default function AgentsPage() {
                       ),
                     )
                   )}
+                  <Button
+                    className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
+                    onClick={() => handleAssignCompanies(agent.id)}
+                  >
+                    Assign companies
+                    <svg
+                      className="ms-2 size-4"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
@@ -106,6 +133,12 @@ export default function AgentsPage() {
             onOpenChange={setIsInviteOpen}
             initialCompanyId={null}
             appRole={'agent'}
+          />
+
+          <AssignCompaniesDialog
+            open={isAssignCompaniesOpen}
+            onOpenChange={setIsAssignCompaniesOpen}
+            agentId={agentId}
           />
         </div>
       )}
