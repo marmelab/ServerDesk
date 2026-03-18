@@ -77,16 +77,23 @@ export default function AgentsPage() {
                 </CardHeader>
 
                 <CardFooter className="flex flex-row flex-wrap gap-2 pt-4">
-                  {((agent.company_names as string[]) || []).map(
-                    (companyName) => (
-                      <Badge
-                        key={companyName}
-                        variant="secondary"
-                        className="whitespace-nowrap"
-                      >
-                        {companyName}
-                      </Badge>
-                    ),
+                  {!agent.company_names ||
+                  (agent.company_names as string[]).length === 0 ? (
+                    <span className="text-sm text-muted-foreground">
+                      No companies assigned
+                    </span>
+                  ) : (
+                    ((agent.company_names as string[]) || []).map(
+                      (companyName) => (
+                        <Badge
+                          key={companyName}
+                          variant="secondary"
+                          className="whitespace-nowrap"
+                        >
+                          {companyName}
+                        </Badge>
+                      ),
+                    )
                   )}
                 </CardFooter>
               </Card>
