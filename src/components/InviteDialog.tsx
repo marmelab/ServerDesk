@@ -34,7 +34,7 @@ export function InviteDialog({
 
   useEffect(() => {
     if (!open) {
-      reset;
+      reset();
       setStep('selection');
       setSelectedIds(initialCompanyId ? [initialCompanyId] : []);
     } else if (initialCompanyId) {

@@ -28,7 +28,7 @@ export default function CompaniesPage() {
   const [company, setCompany] = useState('');
   const [isAddCompanyOpen, setIsAddCompanyOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
-  const [inviteCompany, setInviteCompany] = useState<number | null>(null);
+  const [inviteCompanyId, setInviteCompanyId] = useState<number | null>(null);
 
   const {
     data: companies = [],
@@ -58,7 +58,7 @@ export default function CompaniesPage() {
   };
 
   const handleOpenInvite = async (companyId: number) => {
-    setInviteCompany(companyId);
+    setInviteCompanyId(companyId);
     setIsInviteOpen(true);
   };
 
@@ -169,7 +169,7 @@ export default function CompaniesPage() {
           <InviteDialog
             open={isInviteOpen}
             onOpenChange={setIsInviteOpen}
-            initialCompanyId={inviteCompany}
+            initialCompanyId={inviteCompanyId}
             appRole={'customer_manager'}
           />
         </div>
