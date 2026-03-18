@@ -144,12 +144,19 @@ export const SignUpForm = ({
                 </div>
                 {inviteToken && (
                   <div className="grid gap-2">
-                    <Label htmlFor="company">Company</Label>
+                    <Label htmlFor="company">
+                      {(inviteData?.companies?.length ?? 0) > 1
+                        ? 'Companies'
+                        : 'Company'}
+                    </Label>
                     <Input
                       id="company"
                       type="text"
                       required
-                      value={inviteData?.companies?.[0]?.name}
+                      value={
+                        inviteData?.companies?.map((c) => c?.name).join(', ') ||
+                        ''
+                      }
                       disabled={true}
                     />
                   </div>

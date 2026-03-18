@@ -70,26 +70,24 @@ export default function DashboardPage() {
             </Card>
           </>
         )}
-        {(user?.role == 'admin' || user?.role == 'customer_manager') && (
-          <Card className="hover:shadow-md transition-shadow border-2 border-transparent hover:border-primary/20">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xl font-medium">Tickets</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Link
-                to="/tickets/"
-                className={buttonVariants({
-                  variant: 'default',
-                  size: 'sm',
-                  className: 'w-full group',
-                })}
-              >
-                View List
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </CardContent>
-          </Card>
-        )}
+        <Card className="hover:shadow-md transition-shadow border-2 border-transparent hover:border-primary/20">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-xl font-medium">Tickets</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Link
+              to="/tickets/"
+              className={buttonVariants({
+                variant: 'default',
+                size: 'sm',
+                className: 'w-full group',
+              })}
+            >
+              View List
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

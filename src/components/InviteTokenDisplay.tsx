@@ -1,6 +1,7 @@
-import { Copy, Loader2 } from 'lucide-react';
+import { Check, Copy, Loader2 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
+import { useState } from 'react';
 
 export function InviteTokenDisplay({
   isGenerating,
@@ -9,6 +10,20 @@ export function InviteTokenDisplay({
   isGenerating: boolean;
   inviteToken: string | null;
 }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    if (inviteToken) {
+      try {
+        await navigator.clipboard.writeText(inviteToken);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error('Failed to copy!', err);
+      }
+    }
+  };
+
   if (isGenerating) {
     return (
       <div className="flex flex-col items-center py-6 gap-2">
@@ -23,11 +38,12 @@ export function InviteTokenDisplay({
   return (
     <div className="flex items-center space-x-2">
       <Input readOnly value={inviteToken} className="font-mono text-xs" />
-      <Button
-        size="icon"
-        onClick={() => navigator.clipboard.writeText(inviteToken)}
-      >
-        <Copy className="h-4 w-4" />
+      <Button size="icon" onClick={handleCopy} disabled={!inviteToken}>
+        {copied ? (
+          <Check className="h-4 w-4 text-green-500" />
+        ) : (
+          <Copy className="h-4 w-4" />
+        )}
       </Button>
     </div>
   );
