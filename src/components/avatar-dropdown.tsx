@@ -3,14 +3,12 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { getInitials } from '@/lib/utils';
-import { AppRoles } from '@/types';
 
 export function AvatarDropdown() {
   const { user, logout } = useAuth();
