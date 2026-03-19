@@ -143,7 +143,7 @@ export type Database = {
     Views: {
       agent_details: {
         Row: {
-          company_names: Json | null;
+          companies: Json | null;
           email: string | null;
           id: string | null;
           name: string | null;

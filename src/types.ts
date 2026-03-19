@@ -62,6 +62,8 @@ export const AppRoles: AppRoleOption[] = [
 export type AppUserRole = Enums<'app_role'>;
 export type AgentDetails = Tables<'agent_details'>;
 
+export type CompanyJson = { id: number; name: string };
+
 export type InviteToken = Tables<'invite_tokens'>;
 export type InviteTokenInsert =
   Database['public']['Tables']['invite_tokens']['Insert'];
