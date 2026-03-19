@@ -16,6 +16,7 @@ import { useInviteToken } from '@/hooks/UseInviteToken';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { handleSupabaseError } from '@/lib/error_handler';
+import { AppRoles } from '@/types';
 
 export const SignUpForm = ({
   className,
@@ -144,18 +145,14 @@ export const SignUpForm = ({
                 </div>
                 {inviteToken && (
                   <div className="grid gap-2">
-                    <Label htmlFor="company">
-                      {(inviteData?.companies?.length ?? 0) > 1
-                        ? 'Companies'
-                        : 'Company'}
-                    </Label>
+                    <Label htmlFor="role">Role</Label>
                     <Input
-                      id="company"
+                      id="role"
                       type="text"
                       required
                       value={
-                        inviteData?.companies?.map((c) => c?.name).join(', ') ||
-                        ''
+                        AppRoles.find((r) => r.value === inviteData?.appRole)
+                          ?.label
                       }
                       disabled={true}
                     />
