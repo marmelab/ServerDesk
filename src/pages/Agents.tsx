@@ -129,12 +129,13 @@ export default function AgentsPage() {
             appRole={'agent'}
           />
 
-		 {agent && (
+          {agent && (
             <AssignCompaniesDialog
               open={isAssignCompaniesOpen}
               onOpenChange={setIsAssignCompaniesOpen}
               agent={agent}
             />
+          )}
         </div>
       )}
     </div>
