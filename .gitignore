@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 supabase/.temp
 .claude/settings.local.json
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
