@@ -110,9 +110,6 @@ describe('AgentsPage', () => {
     });
     await user.click(buttonInviteAgent);
 
-    const selectTrigger = await screen.findByText(/select companies/i);
-    await user.click(selectTrigger);
-
     const companyOption = await screen.findByText('acme');
     await user.click(companyOption);
 
@@ -152,9 +149,6 @@ describe('AgentsPage', () => {
       /assign companies to agent agenttest/i,
     );
     expect(labelAgent).toBeInTheDocument();
-    screen.debug();
-    const selectTrigger = await screen.findByRole('combobox');
-    await user.click(selectTrigger);
 
     const companyOption = await screen.findByText('acme');
     await user.click(companyOption);
