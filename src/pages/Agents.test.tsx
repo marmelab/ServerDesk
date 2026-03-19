@@ -152,8 +152,8 @@ describe('AgentsPage', () => {
       /assign companies to agent agenttest/i,
     );
     expect(labelAgent).toBeInTheDocument();
-
-    const selectTrigger = await screen.findByText(/companies selected/i);
+    screen.debug();
+    const selectTrigger = await screen.findByRole('combobox');
     await user.click(selectTrigger);
 
     const companyOption = await screen.findByText('acme');

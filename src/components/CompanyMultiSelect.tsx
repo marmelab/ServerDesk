@@ -50,6 +50,22 @@ export function CompanyMultiSelect({ selectedIds, onChange }: Props) {
     <div className="flex flex-col gap-3">
       {!isPending && !queryError && (
         <>
+          <div className="flex flex-wrap gap-2 h-24 overflow-y-auto border rounded-md p-2 items-start">
+            {selectedIds.length > 0 ? (
+              selectedIds.map((id) => {
+                const name = companies.find((c) => c.id === id)?.name;
+                return (
+                  <Badge key={id} variant="secondary">
+                    {name}
+                  </Badge>
+                );
+              })
+            ) : (
+              <span className="text-sm text-muted-foreground italic">
+                No companies assigned
+              </span>
+            )}
+          </div>
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -91,17 +107,6 @@ export function CompanyMultiSelect({ selectedIds, onChange }: Props) {
               </Command>
             </PopoverContent>
           </Popover>
-
-          <div className="flex flex-wrap gap-2">
-            {selectedIds.map((id) => {
-              const name = companies.find((c) => c.id === id)?.name;
-              return (
-                <Badge key={id} variant="secondary">
-                  {name}
-                </Badge>
-              );
-            })}
-          </div>
         </>
       )}
     </div>

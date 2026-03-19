@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CompanyMultiSelect } from './CompanyMultiSelect';
 import {
   Dialog,
@@ -24,6 +24,9 @@ export function AssignCompaniesDialog({
   onOpenChange,
   agent,
 }: AssignCompaniesDialogProps) {
+  const [currentAgentId, setCurrentAgentId] = useState<string | null>(
+    agent?.id,
+  );
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const queryClient = useQueryClient();
@@ -40,15 +43,18 @@ export function AssignCompaniesDialog({
     },
   });
 
-  useEffect(() => {
-    if (open) {
-      setSelectedIds(
-        ((agent?.companies as { id: number; name: string }[]) ?? []).map(
-          (c) => c.id,
-        ),
-      );
-    }
-  }, [open, agent?.companies]);
+  const finalCompaniesId = useMemo(
+    () =>
+      ((agent?.companies as { id: number; name: string }[]) ?? []).map(
+        (c) => c.id,
+      ),
+    [agent?.id],
+  );
+
+  if (currentAgentId != agent.id) {
+    setCurrentAgentId(agent.id);
+    setSelectedIds(finalCompaniesId);
+  }
 
   if (!agent) return null;
 
