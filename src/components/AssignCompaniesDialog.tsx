@@ -29,7 +29,10 @@ export function AssignCompaniesDialog({
   const queryClient = useQueryClient();
 
   const { mutate: handleSave, isPending } = useMutation({
-    mutationFn: () => updateAgentCompanies(agent?.id!, selectedIds),
+  	mutationFn: () => {
+		if (!agent?.id) throw new Error('Agent ID is required');
+		return updateAgentCompanies(agent.id, selectedIds);
+	},
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agents'] });
       onOpenChange(false);
