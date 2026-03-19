@@ -60,7 +60,7 @@ test-e2e: ## Run e2e tests with Playwright (starts Supabase, seeds DB, runs test
 	@echo "Starting Supabase..."
 	@npx supabase start || true
 	@echo "Seeding database..."
-	@npm run db:seed
+	@npm run db:seed:test
 	@echo "Running e2e tests..."
 	@npm run test:e2e:ui
 
