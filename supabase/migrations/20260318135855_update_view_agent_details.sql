@@ -1,6 +1,7 @@
-alter table "public"."agent_details" rename column "company_names" to "companies";
+drop view if exists "public"."agent_details";
 
-create or replace view "public"."agent_details" as  SELECT COALESCE(au.id, '00000000-0000-0000-0000-000000000000'::uuid) AS id,
+create view "public"."agent_details" as  SELECT 
+    au.id,
     u.email,
     au.name,
     COALESCE(json_agg(json_build_object('id', c.id, 'name', c.name)) FILTER (WHERE (c.id IS NOT NULL)), '[]'::json) AS companies
