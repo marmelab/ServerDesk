@@ -47,7 +47,7 @@ export function AssignCompaniesDialog({
     }
   }, [open, agent?.companies]);
 
-  if (!agent) return;
+  if (!agent) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
