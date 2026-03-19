@@ -2,11 +2,12 @@ import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
-import TicketsPage from './tickets';
+import TicketsPage from './Tickets';
 
 let mockUser: any = {
   id: '1',
   email: 'test@test.com',
+  role: 'customer_manager',
   company_ids: [1],
 };
 vi.mock('@/contexts/AuthContext', () => ({
@@ -21,39 +22,52 @@ let mockTickets = [
   {
     id: 1,
     created_at: '2026-02-25T00:00:00Z',
+    updated_at: '2026-02-25T00:00:00Z',
     company_id: 1,
     subject: 'First Ticket',
     description: 'First ticket description',
     customer_id: '1',
+    status: 'open',
+    priority: 'medium',
   },
 ];
 
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn().mockImplementation(() =>
-        Promise.resolve({
+vi.mock('@/lib/supabase', () => {
+  const mockFrom = {
+    select: vi.fn().mockReturnThis(),
+    order: vi.fn().mockReturnThis(),
+    range: vi.fn().mockReturnThis(),
+    then: vi.fn().mockImplementation((onFulfilled) => {
+      return Promise.resolve(
+        onFulfilled({
           data: mockTickets,
           error: null,
+          count: mockTickets.length,
         }),
-      ),
-      insert: vi.fn((newData) => {
-        const record = Array.isArray(newData) ? newData[0] : newData;
-        const newEntry = {
-          id: Math.random(),
-          created_at: new Date().toISOString(),
-          company_id: 1,
-          subject: record.subject,
-          description: record.description,
-          customer_id: '1',
-        };
+      );
+    }),
 
-        mockTickets.push(newEntry);
-        return Promise.resolve({ data: [newEntry], error: null });
-      }),
-    })),
-  },
-}));
+    insert: vi.fn().mockImplementation((newData) => {
+      const record = Array.isArray(newData) ? newData[0] : newData;
+      const newEntry = {
+        ...record,
+        id: Math.random(),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        status: 'open',
+      };
+
+      mockTickets.push(newEntry);
+      return Promise.resolve({ data: [newEntry], error: null });
+    }),
+  };
+
+  return {
+    supabase: {
+      from: vi.fn(() => mockFrom),
+    },
+  };
+});
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   const queryClient = new QueryClient({

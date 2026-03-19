@@ -21,13 +21,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/lib/supabase';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  TicketInsert,
-  TicketPriority,
-  Priorities,
-  Statuses,
-  TicketWithCompany,
-} from '@/types';
+import { TicketInsert, TicketPriority, Priorities, Statuses } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import {
@@ -38,14 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
-async function fetchTickets(): Promise<TicketWithCompany[]> {
-  const { data, error } = await supabase
-    .from('tickets')
-    .select('*, company:companies(name)');
-  if (error) throw error;
-  return (data as TicketWithCompany[]) || [];
-}
+import { fetchTickets, PAGE_SIZE } from '@/services/Tickets';
 
 export default function TicketsPage() {
   const queryClient = useQueryClient();
@@ -55,16 +42,23 @@ export default function TicketsPage() {
   const [subject, setSubject] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [priority, setPriority] = useState<TicketPriority>('medium');
+  const [page, setPage] = useState<number>(0);
 
   const {
-    data: tickets = [],
+    data,
     isPending,
+    isPlaceholderData,
     error: queryError,
     refetch,
   } = useQuery({
-    queryKey: ['tickets'],
-    queryFn: fetchTickets,
+    queryKey: ['tickets', page],
+    queryFn: () => fetchTickets(page),
+    placeholderData: (previousData) => previousData,
   });
+
+  const tickets = data?.data ?? [];
+  const totalCount = data?.count || 0;
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const resetTicket = () => {
     setSubject('');
@@ -208,7 +202,20 @@ export default function TicketsPage() {
           </header>
 
           <div className="rounded-md border bg-card">
-            <Table>
+            {isPlaceholderData && (
+              <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center">
+                <span className="text-xs font-medium bg-primary text-primary-foreground px-2 py-1 rounded-full animate-pulse">
+                  Updating...
+                </span>
+              </div>
+            )}
+            <Table
+              className={
+                isPlaceholderData
+                  ? 'opacity-50 transition-opacity'
+                  : 'transition-opacity'
+              }
+            >
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[400px]">Subject</TableHead>
@@ -278,6 +285,42 @@ export default function TicketsPage() {
                 )}
               </TableBody>
             </Table>
+          </div>
+          <div className="flex items-center justify-between py-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Page{' '}
+                <span className="font-bold text-foreground">{page + 1}</span> on{' '}
+                <span className="font-bold text-foreground">
+                  {totalPages || 1}
+                </span>
+              </span>
+              <span className="text-xs text-muted-foreground ml-2">
+                ({totalCount} tickets)
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((old) => Math.max(old - 1, 0))}
+                disabled={page === 0 || isPlaceholderData}
+              >
+                Previous
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  if (tickets.length === PAGE_SIZE) {
+                    setPage((old) => old + 1);
+                  }
+                }}
+                disabled={tickets.length < PAGE_SIZE || isPlaceholderData}
+              >
+                Next
+              </Button>
+            </div>
           </div>
         </div>
       )}

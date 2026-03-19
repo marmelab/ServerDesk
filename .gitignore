@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 supabase/.temp
 .claude/settings.local.json
+supabase/.temp/cli-latest
