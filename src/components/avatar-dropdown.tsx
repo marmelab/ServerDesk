@@ -41,7 +41,7 @@ export function AvatarDropdown() {
           >
             {user?.name}
           </p>
-          <p className="text-xs text-muted-foreground leading-none truncate pt-2">
+          <p className="text-xs text-muted-foreground leading-none truncate">
             {user?.email}
           </p>
         </div>
