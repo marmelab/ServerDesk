@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { login, waitForAgentsPage } from './helpers/auth';
+import { login } from './helpers/auth';
 
 test.describe('Agents Page', () => {
   test.beforeEach(async ({ page }) => {

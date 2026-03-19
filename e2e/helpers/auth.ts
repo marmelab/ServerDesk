@@ -27,12 +27,3 @@ export async function logout(page: Page) {
     await logoutButton.click();
   }
 }
-
-/**
- * Wait for the agents page to load
- * @param page - Playwright page object
- */
-export async function waitForAgentsPage(page: Page) {
-  await page.getByText('Agents', { exact: true }).waitFor();
-  await page.getByRole('button', { name: /Invite Agent/i }).waitFor();
-}
