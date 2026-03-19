@@ -151,8 +151,9 @@ export const SignUpForm = ({
                       type="text"
                       required
                       value={
-                        AppRoles.find((r) => r.value === inviteData?.appRole)
-                          ?.label
+                        AppRoles.find(
+                          (role) => role.value === inviteData?.appRole,
+                        )?.label
                       }
                       disabled={true}
                     />
