@@ -19,6 +19,9 @@ supabase-migrate-database: ## apply the migrations to the database
 supabase-reset-database: ## reset (and clear!) the database
 	npx supabase db reset
 
+supabase-gen-types:
+	npx supabase gen types typescript --local > supabase/types.ts
+
 stop-supabase:
 	npx supabase stop
 

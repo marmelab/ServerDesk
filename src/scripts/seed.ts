@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 import * as dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from 'supabase/types';
-import { TicketInsert } from '@/types';
+import { AppUserRole, TicketInsert } from '@/types';
 
 dotenv.config();
 
@@ -68,8 +68,9 @@ async function runSeed() {
 
   if (error) console.error('❌ Error:', error.message);
 
+  const NB_USER: number = 15;
   // Customer managers and companies
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < NB_USER; i++) {
     const companyName = faker.company.name();
     const { data: companyData, error: companyError } = await supabase
       .from('companies')
@@ -84,22 +85,40 @@ async function runSeed() {
       email_confirm: true,
       user_metadata: {
         name: faker.person.fullName(),
-        company_id: companyData?.id,
       },
     });
 
     if (error) console.error('❌ Error:', error.message);
 
-    for (let i = 0; i < 5; i++) {
-      const newTicket: TicketInsert = {
-        subject: faker.hacker.phrase(),
-        description: faker.lorem.paragraph(),
-        company_id: companyData?.id as number,
-        customer_id: userData.user?.id as string,
-      };
+    if (userData && userData.user && userData.user.id && companyData) {
+      // Give role and company
+      const isAgent: boolean = i < NB_USER / 2;
+      const appRole: AppUserRole = isAgent ? 'agent' : 'customer_manager';
+      const { error: updateError } = await supabase
+        .from('app_user')
+        .update({ role: appRole })
+        .eq('id', userData.user.id);
+      if (updateError) console.error(updateError);
 
-      const { error } = await supabase.from('tickets').insert(newTicket);
-      if (error) console.error('❌ Error:', error.message);
+      const customerId = isAgent ? null : userData.user.id;
+      if (!isAgent) {
+        const { error: insertCompanyError } = await supabase
+          .from('user_companies')
+          .insert({ user_id: userData.user.id, company_id: companyData.id });
+        if (insertCompanyError) console.error(insertCompanyError);
+      }
+
+      for (let i = 0; i < 5; i++) {
+        const newTicket: TicketInsert = {
+          subject: faker.hacker.phrase(),
+          description: faker.lorem.paragraph(),
+          company_id: companyData?.id as number,
+          customer_id: customerId,
+        };
+
+        const { error } = await supabase.from('tickets').insert(newTicket);
+        if (error) console.error('❌ Error:', error.message);
+      }
     }
   }
 }

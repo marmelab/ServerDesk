@@ -2,6 +2,7 @@ import { Check, Copy, Loader2 } from 'lucide-react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export function InviteTokenDisplay({
   isGenerating,
@@ -18,6 +19,7 @@ export function InviteTokenDisplay({
         await navigator.clipboard.writeText(inviteToken);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
+        toast.message('Link copied');
       } catch (err) {
         console.error('Failed to copy!', err);
       }

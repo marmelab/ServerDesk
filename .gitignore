@@ -29,3 +29,4 @@ supabase/.temp
 /test-results/
 /playwright-report/
 /playwright/.cache/
+supabase/.temp/cli-latest

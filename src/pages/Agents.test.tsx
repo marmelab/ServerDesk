@@ -18,7 +18,14 @@ const { mockSupabase } = vi.hoisted(() => {
       name: 'AgentTest',
       email: 'agent@test.com',
       role: 'agent',
-      company_names: ['looney'],
+      companies: [{ id: 2, name: 'looney' }],
+    },
+    {
+      id: '2',
+      name: 'AgentTest2',
+      email: 'agent2@test.com',
+      role: 'agent',
+      companies: [],
     },
   ];
   const companies = [
@@ -37,6 +44,7 @@ const { mockSupabase } = vi.hoisted(() => {
         }
         return Promise.resolve({ data: [], error: null });
       }),
+      delete: vi.fn().mockReturnThis(),
       insert: vi.fn().mockReturnValue({
         select: vi.fn().mockReturnValue({
           single: vi.fn().mockResolvedValue({
@@ -102,9 +110,6 @@ describe('AgentsPage', () => {
     });
     await user.click(buttonInviteAgent);
 
-    const selectTrigger = await screen.findByText(/select companies/i);
-    await user.click(selectTrigger);
-
     const companyOption = await screen.findByText('acme');
     await user.click(companyOption);
 
@@ -125,6 +130,36 @@ describe('AgentsPage', () => {
 
     await waitFor(() => {
       expect(screen.queryByText(/generate/i)).not.toBeInTheDocument();
+    });
+  });
+
+  it('opens dialog and assign companies', async () => {
+    const user = userEvent.setup();
+    render(
+      <QueryClientProvider client={queryClient}>
+        <AgentsPage />
+      </QueryClientProvider>,
+    );
+    const buttonsInviteAgent = await screen.findAllByRole('button', {
+      name: /assign/i,
+    });
+    await user.click(buttonsInviteAgent[0]);
+
+    const labelAgent = await screen.findByText(
+      /assign companies to agent agenttest/i,
+    );
+    expect(labelAgent).toBeInTheDocument();
+
+    const companyOption = await screen.findByText('acme');
+    await user.click(companyOption);
+
+    const saveAssign = await screen.findByRole('button', {
+      name: /save/i,
+    });
+    await user.click(saveAssign);
+
+    await waitFor(() => {
+      expect(screen.queryByText(/save/i)).not.toBeInTheDocument();
     });
   });
 });

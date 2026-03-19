@@ -7,7 +7,7 @@ export function ErrorFallback({ error, resetErrorBoundary }: any) {
         Something went wrong
       </h2>
       <p className="text-muted-foreground max-w-md">
-        {error.message || 'An unexpected error crashed the application.'}
+        {error?.message || 'An unexpected error crashed the application.'}
       </p>
       <div className="flex gap-2">
         <Button onClick={resetErrorBoundary}>Try again</Button>

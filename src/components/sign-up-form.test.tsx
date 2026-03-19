@@ -104,11 +104,10 @@ describe('SignupPage with Invite Token', () => {
       </MemoryRouter>,
     );
 
-    const companyInput = await screen.findByLabelText(/company/i);
-    screen.debug();
+    const roleInput = await screen.findByLabelText(/role/i);
     await waitFor(
       () => {
-        expect(companyInput).toHaveValue('acme');
+        expect(roleInput).toHaveValue('Customer Manager');
       },
       { timeout: 2000 },
     );

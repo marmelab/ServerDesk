@@ -31,7 +31,7 @@ export function useInviteToken(token: string | null) {
         .in('id', metadata.company_id);
 
       if (error) throw error;
-      return { ...invite, companies: company };
+      return { ...invite, companies: company, appRole: metadata.app_role };
     },
     enabled: !!token,
     retry: false,
