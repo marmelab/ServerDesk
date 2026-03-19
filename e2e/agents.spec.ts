@@ -5,6 +5,11 @@ test.describe('Agents Page', () => {
   test.beforeEach(async ({ page }) => {
     // Login as admin before each test
     // Note: You'll need to update these credentials with valid test user
+    page.on('console', (msg) => console.log(`BROWSER LOG: ${msg.text()}`));
+    page.on('pageerror', (error) => {
+      console.log(`BROWSER CRASHED: ${error.message}`);
+    });
+
     await login(page, 'jerome@marmelab.com', '123456');
     await page.goto('/ServerDesk/admin/agents');
 
@@ -12,6 +17,10 @@ test.describe('Agents Page', () => {
     await expect(page.getByText('Agents', { exact: true })).toBeVisible();
     await expect(
       page.getByRole('button', { name: /Invite Agent/i }),
+    ).toBeVisible();
+    const firstCard = page.getByTestId('agent-card').first();
+    await expect(
+      firstCard.getByText('No companies assigned', { exact: true }),
     ).toBeVisible();
   });
 
