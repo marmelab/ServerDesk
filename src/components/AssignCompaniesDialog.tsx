@@ -18,7 +18,6 @@ interface AssignCompaniesDialogProps {
   onOpenChange: (open: boolean) => void;
   agent: AgentDetails;
 }
-
 export function AssignCompaniesDialog({
   open,
   onOpenChange,
