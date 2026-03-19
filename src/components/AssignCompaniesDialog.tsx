@@ -18,16 +18,23 @@ interface AssignCompaniesDialogProps {
   onOpenChange: (open: boolean) => void;
   agent: AgentDetails;
 }
-
 export function AssignCompaniesDialog({
   open,
   onOpenChange,
   agent,
 }: AssignCompaniesDialogProps) {
+  const finalCompaniesId = useMemo(
+    () =>
+      ((agent?.companies as { id: number; name: string }[]) ?? []).map(
+        (c) => c.id,
+      ),
+    [agent?.id],
+  );
+
   const [currentAgentId, setCurrentAgentId] = useState<string | null>(
     agent?.id,
   );
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>(finalCompaniesId);
 
   const queryClient = useQueryClient();
 
@@ -42,14 +49,6 @@ export function AssignCompaniesDialog({
       toast.success('Companies assigned successfully!');
     },
   });
-
-  const finalCompaniesId = useMemo(
-    () =>
-      ((agent?.companies as { id: number; name: string }[]) ?? []).map(
-        (c) => c.id,
-      ),
-    [agent?.id],
-  );
 
   if (currentAgentId != agent.id) {
     setCurrentAgentId(agent.id);
