@@ -6,7 +6,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Button } from './ui/button';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useInviteManager } from '@/hooks/UseCreateToken';
 import { AppUserRole } from '@/types';
 import { InviteTokenDisplay } from './InviteTokenDisplay';
@@ -25,27 +25,28 @@ export function InviteDialog({
   initialCompanyId,
   appRole,
 }: InviteDialogProps) {
-  const { createInvite, isGenerating, inviteToken, reset } = useInviteManager();
+  const { createInvite, isGenerating, inviteToken } = useInviteManager();
 
   const [selectedIds, setSelectedIds] = useState<number[]>(
     initialCompanyId ? [initialCompanyId] : [],
   );
-  const [step, setStep] = useState<'selection' | 'result'>('selection');
+  const [step, setStep] = useState<'selection' | 'result'>(
+    initialCompanyId ? 'result' : 'selection',
+  );
+
+  const handleGenerate = useCallback(
+    async (ids: number[]) => {
+      setStep('result');
+      await createInvite({ company_id: ids, app_role: appRole });
+    },
+    [createInvite, appRole],
+  );
 
   useEffect(() => {
-    if (!open) {
-      reset();
-      setStep('selection');
-      setSelectedIds(initialCompanyId ? [initialCompanyId] : []);
-    } else if (initialCompanyId) {
-      handleGenerate([initialCompanyId]);
+    if (initialCompanyId) {
+      createInvite({ company_id: [initialCompanyId], app_role: appRole });
     }
-  }, [open, initialCompanyId]);
-
-  const handleGenerate = async (ids: number[]) => {
-    setStep('result');
-    await createInvite({ company_id: ids, app_role: appRole });
-  };
+  }, [initialCompanyId, createInvite, appRole]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

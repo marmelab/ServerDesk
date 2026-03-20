@@ -28,12 +28,9 @@ export function AssignCompaniesDialog({
       ((agent?.companies as { id: number; name: string }[]) ?? []).map(
         (c) => c.id,
       ),
-    [agent?.id],
+    [agent?.companies],
   );
 
-  const [currentAgentId, setCurrentAgentId] = useState<string | null>(
-    agent?.id,
-  );
   const [selectedIds, setSelectedIds] = useState<number[]>(finalCompaniesId);
 
   const queryClient = useQueryClient();
@@ -49,11 +46,6 @@ export function AssignCompaniesDialog({
       toast.success('Companies assigned successfully!');
     },
   });
-
-  if (currentAgentId != agent.id) {
-    setCurrentAgentId(agent.id);
-    setSelectedIds(finalCompaniesId);
-  }
 
   if (!agent) return null;
 
