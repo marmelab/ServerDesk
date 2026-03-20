@@ -1,10 +1,11 @@
 import { faker } from '@faker-js/faker';
-import * as dotenv from 'dotenv';
+import * as dotenvFlow from 'dotenv-flow';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from 'supabase/types';
 import { AppUserRole, TicketInsert } from '@/types';
 
-dotenv.config();
+// Charge automatiquement .env, .env.local, .env.{NODE_ENV}, .env.{NODE_ENV}.local
+dotenvFlow.config();
 
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
 const SERVICE_ROLE_KEY = process.env.VITE_SUPABASE_SECRET_KEY;

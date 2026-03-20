@@ -68,6 +68,7 @@ export function CompanyMultiSelect({ selectedIds, onChange }: Props) {
                     <CommandItem
                       key={company.id}
                       onSelect={() => toggleCompany(company.id)}
+                      data-testid="assign-company"
                     >
                       <Check
                         className={cn(

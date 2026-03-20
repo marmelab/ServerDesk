@@ -1,4 +1,4 @@
-.PHONY: install dev build preview lint typecheck format test
+.PHONY: install dev build preview lint typecheck format test test-e2e
 
 install:
 	npm install
@@ -56,8 +56,16 @@ format:
 test:
 	npm run test
 
+test-e2e: ## Run e2e tests with Playwright (starts Supabase, seeds DB, runs tests)
+	@echo "Starting Supabase..."
+	@npx supabase start || true
+	@echo "Seeding database..."
+	@npm run db:seed:test
+	@echo "Running e2e tests..."
+	@npm run test:e2e:ui
+
 seed:
-	npm run db:seed
+	npm run db:seed:local
 
 prod-seed:
 	npm run db:seed:prod

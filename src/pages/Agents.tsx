@@ -74,6 +74,7 @@ export default function AgentsPage() {
                 <Card
                   key={agent.id}
                   className="group relative flex flex-col gap-2 overflow-hidden pt-0"
+                  data-testid="agent-card"
                 >
                   <CardHeader className="flex-1 pt-4">
                     <CardTitle className="text-2xl font-semibold text-balance">

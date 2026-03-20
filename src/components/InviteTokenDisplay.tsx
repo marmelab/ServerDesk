@@ -40,7 +40,13 @@ export function InviteTokenDisplay({
   return (
     <div className="flex items-center space-x-2">
       <Input readOnly value={inviteToken} className="font-mono text-xs" />
-      <Button size="icon" onClick={handleCopy} disabled={!inviteToken}>
+      <Button
+        size="icon"
+        onClick={handleCopy}
+        disabled={!inviteToken}
+        aria-label="Copy invite token"
+        data-testid="button-copy"
+      >
         {copied ? (
           <Check className="h-4 w-4 text-green-500" />
         ) : (
