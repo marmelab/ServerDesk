@@ -49,6 +49,7 @@ export function AvatarDropdown() {
         <DropdownMenuItem
           className="cursor-pointer text-destructive focus:text-destructive"
           onSelect={handleSignOut}
+          data-testid="logout-button"
         >
           Log out
         </DropdownMenuItem>
