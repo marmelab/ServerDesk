@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react-vite';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '../src/index.css';
+import { MemoryRouter } from 'react-router-dom';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,9 +22,11 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <QueryClientProvider client={queryClient}>
-        <Story />
-      </QueryClientProvider>
+      <MemoryRouter>
+        <QueryClientProvider client={queryClient}>
+          <Story />
+        </QueryClientProvider>
+      </MemoryRouter>
     ),
   ],
 };

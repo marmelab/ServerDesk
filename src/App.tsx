@@ -8,7 +8,7 @@ import { SignUpForm } from './components/sign-up-form';
 import { UpdatePasswordForm } from './components/update-password-form';
 import { LoginForm } from './components/login-form';
 import DashboardPage from '@/pages/dashboard';
-import { ForgotPasswordForm } from './components/forgot-password-form';
+import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import TicketsPage from '@/pages/Tickets';
 import { ErrorFallback } from './components/error-fallback';
 
