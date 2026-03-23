@@ -20,6 +20,7 @@ import {
 
 import { toast } from 'sonner';
 import { fetchCompanies } from '@/services/companies';
+import { HousePlus } from 'lucide-react';
 
 export default function CompaniesPage() {
   const queryClient = useQueryClient();
@@ -62,6 +63,62 @@ export default function CompaniesPage() {
     setIsInviteOpen(true);
   };
 
+  const Header = (
+    <header className="flex w-full items-center justify-between mb-12">
+      <div className="flex flex-col gap-1 text-left">
+        <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl">
+          Companies
+        </h2>
+        <p className="text-muted-foreground">Manage and add companies.</p>
+      </div>
+
+      <Dialog open={isAddCompanyOpen} onOpenChange={setIsAddCompanyOpen}>
+        <DialogTrigger asChild>
+          <Button className="group-hover:bg-primary group-hover:text-primary-foreground w-fit">
+            <HousePlus className="ms-2 size-4" />
+            Add Company
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <form onSubmit={handleAddCompany}>
+            <DialogHeader>
+              <DialogTitle className="text-xl font-semibold tracking-tight">
+                Add a new company
+              </DialogTitle>
+            </DialogHeader>
+            <DialogDescription className="text-muted-foreground pt-1">
+              Enter the name of the company you want to add.
+            </DialogDescription>
+            <div className="flex items-center gap-2">
+              <div className="grid flex-1 gap-2">
+                <Label htmlFor="link" className="sr-only">
+                  Company
+                </Label>
+                <Input
+                  type="text"
+                  id="link"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  autoFocus
+                  required
+                />
+              </div>
+            </div>
+            <DialogFooter className="sm:justify-start">
+              <Button
+                className="cursor-pointer my-5"
+                type="submit"
+                disabled={isAdding}
+              >
+                Add
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </header>
+  );
+
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
 
@@ -69,12 +126,7 @@ export default function CompaniesPage() {
     <div className="container mx-auto py-10">
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
-          <header className="mb-12 text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl">
-              Companies
-            </h2>
-          </header>
-
+          {Header}
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {companies.map((company) => (
               <Card
@@ -121,51 +173,6 @@ export default function CompaniesPage() {
             ))}
             {companies.length === 0 && <h2>No companies found.</h2>}
           </div>
-
-          <Dialog open={isAddCompanyOpen} onOpenChange={setIsAddCompanyOpen}>
-            <DialogTrigger asChild>
-              <Button className="cursor-pointer my-10" variant="outline">
-                Add Company
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <form onSubmit={handleAddCompany}>
-                <DialogHeader>
-                  <DialogTitle className="text-xl font-semibold tracking-tight">
-                    Add a new company
-                  </DialogTitle>
-                </DialogHeader>
-                <DialogDescription className="text-muted-foreground pt-1">
-                  Enter the name of the company you want to add.
-                </DialogDescription>
-                <div className="flex items-center gap-2">
-                  <div className="grid flex-1 gap-2">
-                    <Label htmlFor="link" className="sr-only">
-                      Company
-                    </Label>
-                    <Input
-                      type="text"
-                      id="link"
-                      value={company}
-                      onChange={(e) => setCompany(e.target.value)}
-                      autoFocus
-                      required
-                    />
-                  </div>
-                </div>
-                <DialogFooter className="sm:justify-start">
-                  <Button
-                    className="cursor-pointer my-5"
-                    type="submit"
-                    disabled={isAdding}
-                  >
-                    Add
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
-
           <InviteDialog
             open={isInviteOpen}
             onOpenChange={setIsInviteOpen}
