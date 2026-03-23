@@ -1,6 +1,12 @@
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { AvatarDropdown } from './components/avatar-dropdown';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuLink,
+} from './components/ui/navigation-menu';
 
 export default function Layout() {
   const { user } = useAuth();
@@ -10,6 +16,29 @@ export default function Layout() {
       <header className="border-b px-6 h-14 flex items-center justify-between">
         <Link to="/">ServerDesk</Link>
 
+        <NavigationMenu>
+          <NavigationMenuList>
+            {user?.role == 'admin' && (
+              <>
+                <NavigationMenuItem>
+                  <NavigationMenuLink>
+                    <Link to="/admin/companies">Companies</Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <NavigationMenuLink>
+                    <Link to="/admin/agents">Agents</Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </>
+            )}
+            <NavigationMenuItem>
+              <NavigationMenuLink>
+                <Link to="/tickets">Tickets</Link>
+              </NavigationMenuLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
         {user && (
           <div className="flex items-center gap-4">
             <AvatarDropdown />
