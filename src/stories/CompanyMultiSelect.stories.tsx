@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CompanyMultiSelect } from '../components/CompanyMultiSelect';
 
 const meta = {
+  title: 'Components/CompanyMultiSelect',
   component: CompanyMultiSelect,
 } satisfies Meta<typeof CompanyMultiSelect>;
 

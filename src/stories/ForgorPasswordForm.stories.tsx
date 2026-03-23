@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ForgotPasswordForm } from '@/components/ForgotPasswordForm';
 
 const meta = {
+  title: 'Components/ForgotPasswordForm',
   component: ForgotPasswordForm,
 } satisfies Meta<typeof ForgotPasswordForm>;
 
