@@ -11,7 +11,7 @@ import { Button } from './ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { updateAgentCompanies } from '@/services/Agents';
-import { AgentDetails } from '@/types';
+import { AgentDetails, Company } from '@/types';
 
 interface AssignCompaniesDialogProps {
   open: boolean;
@@ -24,10 +24,7 @@ export function AssignCompaniesDialog({
   agent,
 }: AssignCompaniesDialogProps) {
   const finalCompaniesId = useMemo(
-    () =>
-      ((agent?.companies as { id: number; name: string }[]) ?? []).map(
-        (c) => c.id,
-      ),
+    () => ((agent?.companies as Pick<Company, 'id'>[]) ?? []).map((c) => c.id),
     [agent?.companies],
   );
 

@@ -9,16 +9,16 @@ interface StoryWrapperProps {
   user?: any;
 }
 
-export function StoryWrapper({ children, mockData, user }: StoryWrapperProps) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-        staleTime: Infinity,
-      },
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      staleTime: Infinity,
     },
-  });
+  },
+});
 
+export function StoryWrapper({ children, mockData, user }: StoryWrapperProps) {
   if (mockData) {
     Object.entries(mockData).forEach(([key, data]) => {
       // Inject data for given key (ex: ['agents'] ou ['companies'])

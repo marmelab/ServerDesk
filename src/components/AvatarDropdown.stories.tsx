@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AuthContext } from '@/contexts/AuthContext';
 import { AvatarDropdown } from '../components/AvatarDropdown';
-import { StoryWrapper } from './StoryWrapper';
+import { StoryWrapper } from '@/stories/StoryWrapper';
 
 const meta = {
   title: 'Components/AvatarDropDown',

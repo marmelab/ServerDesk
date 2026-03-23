@@ -1,13 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { SignUpForm } from '@/components/SignUpForm';
-import { StoryWrapper } from './StoryWrapper';
+
+import { ForgotPasswordForm } from '@/components/ForgotPasswordForm';
+import { StoryWrapper } from '@/stories/StoryWrapper';
 
 const meta = {
-  title: 'Components/SignUpForm',
-  component: SignUpForm,
-  parameters: {
-    layout: 'centered',
-  },
+  title: 'Components/ForgotPasswordForm',
+  component: ForgotPasswordForm,
   decorators: [
     (Story) => (
       <StoryWrapper user={null}>
@@ -15,7 +13,8 @@ const meta = {
       </StoryWrapper>
     ),
   ],
-} satisfies Meta<typeof SignUpForm>;
+} satisfies Meta<typeof ForgotPasswordForm>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;

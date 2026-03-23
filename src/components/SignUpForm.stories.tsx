@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { LoginForm } from '@/components/LoginForm';
-import { StoryWrapper } from './StoryWrapper';
+import { SignUpForm } from '@/components/SignUpForm';
+import { StoryWrapper } from '@/stories/StoryWrapper';
 
 const meta = {
-  title: 'Components/LoginForm',
-  component: LoginForm,
+  title: 'Components/SignUpForm',
+  component: SignUpForm,
   parameters: {
     layout: 'centered',
   },
@@ -15,8 +15,7 @@ const meta = {
       </StoryWrapper>
     ),
   ],
-} satisfies Meta<typeof LoginForm>;
-
+} satisfies Meta<typeof SignUpForm>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;

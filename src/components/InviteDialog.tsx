@@ -34,13 +34,10 @@ export function InviteDialog({
     initialCompanyId ? 'result' : 'selection',
   );
 
-  const handleGenerate = useCallback(
-    async (ids: number[]) => {
-      setStep('result');
-      await createInvite({ company_id: ids, app_role: appRole });
-    },
-    [createInvite, appRole],
-  );
+  const handleGenerate = useCallback(async () => {
+    setStep('result');
+    await createInvite({ company_id: selectedIds, app_role: appRole });
+  }, [createInvite, appRole, selectedIds]);
 
   useEffect(() => {
     if (initialCompanyId) {
@@ -65,9 +62,7 @@ export function InviteDialog({
               onChange={setSelectedIds}
             />
 
-            <Button onClick={() => handleGenerate(selectedIds)}>
-              Generate Invite Link
-            </Button>
+            <Button onClick={handleGenerate}>Generate Invite Link</Button>
           </div>
         ) : (
           <InviteTokenDisplay

@@ -1,11 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
-import { ForgotPasswordForm } from '@/components/ForgotPasswordForm';
-import { StoryWrapper } from './StoryWrapper';
+import { UpdatePasswordForm } from '@/components/UpdatePasswordForm';
+import { StoryWrapper } from '@/stories/StoryWrapper';
 
 const meta = {
-  title: 'Components/ForgotPasswordForm',
-  component: ForgotPasswordForm,
+  title: 'Components/UpdatePasswordForm',
+  component: UpdatePasswordForm,
   decorators: [
     (Story) => (
       <StoryWrapper user={null}>
@@ -13,7 +12,7 @@ const meta = {
       </StoryWrapper>
     ),
   ],
-} satisfies Meta<typeof ForgotPasswordForm>;
+} satisfies Meta<typeof UpdatePasswordForm>;
 
 export default meta;
 
