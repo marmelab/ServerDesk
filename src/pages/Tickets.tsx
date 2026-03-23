@@ -33,6 +33,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { fetchTickets, PAGE_SIZE } from '@/services/Tickets';
+import { FilePlus } from 'lucide-react';
 
 export default function TicketsPage() {
   const queryClient = useQueryClient();
@@ -94,10 +95,105 @@ export default function TicketsPage() {
     });
   };
 
+  const Header = (
+    <header className="flex w-full items-center justify-between mb-12">
+      <div className="flex flex-col gap-1 text-left">
+        <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl">
+          Tickets
+        </h2>
+        <p className="text-muted-foreground">View and manage all tickets.</p>
+      </div>
+
+      {user?.role === 'customer_manager' && (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger asChild>
+            <Button className="group-hover:bg-primary group-hover:text-primary-foreground w-fit">
+              <FilePlus className="ms-2 size-4" />
+              Add Ticket
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <form onSubmit={handleAddTicket}>
+              <DialogHeader>
+                <DialogTitle className="text-xl font-semibold tracking-tight">
+                  Add a new ticket
+                </DialogTitle>
+              </DialogHeader>
+              <DialogDescription className="text-muted-foreground pt-1">
+                Fill the informations of the ticket.
+              </DialogDescription>
+              <div className="space-y-4">
+                <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                  <Label htmlFor="subject" className="text-right">
+                    Subject
+                  </Label>
+                  <Input
+                    type="text"
+                    id="subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                  <Label htmlFor="description" className="text-right mt-2">
+                    Description
+                  </Label>
+                  <Textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    required
+                    rows={4}
+                  />
+                </div>
+                <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                  <Label htmlFor="priority" className="text-right">
+                    Priority
+                  </Label>
+                  <Select
+                    value={priority}
+                    onValueChange={(val) => setPriority(val as TicketPriority)}
+                  >
+                    <SelectTrigger id="priority" className="w-full">
+                      <SelectValue placeholder="Choose priority" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Priorities.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={`h-2 w-2 rounded-full ${p.color}`}
+                            />
+                            {p.label}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter className="sm:justify-start">
+                <Button
+                  className="cursor-pointer my-5"
+                  type="submit"
+                  disabled={isAdding}
+                >
+                  {isAdding ? 'Creating...' : 'Add Ticket'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
+    </header>
+  );
+
+  if (isPending)
+    return <p className="text-muted-foreground p-10">Loading...</p>;
+
   return (
     <div className="container mx-auto py-10">
-      {isPending && <p className="text-muted-foreground">Loading...</p>}
-
       {queryError && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <h3 className="text-xl font-semibold italic">
@@ -108,99 +204,9 @@ export default function TicketsPage() {
           </Button>
         </div>
       )}
-
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
-          <header className="mb-8 flex items-center justify-between">
-            <h2 className="text-3xl font-bold tracking-tight">Tickets</h2>
-            {user?.role === 'customer_manager' && (
-              <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogTrigger asChild>
-                  <Button className="cursor-pointer my-10" variant="outline">
-                    Add Ticket
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <form onSubmit={handleAddTicket}>
-                    <DialogHeader>
-                      <DialogTitle className="text-xl font-semibold tracking-tight">
-                        Add a new ticket
-                      </DialogTitle>
-                    </DialogHeader>
-                    <DialogDescription className="text-muted-foreground pt-1">
-                      Fill the informations of the ticket.
-                    </DialogDescription>
-                    <div className="space-y-4">
-                      <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-                        <Label htmlFor="subject" className="text-right">
-                          Subject
-                        </Label>
-                        <Input
-                          type="text"
-                          id="subject"
-                          value={subject}
-                          onChange={(e) => setSubject(e.target.value)}
-                          required
-                        />
-                      </div>
-                      <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-                        <Label
-                          htmlFor="description"
-                          className="text-right mt-2"
-                        >
-                          Description
-                        </Label>
-                        <Textarea
-                          id="description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                          required
-                          rows={4}
-                        />
-                      </div>
-                      <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-                        <Label htmlFor="priority" className="text-right">
-                          Priority
-                        </Label>
-                        <Select
-                          value={priority}
-                          onValueChange={(val) =>
-                            setPriority(val as TicketPriority)
-                          }
-                        >
-                          <SelectTrigger id="priority" className="w-full">
-                            <SelectValue placeholder="Choose priority" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Priorities.map((p) => (
-                              <SelectItem key={p.value} value={p.value}>
-                                <div className="flex items-center gap-2">
-                                  <span
-                                    className={`h-2 w-2 rounded-full ${p.color}`}
-                                  />
-                                  {p.label}
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    <DialogFooter className="sm:justify-start">
-                      <Button
-                        className="cursor-pointer my-5"
-                        type="submit"
-                        disabled={isAdding}
-                      >
-                        {isAdding ? 'Creating...' : 'Add Ticket'}
-                      </Button>
-                    </DialogFooter>
-                  </form>
-                </DialogContent>
-              </Dialog>
-            )}
-          </header>
-
+          {Header}
           <div className="rounded-md border bg-card">
             {isPlaceholderData && (
               <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center">
