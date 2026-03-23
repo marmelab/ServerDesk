@@ -1,7 +1,7 @@
 import { buttonVariants } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 
 export default function DashboardPage() {
@@ -9,11 +9,13 @@ export default function DashboardPage() {
 
   function DashboardCard({ title, to }: { title: string; to: string }) {
     return (
-      <Card className="hover:shadow-md transition-shadow border-2 border-transparent hover:border-primary/20">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-xl font-medium">{title}</CardTitle>
+      <Card className="group relative flex flex-col gap-2 overflow-hidden pt-0">
+        <CardHeader className="flex-1 pt-4">
+          <CardTitle className="text-2xl font-semibold text-balance">
+            {title}
+          </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardFooter className="flex-col items-start space-y-4 pt-4">
           <Link
             to={to}
             className={buttonVariants({
@@ -25,7 +27,7 @@ export default function DashboardPage() {
             View List
             <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-        </CardContent>
+        </CardFooter>
       </Card>
     );
   }
