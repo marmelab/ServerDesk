@@ -1,10 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { ForgotPasswordForm } from '@/components/ForgotPasswordForm';
+import { StoryWrapper } from './StoryWrapper';
 
 const meta = {
   title: 'Components/ForgotPasswordForm',
   component: ForgotPasswordForm,
+  decorators: [
+    (Story) => (
+      <StoryWrapper user={null}>
+        <Story />
+      </StoryWrapper>
+    ),
+  ],
 } satisfies Meta<typeof ForgotPasswordForm>;
 
 export default meta;
