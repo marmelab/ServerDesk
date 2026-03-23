@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { supabase } from '@/lib/supabase';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import { SignUpForm } from './sign-up-form';
+import { SignUpForm } from './SignUpForm';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 
