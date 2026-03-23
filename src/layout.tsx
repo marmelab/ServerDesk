@@ -1,6 +1,6 @@
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
-import { AvatarDropdown } from './components/avatar-dropdown';
+import { AvatarDropdown } from './components/AvatarDropdown';
 
 export default function Layout() {
   const { user } = useAuth();
