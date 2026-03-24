@@ -33,8 +33,7 @@ export const LoginForm = ({
     },
     onSuccess: (loggedUser) => {
       const role = loggedUser.role;
-      if (role === 'admin') navigate('/admin');
-      else if (role === 'agent') navigate('/agent');
+      if (role === 'admin') navigate('/');
       else navigate('/tickets');
     },
   });

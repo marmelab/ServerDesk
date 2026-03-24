@@ -21,7 +21,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: 'http://127.0.0.1:4173',
+    baseURL: 'http://127.0.0.1:4173/ServerDesk/',
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -39,14 +39,15 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'npm run build && npm run preview',
-    url: 'http://127.0.0.1:4173',
+    url: 'http://127.0.0.1:4173/ServerDesk/',
     reuseExistingServer: !process.env.CI,
-    stdout: 'pipe', // Useful for debugging CI logs
+    stdout: 'pipe',
     stderr: 'pipe',
     env: {
-      VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL,
-      VITE_SUPABASE_PUBLISHABLE_KEY: process.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-      VITE_SUPABASE_SECRET_KEY: process.env.VITE_SUPABASE_SECRET_KEY,
+      VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL || '',
+      VITE_SUPABASE_PUBLISHABLE_KEY:
+        process.env.VITE_SUPABASE_PUBLISHABLE_KEY || '',
+      VITE_SUPABASE_SECRET_KEY: process.env.VITE_SUPABASE_SECRET_KEY || '',
     },
   },
 });

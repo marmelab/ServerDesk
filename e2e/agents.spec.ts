@@ -6,7 +6,7 @@ test.describe('Agents Page', () => {
     // Login as admin before each test
     // Note: You'll need to update these credentials with valid test user
     await login(page, 'jerome@marmelab.com', '123456');
-    await page.goto('/ServerDesk/admin/agents');
+    await page.goto('admin/agents');
 
     // Wait for page to fully load (agents query to complete)
     await expect(page.getByText('Agents', { exact: true })).toBeVisible();
@@ -82,8 +82,10 @@ test.describe('Agents Page', () => {
       );
 
       await login(page, 'jerome@marmelab.com', '123456');
-      await page.goto('/ServerDesk/admin/agents');
-      await expect(page.getByText('Agents', { exact: true })).toBeVisible();
+      await page.goto('admin/agents');
+      await expect(
+        page.getByText('Agents', { exact: true }).first(),
+      ).toBeVisible();
       await expect(page.getByText('Agent1').first()).toBeVisible();
     });
   });
