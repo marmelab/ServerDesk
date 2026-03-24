@@ -124,6 +124,7 @@ export default function AgentsPage() {
             </div>
           )}
           <InviteDialog
+            key={isInviteOpen ? `open` : 'closed'}
             open={isInviteOpen}
             onOpenChange={setIsInviteOpen}
             initialCompanyId={null}
@@ -132,6 +133,7 @@ export default function AgentsPage() {
 
           {agent && (
             <AssignCompaniesDialog
+              key={agent.id}
               open={isAssignCompaniesOpen}
               onOpenChange={setIsAssignCompaniesOpen}
               agent={agent}

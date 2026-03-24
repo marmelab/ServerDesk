@@ -1,6 +1,6 @@
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
-import { AvatarDropdown } from './components/avatar-dropdown';
+import { AvatarDropdown } from './components/AvatarDropdown';
 import { HeadsetIcon } from 'lucide-react';
 
 export default function Layout() {
@@ -9,10 +9,14 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b px-6 h-14 flex items-center justify-between">
-        <div className="flex">
+        <Link
+          to="/"
+          className="flex items-center hover:opacity-80 transition-opacity"
+          aria-label="ServerDesk Home"
+        >
           <HeadsetIcon className="mr-2" />
-          <Link to="/">ServerDesk</Link>
-        </div>
+          <span className="font-semibold">ServerDesk</span>
+        </Link>
         {user && (
           <div className="flex items-center gap-4">
             <AvatarDropdown />

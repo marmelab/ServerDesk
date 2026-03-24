@@ -30,3 +30,6 @@ supabase/.temp
 /playwright-report/
 /playwright/.cache/
 supabase/.temp/cli-latest
+
+*storybook.log
+storybook-static
