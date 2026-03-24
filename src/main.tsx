@@ -4,7 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import './index.css';
 import App from './App';
 import { ErrorBoundary } from 'react-error-boundary';
-import { ErrorFallback } from './components/error-fallback';
+import { ErrorFallback } from './components/ErrorFallback';
 import { queryClient } from './lib/query-client';
 import { Toaster } from 'sonner';
 
