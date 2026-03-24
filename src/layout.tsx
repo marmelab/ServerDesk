@@ -7,6 +7,7 @@ import {
   NavigationMenuList,
   NavigationMenuLink,
 } from './components/ui/navigation-menu';
+import { HeadsetIcon } from 'lucide-react';
 
 export default function Layout() {
   const { user } = useAuth();
@@ -14,9 +15,14 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b px-6 h-14 flex items-center relative">
-        <div className="flex-1 flex justify-start">
-          <Link to="/">ServerDesk</Link>
-        </div>
+        <Link
+          to="/"
+          className="flex-1 flex justify-start items-center hover:opacity-80 transition-opacity"
+          aria-label="ServerDesk Home"
+        >
+          <HeadsetIcon className="mr-2" />
+          <span className="font-semibold">ServerDesk</span>
+        </Link>
         <div className="flex-initial">
           <NavigationMenu>
             <NavigationMenuList>
