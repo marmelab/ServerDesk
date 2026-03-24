@@ -7,62 +7,68 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import React, { useState } from 'react';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
+import { useState } from 'react';
 import { FilePlus } from 'lucide-react';
 import { toast } from 'sonner';
-import { TicketPriority, Priorities } from '@/types';
+import { TicketPriority } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from './ui/button';
 import { useAddTicket } from '@/hooks/UseTickets';
+import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
+import {
+  TextField,
+  TextAreaField,
+  PrioritySelectField,
+  SubmitButton,
+} from '@/components/FormInputs';
+
+const { fieldContext, formContext } = createFormHookContexts();
+
+const { useAppForm } = createFormHook({
+  fieldComponents: {
+    TextField,
+    TextAreaField,
+    PrioritySelectField,
+  },
+  formComponents: {
+    SubmitButton,
+  },
+  fieldContext,
+  formContext,
+});
 
 export default function AddTicketDialog() {
   const { user } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [subject, setSubject] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [priority, setPriority] = useState<TicketPriority>('medium');
 
-  const resetTicket = () => {
-    setSubject('');
-    setDescription('');
-    setPriority('medium');
-    setIsOpen(false);
-  };
+  const form = useAppForm({
+    defaultValues: {
+      subject: '',
+      description: '',
+      priority: 'medium' as TicketPriority,
+    },
+    onSubmit: async ({ value }) => {
+      if (!user?.company_ids?.length) {
+        toast.error('You are not linked to any company.');
+        return;
+      }
+      try {
+        await addTicket({
+          ...value,
+          company_id: user.company_ids[0],
+          customer_id: user.id,
+        });
+        form.reset();
+        setIsOpen(false);
+      } catch (error) {
+        // Error is handled
+        console.error(error);
+      }
+    },
+  });
 
-  const { mutate: addTicket, isPending: isAdding } = useAddTicket();
-
-  const handleAddTicket = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user?.company_ids?.length) {
-      toast.error('You are not linked to any company.');
-      return;
-    }
-    addTicket(
-      {
-        subject,
-        description,
-        priority,
-        company_id: user?.company_ids[0],
-        customer_id: user?.id,
-      },
-      {
-        onSuccess: () => {
-          resetTicket();
-        },
-      },
-    );
-  };
+  const { mutateAsync: addTicket } = useAddTicket();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -73,7 +79,12 @@ export default function AddTicketDialog() {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
-        <form onSubmit={handleAddTicket}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+        >
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold tracking-tight">
               Add a new ticket
@@ -83,62 +94,24 @@ export default function AddTicketDialog() {
             Fill the informations of the ticket.
           </DialogDescription>
           <div className="space-y-4">
-            <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-              <Label htmlFor="subject" className="text-right">
-                Subject
-              </Label>
-              <Input
-                type="text"
-                id="subject"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                required
-              />
-            </div>
-            <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-              <Label htmlFor="description" className="text-right mt-2">
-                Description
-              </Label>
-              <Textarea
-                id="description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                required
-                rows={4}
-              />
-            </div>
-            <div className="grid grid-cols-[100px_1fr] items-center gap-4">
-              <Label htmlFor="priority" className="text-right">
-                Priority
-              </Label>
-              <Select
-                value={priority}
-                onValueChange={(val) => setPriority(val as TicketPriority)}
-              >
-                <SelectTrigger id="priority" className="w-full">
-                  <SelectValue placeholder="Choose priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Priorities.map((p) => (
-                    <SelectItem key={p.value} value={p.value}>
-                      <div className="flex items-center gap-2">
-                        <span className={`h-2 w-2 rounded-full ${p.color}`} />
-                        {p.label}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            <form.AppField name="subject">
+              {(field) => <field.TextField label="Subject" field={field} />}
+            </form.AppField>
+            <form.AppField name="description">
+              {(field) => (
+                <field.TextAreaField label="Description" field={field} />
+              )}
+            </form.AppField>
+            <form.AppField name="priority">
+              {(field) => (
+                <field.PrioritySelectField label="Priority" field={field} />
+              )}
+            </form.AppField>
           </div>
           <DialogFooter className="sm:justify-start">
-            <Button
-              className="cursor-pointer my-5"
-              type="submit"
-              disabled={isAdding}
-            >
-              {isAdding ? 'Creating...' : 'Add Ticket'}
-            </Button>
+            <form.AppForm>
+              <form.SubmitButton form={form}>Add Ticket</form.SubmitButton>
+            </form.AppForm>
           </DialogFooter>
         </form>
       </DialogContent>
