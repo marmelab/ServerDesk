@@ -10,33 +10,24 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { HousePlus } from 'lucide-react';
-import { toast } from 'sonner';
-import { supabase } from '@/lib/supabase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { Button } from './ui/button';
+import { useAddCompany } from '@/hooks/UseCompanies';
 
 export default function AddCompanyDialog() {
-  const queryClient = useQueryClient();
   const [company, setCompany] = useState('');
   const [isAddCompanyOpen, setIsAddCompanyOpen] = useState(false);
 
-  const { mutate: addCompany, isPending: isAdding } = useMutation({
-    mutationFn: async (name: string) => {
-      const { error } = await supabase.from('companies').insert({ name });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['companies'] });
-      setCompany('');
-      setIsAddCompanyOpen(false);
-      toast.success('Company added successfully!');
-    },
-  });
+  const { mutate: addCompany, isPending: isAdding } = useAddCompany();
 
   const handleAddCompany = async (e: React.FormEvent) => {
     e.preventDefault();
-    addCompany(company);
+    addCompany(company, {
+      onSuccess: () => {
+        setCompany('');
+        setIsAddCompanyOpen(false);
+      },
+    });
   };
 
   return (
