@@ -5,9 +5,9 @@ import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuList,
-  NavigationMenuLink,
 } from './components/ui/navigation-menu';
 import { HeadsetIcon } from 'lucide-react';
+import { AppNavLink } from './components/AppNavLink';
 
 export default function Layout() {
   const { user } = useAuth();
@@ -23,35 +23,36 @@ export default function Layout() {
           <HeadsetIcon className="mr-2" />
           <span className="font-semibold">ServerDesk</span>
         </Link>
-        <div className="flex-initial">
-          <NavigationMenu>
-            <NavigationMenuList>
-              {user?.role === 'admin' && (
-                <>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <Link to="/admin/companies">Companies</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink asChild>
-                      <Link to="/admin/agents">Agents</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                </>
-              )}
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link to="/tickets">Tickets</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-        </div>
         {user && (
-          <div className="flex-1 flex justify-end items-center gap-4">
-            <AvatarDropdown />
-          </div>
+          <>
+            <div className="flex-initial">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <AppNavLink to="/" end>
+                      Home
+                    </AppNavLink>
+                  </NavigationMenuItem>
+                  {user?.role === 'admin' && (
+                    <>
+                      <NavigationMenuItem>
+                        <AppNavLink to="/admin/companies">Companies</AppNavLink>
+                      </NavigationMenuItem>
+                      <NavigationMenuItem>
+                        <AppNavLink to="/admin/agents">Agents</AppNavLink>
+                      </NavigationMenuItem>
+                    </>
+                  )}
+                  <NavigationMenuItem>
+                    <AppNavLink to="/tickets">Tickets</AppNavLink>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
+            <div className="flex-1 flex justify-end items-center gap-4">
+              <AvatarDropdown />
+            </div>
+          </>
         )}
       </header>
       <main className="flex-1 py-10">
