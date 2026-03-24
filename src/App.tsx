@@ -4,13 +4,13 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import Layout from '@/layout';
 import CompaniesPage from '@/pages/companies';
 import AgentsPage from './pages/Agents';
-import { SignUpForm } from './components/sign-up-form';
-import { UpdatePasswordForm } from './components/update-password-form';
-import { LoginForm } from './components/login-form';
+import { SignUpForm } from './components/SignUpForm';
+import { UpdatePasswordForm } from './components/UpdatePasswordForm';
+import { LoginForm } from './components/LoginForm';
 import DashboardPage from '@/pages/dashboard';
-import { ForgotPasswordForm } from './components/forgot-password-form';
+import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import TicketsPage from '@/pages/Tickets';
-import { ErrorFallback } from './components/error-fallback';
+import { ErrorFallback } from './components/ErrorFallback';
 
 export const router = createBrowserRouter(
   [

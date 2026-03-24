@@ -1,5 +1,4 @@
 import { BrowserContext, expect, Page } from '@playwright/test';
-import { Context } from 'react';
 
 /**
  * Login helper for e2e tests

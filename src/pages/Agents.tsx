@@ -60,6 +60,7 @@ export default function AgentsPage() {
             </div>
           )}
           <InviteDialog
+            key={isInviteOpen ? `open` : 'closed'}
             open={isInviteOpen}
             onOpenChange={setIsInviteOpen}
             initialCompanyId={null}

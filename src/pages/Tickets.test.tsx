@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import TicketsPage from './Tickets';
 
-let mockUser: any = {
+const mockUser: any = {
   id: '1',
   email: 'test@test.com',
   role: 'customer_manager',
@@ -18,7 +18,7 @@ vi.mock('@/contexts/AuthContext', () => ({
   }),
 }));
 
-let mockTickets = [
+const mockTickets = [
   {
     id: 1,
     created_at: '2026-02-25T00:00:00Z',

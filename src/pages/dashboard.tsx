@@ -62,7 +62,7 @@ export default function DashboardPage() {
         {Header}
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {user?.role == 'admin' && (
+          {user?.role === 'admin' && (
             <>
               {DashboardCard({ title: 'Companies', to: '/admin/companies' })}
 

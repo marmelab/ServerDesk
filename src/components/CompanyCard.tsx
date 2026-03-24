@@ -35,7 +35,7 @@ export default function CompanyCard({ company }: { company: Company }) {
             </span>
           </div>
         </div>
-        {user?.role == 'admin' && (
+        {user?.role === 'admin' && (
           <Button
             className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
             onClick={() => handleOpenInvite(company.id)}
