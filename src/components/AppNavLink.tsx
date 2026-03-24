@@ -17,7 +17,6 @@ export const AppNavLink = ({ to, children, ...props }: AppNavLinkProps) => {
           isActive ? activeClass : inactiveClass
         }`;
       }}
-      aria-current={isActive}
     >
       {children}
     </NavLink>
