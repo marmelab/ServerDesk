@@ -20,14 +20,12 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { FilePlus } from 'lucide-react';
 import { toast } from 'sonner';
-import { supabase } from '@/lib/supabase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TicketInsert, TicketPriority, Priorities } from '@/types';
+import { TicketPriority, Priorities } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from './ui/button';
+import { useAddTicket } from '@/hooks/UseTickets';
 
 export default function AddTicketDialog() {
-  const queryClient = useQueryClient();
   const { user } = useAuth();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -42,31 +40,28 @@ export default function AddTicketDialog() {
     setIsOpen(false);
   };
 
-  const { mutate: addTicket, isPending: isAdding } = useMutation({
-    mutationFn: async (newTicket: TicketInsert) => {
-      const { error } = await supabase.from('tickets').insert(newTicket);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tickets'] });
-      resetTicket();
-      toast.success('Ticket created successfully!');
-    },
-  });
+  const { mutate: addTicket, isPending: isAdding } = useAddTicket();
 
-  const handleAddTicket = (e: React.FormEvent) => {
+  const handleAddTicket = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user?.company_ids?.length) {
       toast.error('You are not linked to any company.');
       return;
     }
-    addTicket({
-      subject,
-      description,
-      priority,
-      company_id: user?.company_ids[0],
-      customer_id: user?.id,
-    });
+    addTicket(
+      {
+        subject,
+        description,
+        priority,
+        company_id: user?.company_ids[0],
+        customer_id: user?.id,
+      },
+      {
+        onSuccess: () => {
+          resetTicket();
+        },
+      },
+    );
   };
 
   return (
