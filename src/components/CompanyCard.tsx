@@ -9,12 +9,6 @@ export default function CompanyCard({ company }: { company: Company }) {
   const { user } = useAuth();
 
   const [isInviteOpen, setIsInviteOpen] = useState(false);
-  const [inviteCompanyId, setInviteCompanyId] = useState<number | null>(null);
-
-  const handleOpenInvite = async (companyId: number) => {
-    setInviteCompanyId(companyId);
-    setIsInviteOpen(true);
-  };
 
   return (
     <Card
@@ -38,7 +32,7 @@ export default function CompanyCard({ company }: { company: Company }) {
         {user?.role === 'admin' && (
           <Button
             className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
-            onClick={() => handleOpenInvite(company.id)}
+            onClick={() => setIsInviteOpen(true)}
           >
             Invite Manager
             <svg
@@ -60,7 +54,7 @@ export default function CompanyCard({ company }: { company: Company }) {
       <InviteDialog
         open={isInviteOpen}
         onOpenChange={setIsInviteOpen}
-        initialCompanyId={inviteCompanyId}
+        initialCompanyId={company.id}
         appRole={'customer_manager'}
       />
     </Card>

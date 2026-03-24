@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { FilePlus } from 'lucide-react';
-import { toast } from 'sonner';
 import { TicketPriority } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from './ui/button';
@@ -39,7 +38,6 @@ const { useAppForm } = createFormHook({
 
 export default function AddTicketDialog() {
   const { user } = useAuth();
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const form = useAppForm({
@@ -49,26 +47,29 @@ export default function AddTicketDialog() {
       priority: 'medium' as TicketPriority,
     },
     onSubmit: async ({ value }) => {
-      if (!user?.company_ids?.length) {
-        toast.error('You are not linked to any company.');
-        return;
-      }
-      try {
-        await addTicket({
-          ...value,
-          company_id: user.company_ids[0],
-          customer_id: user.id,
-        });
-        form.reset();
-        setIsOpen(false);
-      } catch (error) {
-        // Error is handled
-        console.error(error);
+      if (user && user.company_ids) {
+        try {
+          await addTicket({
+            ...value,
+            company_id: user.company_ids[0],
+            customer_id: user.id,
+          });
+          form.reset();
+          setIsOpen(false);
+        } catch (error) {
+          // Error is handled
+          console.error(error);
+        }
       }
     },
   });
 
   const { mutateAsync: addTicket } = useAddTicket();
+
+  if (!user?.company_ids?.length) {
+    console.error('User is not linked to any company.');
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

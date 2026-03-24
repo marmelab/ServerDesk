@@ -16,13 +16,7 @@ export default function AgentCard({
 }: {
   agentInfos: AgentDetails;
 }) {
-  const [agent, setAgent] = useState<AgentDetails>();
   const [isAssignCompaniesOpen, setIsAssignCompaniesOpen] = useState(false);
-
-  const handleAssignCompanies = (agent: AgentDetails) => {
-    setAgent(agent);
-    setIsAssignCompaniesOpen(true);
-  };
 
   return (
     <Card
@@ -55,7 +49,7 @@ export default function AgentCard({
         )}
         <Button
           className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
-          onClick={() => handleAssignCompanies(agentInfos)}
+          onClick={() => setIsAssignCompaniesOpen(true)}
         >
           Assign companies
           <svg
@@ -73,13 +67,11 @@ export default function AgentCard({
           </svg>
         </Button>
       </CardFooter>
-      {agent && (
-        <AssignCompaniesDialog
-          open={isAssignCompaniesOpen}
-          onOpenChange={setIsAssignCompaniesOpen}
-          agent={agent}
-        />
-      )}
+      <AssignCompaniesDialog
+        open={isAssignCompaniesOpen}
+        onOpenChange={setIsAssignCompaniesOpen}
+        agent={agentInfos}
+      />
     </Card>
   );
 }
