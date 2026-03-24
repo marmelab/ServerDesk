@@ -1,6 +1,12 @@
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { AvatarDropdown } from './components/AvatarDropdown';
+import {
+  NavigationMenu,
+  NavigationMenuItem,
+  NavigationMenuList,
+  NavigationMenuLink,
+} from './components/ui/navigation-menu';
 import { HeadsetIcon } from 'lucide-react';
 
 export default function Layout() {
@@ -8,17 +14,42 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b px-6 h-14 flex items-center justify-between">
+      <header className="border-b px-6 h-14 flex items-center relative">
         <Link
           to="/"
-          className="flex items-center hover:opacity-80 transition-opacity"
+          className="flex-1 flex justify-start items-center hover:opacity-80 transition-opacity"
           aria-label="ServerDesk Home"
         >
           <HeadsetIcon className="mr-2" />
           <span className="font-semibold">ServerDesk</span>
         </Link>
+        <div className="flex-initial">
+          <NavigationMenu>
+            <NavigationMenuList>
+              {user?.role === 'admin' && (
+                <>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link to="/admin/companies">Companies</Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <NavigationMenuLink asChild>
+                      <Link to="/admin/agents">Agents</Link>
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                </>
+              )}
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link to="/tickets">Tickets</Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
         {user && (
-          <div className="flex items-center gap-4">
+          <div className="flex-1 flex justify-end items-center gap-4">
             <AvatarDropdown />
           </div>
         )}
