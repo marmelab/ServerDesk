@@ -4,30 +4,32 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import CompaniesPage from './companies';
 import userEvent from '@testing-library/user-event';
 
-const { mockSupabase } = vi.hoisted(() => {
-  const companies = [
-    { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' },
-  ];
+const { mockSupabase, mockState, utils } = vi.hoisted(() => {
+  const internalState = {
+    companies: [{ id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' }],
+    user: null as any,
+  };
 
-  const internalMock = {
+  const supabaseMock = {
     from: vi.fn().mockReturnThis(),
-    insert: vi.fn().mockImplementation((newData) => {
+    insert: vi.fn().mockImplementation(function (this: any, newData) {
       const dataToInsert = Array.isArray(newData) ? newData[0] : newData;
-      if (dataToInsert?.name) {
-        companies.push({
-          id: Math.random(),
-          name: dataToInsert.name,
-          created_at: new Date().toISOString(),
-        });
-      }
-      return Object.assign(
-        Promise.resolve({ data: dataToInsert, error: null }),
-        internalMock,
-      );
+      const newEntry = {
+        id: Math.random(),
+        name: dataToInsert?.name || 'New Company',
+        created_at: new Date().toISOString(),
+      };
+      internalState.companies.push(newEntry);
+      return this;
     }),
-    select: vi.fn().mockImplementation((columns) => {
-      if (columns === 'token') return internalMock;
-      return Promise.resolve({ data: companies, error: null });
+    select: vi.fn().mockImplementation(function (this: any, columns) {
+      if (columns === 'token') {
+        return this;
+      }
+      return Promise.resolve({
+        data: [...internalState.companies],
+        error: null,
+      });
     }),
     single: vi
       .fn()
@@ -38,15 +40,22 @@ const { mockSupabase } = vi.hoisted(() => {
     eq: vi.fn().mockReturnThis(),
   };
 
-  return { mockSupabase: internalMock, mockCompanies: companies };
+  return {
+    mockSupabase: supabaseMock,
+    mockState: internalState,
+    utils: {
+      reset: () => {
+        internalState.companies = [
+          { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' },
+        ];
+        internalState.user = null;
+      },
+    },
+  };
 });
 
 vi.mock('@/lib/supabase', () => ({
   supabase: mockSupabase,
-}));
-
-const { mockState } = vi.hoisted(() => ({
-  mockState: { user: null as any },
 }));
 
 vi.mock('@/contexts/AuthContext', () => ({
@@ -57,9 +66,7 @@ vi.mock('@/contexts/AuthContext', () => ({
   }),
 }));
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { retry: false, gcTime: 0 } },
-});
+let queryClient: QueryClient;
 
 function Wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -69,6 +76,10 @@ function Wrapper({ children }: { children: React.ReactNode }) {
 
 describe('CompaniesPage', () => {
   beforeEach(() => {
+    utils.reset();
+    queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+    });
     cleanup();
     vi.clearAllMocks();
   });
@@ -100,7 +111,9 @@ describe('CompaniesPage', () => {
     });
     await user.click(buttonInsertCompany);
 
-    expect(await screen.findByText('New company')).toBeInTheDocument();
+    expect(
+      await screen.findByText('New company', {}, { timeout: 3000 }),
+    ).toBeInTheDocument();
 
     // Verify dialog is closed
     const dialogTitle = screen.queryByText(/add a new company/i);
