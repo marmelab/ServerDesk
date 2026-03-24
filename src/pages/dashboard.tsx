@@ -29,7 +29,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {user?.role == 'admin' && (
+        {user?.role === 'admin' && (
           <>
             <Card className="hover:shadow-md transition-shadow border-2 border-transparent hover:border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
