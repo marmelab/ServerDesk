@@ -20,7 +20,7 @@ export default function Layout() {
         <div className="flex-initial">
           <NavigationMenu>
             <NavigationMenuList>
-              {user?.role == 'admin' && (
+              {user?.role === 'admin' && (
                 <>
                   <NavigationMenuItem>
                     <NavigationMenuLink asChild>
