@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table';
 import { fetchTickets, PAGE_SIZE } from '@/services/Tickets';
 import AddTicketDialog from '@/components/AddTicketDialog';
+import { PageHeader } from '@/components/PageHeader';
 
 export default function TicketsPage() {
   const { user } = useAuth();
@@ -34,19 +35,6 @@ export default function TicketsPage() {
   const totalCount = data?.count || 0;
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
-  const Header = (
-    <header className="flex w-full items-center justify-between mb-12">
-      <div className="flex flex-col gap-1 text-left">
-        <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl">
-          Tickets
-        </h2>
-        <p className="text-muted-foreground">View and manage all tickets.</p>
-      </div>
-
-      {user?.role === 'customer_manager' && <AddTicketDialog />}
-    </header>
-  );
-
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
 
@@ -64,7 +52,12 @@ export default function TicketsPage() {
       )}
       {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
-          {Header}
+          <PageHeader
+            title="Tickets"
+            description="View and manage all tickets."
+          >
+            {user?.role === 'customer_manager' && <AddTicketDialog />}
+          </PageHeader>
           <div className="rounded-md border bg-card">
             {isPlaceholderData && (
               <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center">
