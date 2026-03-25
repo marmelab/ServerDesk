@@ -16,7 +16,7 @@ import { PageHeader } from '@/components/PageHeader';
 import TicketSummary from '@/components/TicketSummary';
 import { TicketWithDetails } from '@/types';
 import { Drawer } from '@/components/ui/drawer';
-import TicketDetails from './TicketDetail';
+import TicketDetails from '../components/TicketDetail';
 
 export default function TicketsPage() {
   const { user } = useAuth();
