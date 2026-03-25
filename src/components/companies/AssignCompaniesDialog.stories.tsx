@@ -1,7 +1,7 @@
 import { fn } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { AssignCompaniesDialog } from './AssignCompaniesDialog';
-import { StoryWrapper } from '../stories/StoryWrapper';
+import { StoryWrapper } from '../../stories/StoryWrapper';
 import { http, HttpResponse } from 'msw';
 
 const commonHandlers = [

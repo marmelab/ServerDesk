@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { AgentDetails, CompanyJson } from '@/types';
 import { useState } from 'react';
 import { Button } from './ui/button';
-import { AssignCompaniesDialog } from '@/components/AssignCompaniesDialog';
+import { AssignCompaniesDialog } from '@/components/companies/AssignCompaniesDialog';
 
 export default function AgentCard({
   agentInfos,

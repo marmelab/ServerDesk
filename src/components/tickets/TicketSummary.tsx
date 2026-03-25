@@ -1,5 +1,5 @@
 import { TicketWithDetails, PRIORITY_MAP, STATUS_MAP } from '@/types';
-import { TableRow, TableCell } from './ui/table';
+import { TableRow, TableCell } from '../ui/table';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface TicketSummaryProps {

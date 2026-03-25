@@ -11,12 +11,12 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { fetchTickets, PAGE_SIZE } from '@/services/Tickets';
-import AddTicketDialog from '@/components/AddTicketDialog';
+import AddTicketDialog from '@/components/tickets/AddTicketDialog';
 import { PageHeader } from '@/components/PageHeader';
-import TicketSummary from '@/components/TicketSummary';
+import TicketSummary from '@/components/tickets/TicketSummary';
 import { TicketWithDetails } from '@/types';
 import { Drawer } from '@/components/ui/drawer';
-import TicketDetails from '../components/TicketDetail';
+import TicketDetails from '../components/tickets/TicketDetail';
 
 export default function TicketsPage() {
   const { user } = useAuth();

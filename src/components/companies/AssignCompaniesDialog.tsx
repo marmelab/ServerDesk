@@ -6,12 +6,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from './ui/dialog';
-import { Button } from './ui/button';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { updateAgentCompanies } from '@/services/Agents';
+} from '../ui/dialog';
+import { Button } from '../ui/button';
 import { AgentDetails, Company } from '@/types';
+import { useUpdateAgentCompanies } from '@/hooks/useAgents';
 
 interface AssignCompaniesDialogProps {
   open: boolean;
@@ -30,18 +28,8 @@ export function AssignCompaniesDialog({
 
   const [selectedIds, setSelectedIds] = useState<number[]>(finalCompaniesId);
 
-  const queryClient = useQueryClient();
-
-  const { mutate: handleSave, isPending } = useMutation({
-    mutationFn: () => {
-      if (!agent?.id) throw new Error('Agent ID is required');
-      return updateAgentCompanies(agent.id, selectedIds);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['agents'] });
-      onOpenChange(false);
-      toast.success('Companies assigned successfully!');
-    },
+  const { mutate, isPending } = useUpdateAgentCompanies({
+    onSuccess: () => onOpenChange(false),
   });
 
   if (!agent) return null;
@@ -64,7 +52,9 @@ export function AssignCompaniesDialog({
             Cancel
           </Button>
           <Button
-            onClick={() => handleSave()}
+            onClick={() =>
+              mutate({ agentId: agent.id!, companyIds: selectedIds })
+            }
             disabled={isPending || !agent.id}
           >
             {isPending ? 'Saving...' : 'Save Changes'}
