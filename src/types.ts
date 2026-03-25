@@ -1,5 +1,22 @@
 import { Database, Enums, Tables } from 'supabase/types.ts';
 
+// User
+export type AppUser = Tables<'app_user'>;
+
+interface AppRoleOption {
+  value: AppUserRole;
+  label: string;
+}
+
+export const AppRoles: AppRoleOption[] = [
+  { value: 'admin', label: 'Administrator' },
+  { value: 'agent', label: 'Agent' },
+  { value: 'customer_manager', label: 'Customer Manager' },
+  { value: 'customer', label: 'Customer' },
+];
+
+export type AppUserRole = Enums<'app_role'>;
+
 // Tickets
 export type Ticket = Tables<'tickets'>;
 export type TicketInsert = Database['public']['Tables']['tickets']['Insert'];
@@ -8,6 +25,12 @@ export type TicketStatus = Database['public']['Enums']['ticket_status'];
 export type TicketWithDetails = Ticket & {
   company: { name: string } | null;
   creator: { name: string; email: string; isInternal: boolean } | null;
+};
+
+export type Message = Tables<'messages'>;
+export type MessageInsert = Database['public']['Tables']['messages']['Insert'];
+export type MessageWithDetails = Message & {
+  sender: { name: string; role: AppUserRole | null } | null;
 };
 
 interface PriorityOption {
@@ -45,22 +68,6 @@ export const Statuses: StatusOption[] = [
 export type Company = Tables<'companies'>;
 export type CompanyInsert = Database['public']['Tables']['companies']['Insert'];
 
-// User
-export type AppUser = Tables<'app_user'>;
-
-interface AppRoleOption {
-  value: AppUserRole;
-  label: string;
-}
-
-export const AppRoles: AppRoleOption[] = [
-  { value: 'admin', label: 'Administrator' },
-  { value: 'agent', label: 'Agent' },
-  { value: 'customer_manager', label: 'Customer Manager' },
-  { value: 'customer', label: 'Customer' },
-];
-
-export type AppUserRole = Enums<'app_role'>;
 export type AgentDetails = Tables<'agent_details'>;
 
 export type CompanyJson = { id: number; name: string };

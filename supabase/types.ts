@@ -107,6 +107,7 @@ export type Database = {
           created_at: string;
           id: number;
           sender_id: string | null;
+          text: string;
           ticket_id: number | null;
           updated_at: string | null;
         };
@@ -115,6 +116,7 @@ export type Database = {
           created_at?: string;
           id?: number;
           sender_id?: string | null;
+          text: string;
           ticket_id?: number | null;
           updated_at?: string | null;
         };
@@ -123,6 +125,7 @@ export type Database = {
           created_at?: string;
           id?: number;
           sender_id?: string | null;
+          text?: string;
           ticket_id?: number | null;
           updated_at?: string | null;
         };
@@ -132,6 +135,13 @@ export type Database = {
             columns: ['contact_id'];
             isOneToOne: false;
             referencedRelation: 'company_contacts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_sender_id_fkey1';
+            columns: ['sender_id'];
+            isOneToOne: false;
+            referencedRelation: 'app_user';
             referencedColumns: ['id'];
           },
           {
@@ -149,7 +159,7 @@ export type Database = {
           contact_id: number | null;
           created_at: string;
           customer_id: string | null;
-          description: string | null;
+          description: string;
           id: number;
           priority: Database['public']['Enums']['ticket_priority'] | null;
           status: Database['public']['Enums']['ticket_status'] | null;
@@ -161,7 +171,7 @@ export type Database = {
           contact_id?: number | null;
           created_at?: string;
           customer_id?: string | null;
-          description?: string | null;
+          description: string;
           id?: number;
           priority?: Database['public']['Enums']['ticket_priority'] | null;
           status?: Database['public']['Enums']['ticket_status'] | null;
@@ -173,7 +183,7 @@ export type Database = {
           contact_id?: number | null;
           created_at?: string;
           customer_id?: string | null;
-          description?: string | null;
+          description?: string;
           id?: number;
           priority?: Database['public']['Enums']['ticket_priority'] | null;
           status?: Database['public']['Enums']['ticket_status'] | null;

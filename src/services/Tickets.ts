@@ -25,7 +25,6 @@ export async function fetchTickets(
     (ticket: any) => {
       const { creator_user, creator_contact, ...rest } = ticket;
 
-      // TODO : Unable to retrieve email of customer_manager => View, replication of email in app_user ?
       const baseCreator = creator_user || creator_contact;
       return {
         ...rest,
