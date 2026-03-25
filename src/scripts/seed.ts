@@ -6,7 +6,7 @@ import { MessageInsert, TicketInsert } from '@/types';
 
 const NB_COMPANIES: number = 15;
 const NB_TICKETS: number = 15;
-const NB_MESSAGES: number = 15;
+const NB_MESSAGES: number = 5;
 
 // Charge automatiquement .env, .env.local, .env.{NODE_ENV}, .env.{NODE_ENV}.local
 dotenvFlow.config();
@@ -125,12 +125,21 @@ async function runSeed() {
       if (updateError) console.error(updateError);
 
       // Give company
+      const rowsToInsert = [
+        { user_id: userData.user.id, company_id: companyData.id },
+      ];
+
+      // For e2e tests, we don't assign company to first agent
+      if (i !== 0) {
+        rowsToInsert.push({
+          user_id: agentData.user.id,
+          company_id: companyData.id,
+        });
+      }
       const { error: insertCompanyError } = await supabase
         .from('user_companies')
-        .insert([
-          { user_id: userData.user.id, company_id: companyData.id },
-          { user_id: agentData.user.id, company_id: companyData.id },
-        ]);
+        .insert(rowsToInsert);
+
       if (insertCompanyError) console.error(insertCompanyError);
 
       // Create tickets
