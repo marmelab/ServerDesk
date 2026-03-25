@@ -5,8 +5,9 @@ export type Ticket = Tables<'tickets'>;
 export type TicketInsert = Database['public']['Tables']['tickets']['Insert'];
 export type TicketPriority = Database['public']['Enums']['ticket_priority'];
 export type TicketStatus = Database['public']['Enums']['ticket_status'];
-export type TicketWithCompany = Ticket & {
-  company: Company | null;
+export type TicketWithDetails = Ticket & {
+  company: { name: string } | null;
+  creator: { name: string; email: string; isInternal: boolean } | null;
 };
 
 interface PriorityOption {
@@ -67,3 +68,5 @@ export type CompanyJson = { id: number; name: string };
 export type InviteToken = Tables<'invite_tokens'>;
 export type InviteTokenInsert =
   Database['public']['Tables']['invite_tokens']['Insert'];
+
+export type CompanyContacts = Tables<'company_contacts'>;

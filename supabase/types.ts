@@ -45,6 +45,38 @@ export type Database = {
         };
         Relationships: [];
       };
+      company_contacts: {
+        Row: {
+          company_id: number;
+          created_at: string;
+          email: string | null;
+          id: number;
+          name: string;
+        };
+        Insert: {
+          company_id: number;
+          created_at?: string;
+          email?: string | null;
+          id?: number;
+          name: string;
+        };
+        Update: {
+          company_id?: number;
+          created_at?: string;
+          email?: string | null;
+          id?: number;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'company_contacts_company_id_fkey';
+            columns: ['company_id'];
+            isOneToOne: false;
+            referencedRelation: 'companies';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       invite_tokens: {
         Row: {
           created_at: string;
@@ -69,9 +101,52 @@ export type Database = {
         };
         Relationships: [];
       };
+      messages: {
+        Row: {
+          contact_id: number | null;
+          created_at: string;
+          id: number;
+          sender_id: string | null;
+          ticket_id: number | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          contact_id?: number | null;
+          created_at?: string;
+          id?: number;
+          sender_id?: string | null;
+          ticket_id?: number | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          contact_id?: number | null;
+          created_at?: string;
+          id?: number;
+          sender_id?: string | null;
+          ticket_id?: number | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'messages_contact_id_fkey';
+            columns: ['contact_id'];
+            isOneToOne: false;
+            referencedRelation: 'company_contacts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_ticket_id_fkey';
+            columns: ['ticket_id'];
+            isOneToOne: false;
+            referencedRelation: 'tickets';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       tickets: {
         Row: {
           company_id: number | null;
+          contact_id: number | null;
           created_at: string;
           customer_id: string | null;
           description: string | null;
@@ -83,6 +158,7 @@ export type Database = {
         };
         Insert: {
           company_id?: number | null;
+          contact_id?: number | null;
           created_at?: string;
           customer_id?: string | null;
           description?: string | null;
@@ -94,6 +170,7 @@ export type Database = {
         };
         Update: {
           company_id?: number | null;
+          contact_id?: number | null;
           created_at?: string;
           customer_id?: string | null;
           description?: string | null;
@@ -109,6 +186,20 @@ export type Database = {
             columns: ['company_id'];
             isOneToOne: false;
             referencedRelation: 'companies';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'tickets_contact_id_fkey';
+            columns: ['contact_id'];
+            isOneToOne: false;
+            referencedRelation: 'company_contacts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'tickets_customer_id_fkey1';
+            columns: ['customer_id'];
+            isOneToOne: false;
+            referencedRelation: 'app_user';
             referencedColumns: ['id'];
           },
         ];

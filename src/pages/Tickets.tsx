@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useQuery } from '@tanstack/react-query';
-import { Priorities, Statuses } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Table,
@@ -14,10 +13,16 @@ import {
 import { fetchTickets, PAGE_SIZE } from '@/services/Tickets';
 import AddTicketDialog from '@/components/AddTicketDialog';
 import { PageHeader } from '@/components/PageHeader';
+import TicketSummary from '@/components/TicketSummary';
+import { TicketWithDetails } from '@/types';
+import { Drawer } from '@/components/ui/drawer';
+import TicketDetails from './TicketDetail';
 
 export default function TicketsPage() {
   const { user } = useAuth();
   const [page, setPage] = useState<number>(0);
+  const [selectedTicket, setSelectedTicket] =
+    useState<TicketWithDetails | null>(null);
 
   const {
     data,
@@ -85,52 +90,13 @@ export default function TicketsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tickets.map((ticket) => {
-                  const priorityInfo = Priorities.find(
-                    (p) => p.value === ticket.priority,
-                  );
-                  const statusInfo = Statuses.find(
-                    (p) => p.value === ticket.status,
-                  );
-                  return (
-                    <TableRow
-                      key={ticket.id}
-                      className="cursor-pointer hover:bg-muted/50"
-                    >
-                      <TableCell className="font-medium">
-                        <div className="flex flex-col">
-                          <span>{ticket.subject}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {new Date(ticket.created_at).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`h-2 w-2 rounded-full ${priorityInfo?.color}`}
-                          />
-                          <span className="capitalize text-sm">
-                            {ticket.priority}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`h-2 w-2 rounded-full ${statusInfo?.color}`}
-                          />
-                          <span className="capitalize text-sm">
-                            {ticket.status}
-                          </span>
-                        </div>
-                      </TableCell>
-                      {(user?.role === 'admin' || user?.role === 'agent') && (
-                        <TableCell>{ticket.company?.name}</TableCell>
-                      )}
-                    </TableRow>
-                  );
-                })}
+                {tickets.map((ticket) => (
+                  <TicketSummary
+                    key={ticket.id}
+                    ticket={ticket}
+                    onSelect={setSelectedTicket}
+                  />
+                ))}
                 {tickets.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={4} className="h-32 text-center">
@@ -142,6 +108,13 @@ export default function TicketsPage() {
                 )}
               </TableBody>
             </Table>
+            <Drawer
+              open={!!selectedTicket}
+              onOpenChange={(open) => !open && setSelectedTicket(null)}
+              direction="right"
+            >
+              {selectedTicket && <TicketDetails ticket={selectedTicket} />}
+            </Drawer>
           </div>
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-2">
