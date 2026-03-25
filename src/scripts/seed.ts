@@ -108,15 +108,7 @@ async function runSeed() {
 
     if (userError) console.error('❌ Error:', userError.message);
 
-    if (
-      agentData &&
-      agentData.user &&
-      agentData.user.id &&
-      userData &&
-      userData.user &&
-      userData.user.id &&
-      companyData
-    ) {
+    if (agentData?.user?.id && userData?.user?.id && companyData) {
       // Update role because of trigger
       const { error: updateError } = await supabase
         .from('app_user')

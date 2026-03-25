@@ -161,8 +161,8 @@ export type Database = {
           customer_id: string | null;
           description: string;
           id: number;
-          priority: Database['public']['Enums']['ticket_priority'] | null;
-          status: Database['public']['Enums']['ticket_status'] | null;
+          priority: Database['public']['Enums']['ticket_priority'];
+          status: Database['public']['Enums']['ticket_status'];
           subject: string;
           updated_at: string | null;
         };
@@ -173,8 +173,8 @@ export type Database = {
           customer_id?: string | null;
           description: string;
           id?: number;
-          priority?: Database['public']['Enums']['ticket_priority'] | null;
-          status?: Database['public']['Enums']['ticket_status'] | null;
+          priority?: Database['public']['Enums']['ticket_priority'];
+          status?: Database['public']['Enums']['ticket_status'];
           subject: string;
           updated_at?: string | null;
         };
@@ -185,8 +185,8 @@ export type Database = {
           customer_id?: string | null;
           description?: string;
           id?: number;
-          priority?: Database['public']['Enums']['ticket_priority'] | null;
-          status?: Database['public']['Enums']['ticket_status'] | null;
+          priority?: Database['public']['Enums']['ticket_priority'];
+          status?: Database['public']['Enums']['ticket_status'];
           subject?: string;
           updated_at?: string | null;
         };

@@ -1,4 +1,4 @@
-import { Priorities, Statuses, TicketWithDetails } from '@/types';
+import { PRIORITY_MAP, STATUS_MAP, TicketWithDetails } from '@/types';
 import {
   DrawerContent,
   DrawerTitle,
@@ -7,16 +7,15 @@ import {
 } from '@/components/ui/drawer';
 import { Badge } from '@/components/ui/badge';
 import MessageThread from './MessageThread';
+import { Send } from 'lucide-react';
 
-export default function TicketDetails({
-  ticket,
-}: {
+interface TicketDetailsProps {
   ticket: TicketWithDetails;
-}) {
-  if (!ticket) return null;
+}
 
-  const priorityInfo = Priorities.find((p) => p.value === ticket.priority);
-  const statusInfo = Statuses.find((p) => p.value === ticket.status);
+export default function TicketDetails({ ticket }: TicketDetailsProps) {
+  const priorityInfo = PRIORITY_MAP[ticket.priority];
+  const statusInfo = STATUS_MAP[ticket.status];
 
   return (
     <DrawerContent className="h-full fixed right-0 top-0 mt-0 rounded-l-xl border-l !w-[900px] !max-w-[90vw] outline-none">
@@ -33,13 +32,13 @@ export default function TicketDetails({
             <div className="flex gap-2 shrink-0 pt-1">
               <Badge variant="secondary" className="whitespace-nowrap">
                 <span
-                  className={`h-2 w-2 rounded-full ${priorityInfo?.color}`}
+                  className={`h-2 w-2 rounded-full ${priorityInfo.color}`}
                 />
-                {priorityInfo?.label}
+                {priorityInfo.label}
               </Badge>
               <Badge variant="secondary" className="whitespace-nowrap">
-                <span className={`h-2 w-2 rounded-full ${statusInfo?.color}`} />
-                {statusInfo?.label}
+                <span className={`h-2 w-2 rounded-full ${statusInfo.color}`} />
+                {statusInfo.label}
               </Badge>
             </div>
           </div>
@@ -61,7 +60,7 @@ export default function TicketDetails({
             placeholder="Type a reply..."
           />
           <button className="bg-primary text-white p-2 rounded-full w-9 h-9 flex items-center justify-center">
-            ↑
+            <Send />
           </button>
         </div>
       </div>

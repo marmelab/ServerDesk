@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from './ui/button';
 import { useCallback, useEffect, useState } from 'react';
-import { useInviteManager } from '@/hooks/UseCreateToken';
+import { useInviteManager } from '@/hooks/useCreateToken';
 import { AppUserRole } from '@/types';
 import { InviteTokenDisplay } from './InviteTokenDisplay';
 import { CompanyMultiSelect } from './CompanyMultiSelect';

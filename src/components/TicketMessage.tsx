@@ -1,18 +1,20 @@
 import { AppUserRole } from '@/types';
 
+interface TicketMessageProps {
+  message: string;
+  role: AppUserRole | null | undefined;
+  id: number;
+  created_at: string;
+  name: string | undefined;
+}
+
 export default function TicketMessage({
   message,
   role,
   id,
   created_at,
   name,
-}: {
-  message: string;
-  role: AppUserRole | null | undefined;
-  id: number;
-  created_at: string;
-  name: string | undefined;
-}) {
+}: TicketMessageProps) {
   const isInternal = role === 'agent';
 
   return (

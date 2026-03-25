@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Priorities } from '@/types';
+import { PRIORITY_MAP } from '@/types';
 import { Loader2 } from 'lucide-react';
 
 const FieldWrapper = ({ label, field, children }: any) => (
@@ -79,7 +79,7 @@ export const PrioritySelectField = ({ label, field }: any) => {
           <SelectValue placeholder="Select priority" />
         </SelectTrigger>
         <SelectContent>
-          {Priorities.map((p) => (
+          {Object.values(PRIORITY_MAP).map((p) => (
             <SelectItem key={p.value} value={p.value}>
               <div className="flex items-center gap-2">
                 <span className={`h-2 w-2 rounded-full ${p.color}`} />

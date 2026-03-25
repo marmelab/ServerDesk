@@ -1,4 +1,4 @@
-import { TicketWithDetails, Priorities, Statuses } from '@/types';
+import { TicketWithDetails, PRIORITY_MAP, STATUS_MAP } from '@/types';
 import { TableRow, TableCell } from './ui/table';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -13,8 +13,8 @@ export default function TicketSummary({
 }: TicketSummaryProps) {
   const { user } = useAuth();
 
-  const priorityInfo = Priorities.find((p) => p.value === ticket.priority);
-  const statusInfo = Statuses.find((p) => p.value === ticket.status);
+  const priorityInfo = PRIORITY_MAP[ticket.priority];
+  const statusInfo = STATUS_MAP[ticket.status];
 
   return (
     <TableRow

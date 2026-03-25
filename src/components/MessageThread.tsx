@@ -1,24 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchMessages } from '@/services/Messages';
 import { TicketWithDetails } from '@/types';
 import TicketMessage from './TicketMessage';
+import { useMessages } from '@/hooks/useMessages';
 
-export default function MessageThread({
-  ticket,
-}: {
+interface MessageThreadProps {
   ticket: TicketWithDetails;
-}) {
-  const {
-    data,
-    isPending,
-    error: queryError,
-  } = useQuery({
-    queryKey: ['messages', ticket.id],
-    queryFn: () => fetchMessages(ticket.id),
-    placeholderData: (previousData) => previousData,
-  });
+}
 
-  const messages = data?.data ?? [];
+export default function MessageThread({ ticket }: MessageThreadProps) {
+  const { messages, isPending, error: queryError } = useMessages(ticket.id);
 
   return (
     <div className="flex-1 overflow-y-auto">

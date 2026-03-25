@@ -33,7 +33,7 @@ export async function fetchTickets(
               ...baseCreator,
               // Boolean to know if Ticket created by contact or customer_manager
               isInternal: !!creator_user,
-              email: creator_user?.auth_user?.email || creator_contact?.email,
+              email: creator_user?.auth_user?.email ?? creator_contact?.email,
             }
           : null,
       };
