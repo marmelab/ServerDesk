@@ -1,7 +1,7 @@
 import { fn } from 'storybook/test';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { CompanyMultiSelect } from './CompanyMultiSelect';
-import { InteractiveStory } from '../stories/UtilsStories';
+import { InteractiveStory } from '../../stories/UtilsStories';
 
 const meta = {
   title: 'Components/CompanyMultiSelect',

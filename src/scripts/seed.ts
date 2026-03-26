@@ -2,7 +2,11 @@ import { faker } from '@faker-js/faker';
 import * as dotenvFlow from 'dotenv-flow';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from 'supabase/types';
-import { AppUserRole, TicketInsert } from '@/types';
+import { MessageInsert, TicketInsert } from '@/types';
+
+const NB_COMPANIES: number = 15;
+const NB_TICKETS: number = 15;
+const NB_MESSAGES: number = 5;
 
 // Charge automatiquement .env, .env.local, .env.{NODE_ENV}, .env.{NODE_ENV}.local
 dotenvFlow.config();
@@ -69,9 +73,8 @@ async function runSeed() {
 
   if (error) console.error('❌ Error:', error.message);
 
-  const NB_USER: number = 15;
   // Customer managers and companies
-  for (let i = 0; i < NB_USER; i++) {
+  for (let i = 0; i < NB_COMPANIES; i++) {
     const companyName = faker.company.name();
     const { data: companyData, error: companyError } = await supabase
       .from('companies')
@@ -80,45 +83,84 @@ async function runSeed() {
       .single();
     if (companyError) console.error(companyError);
 
-    const { data: userData, error } = await supabase.auth.admin.createUser({
-      email: `test${i}@test.com`,
-      password: '123456',
-      email_confirm: true,
-      user_metadata: {
-        name: faker.person.fullName(),
-      },
-    });
+    const { data: agentData, error: agentError } =
+      await supabase.auth.admin.createUser({
+        email: `agent${i}@test.com`,
+        password: '123456',
+        email_confirm: true,
+        user_metadata: {
+          name: faker.person.fullName(),
+          role: 'agent',
+        },
+      });
+    if (agentError) console.error('❌ Error:', agentError.message);
 
-    if (error) console.error('❌ Error:', error.message);
+    const { data: userData, error: userError } =
+      await supabase.auth.admin.createUser({
+        email: `test${i}@test.com`,
+        password: '123456',
+        email_confirm: true,
+        user_metadata: {
+          name: faker.person.fullName(),
+          role: 'customer_manager',
+        },
+      });
 
-    if (userData && userData.user && userData.user.id && companyData) {
-      // Give role and company
-      const isAgent: boolean = i < NB_USER / 2;
-      const appRole: AppUserRole = isAgent ? 'agent' : 'customer_manager';
+    if (userError) console.error('❌ Error:', userError.message);
+
+    if (agentData?.user?.id && userData?.user?.id && companyData) {
+      // Update role because of trigger
       const { error: updateError } = await supabase
         .from('app_user')
-        .update({ role: appRole })
-        .eq('id', userData.user.id);
+        .update({ role: 'customer_manager' })
+        .eq('id', userData.user?.id);
       if (updateError) console.error(updateError);
 
-      const customerId = isAgent ? null : userData.user.id;
-      if (!isAgent) {
-        const { error: insertCompanyError } = await supabase
-          .from('user_companies')
-          .insert({ user_id: userData.user.id, company_id: companyData.id });
-        if (insertCompanyError) console.error(insertCompanyError);
-      }
+      // Give company
+      const rowsToInsert = [
+        { user_id: userData.user.id, company_id: companyData.id },
+      ];
 
-      for (let i = 0; i < 5; i++) {
+      // For e2e tests, we don't assign company to first agent
+      if (i !== 0) {
+        rowsToInsert.push({
+          user_id: agentData.user.id,
+          company_id: companyData.id,
+        });
+      }
+      const { error: insertCompanyError } = await supabase
+        .from('user_companies')
+        .insert(rowsToInsert);
+
+      if (insertCompanyError) console.error(insertCompanyError);
+
+      // Create tickets
+      for (let i = 0; i < NB_TICKETS; i++) {
         const newTicket: TicketInsert = {
           subject: faker.hacker.phrase(),
           description: faker.lorem.paragraph(),
           company_id: companyData?.id as number,
-          customer_id: customerId,
+          customer_id: userData.user.id,
+          contact_id: null,
         };
 
-        const { error } = await supabase.from('tickets').insert(newTicket);
+        const { data: ticketData, error } = await supabase
+          .from('tickets')
+          .insert(newTicket)
+          .select()
+          .single();
         if (error) console.error('❌ Error:', error.message);
+
+        // Create messages
+        for (let i = 0; i < NB_MESSAGES; i++) {
+          const newMessage: MessageInsert = {
+            text: faker.lorem.sentences(),
+            ticket_id: ticketData?.id,
+            sender_id: i % 2 === 0 ? userData.user.id : agentData.user.id,
+          };
+          const { error } = await supabase.from('messages').insert(newMessage);
+          if (error) console.error('❌ Error:', error.message);
+        }
       }
     }
   }

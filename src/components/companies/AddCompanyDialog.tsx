@@ -11,8 +11,8 @@ import {
 } from '@/components/ui/dialog';
 import { HousePlus } from 'lucide-react';
 import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { useAddCompany } from '@/hooks/UseCompanies';
+import { Button } from './../ui/button';
+import { useAddCompany } from '@/hooks/useCompanies';
 
 export default function AddCompanyDialog() {
   const [company, setCompany] = useState('');

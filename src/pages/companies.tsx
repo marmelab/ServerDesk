@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { fetchCompanies } from '@/services/companies';
-import AddCompanyDialog from '@/components/AddCompanyDialog';
-import CompanyCard from '@/components/CompanyCard';
+import AddCompanyDialog from '@/components/companies/AddCompanyDialog';
+import CompanyCard from '@/components/companies/CompanyCard';
 import { PageHeader } from '@/components/PageHeader';
 
 export default function CompaniesPage() {

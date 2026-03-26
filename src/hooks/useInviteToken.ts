@@ -1,6 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { useQuery } from '@tanstack/react-query';
-import { InviteTokenInput } from './UseCreateToken';
+import { InviteTokenInput } from './useCreateToken';
 
 export function useInviteToken(token: string | null) {
   const query = useQuery({

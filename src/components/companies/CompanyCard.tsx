@@ -3,7 +3,7 @@ import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Company } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
-import { InviteDialog } from './InviteDialog';
+import { InviteDialog } from './../InviteDialog';
 
 export default function CompanyCard({ company }: { company: Company }) {
   const { user } = useAuth();
