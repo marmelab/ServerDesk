@@ -16,7 +16,6 @@ export default function MessageThreadView({
   error,
 }: MessageThreadViewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
