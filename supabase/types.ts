@@ -108,7 +108,7 @@ export type Database = {
           id: number;
           sender_id: string | null;
           text: string;
-          ticket_id: number | null;
+          ticket_id: number;
           updated_at: string | null;
         };
         Insert: {
@@ -117,7 +117,7 @@ export type Database = {
           id?: number;
           sender_id?: string | null;
           text: string;
-          ticket_id?: number | null;
+          ticket_id: number;
           updated_at?: string | null;
         };
         Update: {
@@ -126,7 +126,7 @@ export type Database = {
           id?: number;
           sender_id?: string | null;
           text?: string;
-          ticket_id?: number | null;
+          ticket_id?: number;
           updated_at?: string | null;
         };
         Relationships: [

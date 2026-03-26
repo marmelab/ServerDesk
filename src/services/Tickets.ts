@@ -45,3 +45,40 @@ export async function fetchTickets(
     count: count || 0,
   };
 }
+
+export async function fetchTicket(
+  ticketId: number,
+): Promise<{ data: TicketWithDetails }> {
+  const { data, error } = await supabase
+    .from('tickets')
+    .select(
+      `
+      *, 
+      company:companies(name),
+      creator_user:app_user!customer_id(name),
+      creator_contact:company_contacts!contact_id(name, email)
+      `,
+    )
+    .eq('id', ticketId)
+    .single();
+  if (error) throw error;
+  if (!data) throw new Error('Ticket not found');
+
+  const { creator_user, creator_contact, ...rest } = data;
+  const baseCreator = creator_user || creator_contact;
+  const transformedData: TicketWithDetails = {
+    ...rest,
+    creator: baseCreator
+      ? {
+          ...baseCreator,
+          // Boolean to know if Ticket created by contact or customer_manager
+          isInternal: !!creator_user,
+          email: (creator_user as any)?.email ?? creator_contact?.email,
+        }
+      : null,
+  };
+
+  return {
+    data: transformedData,
+  };
+}

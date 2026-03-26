@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Table,
@@ -10,13 +9,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { fetchTickets, PAGE_SIZE } from '@/services/Tickets';
+import { PAGE_SIZE } from '@/services/Tickets';
 import AddTicketDialog from '@/components/tickets/AddTicketDialog';
 import { PageHeader } from '@/components/PageHeader';
 import TicketSummary from '@/components/tickets/TicketSummary';
 import { TicketWithDetails } from '@/types';
 import { Drawer } from '@/components/ui/drawer';
 import TicketDetails from '../components/tickets/TicketDetail';
+import { useTickets } from '@/hooks/useTickets';
 
 export default function TicketsPage() {
   const { user } = useAuth();
@@ -24,20 +24,8 @@ export default function TicketsPage() {
   const [selectedTicket, setSelectedTicket] =
     useState<TicketWithDetails | null>(null);
 
-  const {
-    data,
-    isPending,
-    isPlaceholderData,
-    error: queryError,
-    refetch,
-  } = useQuery({
-    queryKey: ['tickets', page],
-    queryFn: () => fetchTickets(page),
-    placeholderData: (previousData) => previousData,
-  });
-
-  const tickets = data?.data ?? [];
-  const totalCount = data?.count || 0;
+  const { tickets, totalCount, isPending, isPlaceholderData, error, refetch } =
+    useTickets(page);
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   if (isPending)
@@ -45,7 +33,7 @@ export default function TicketsPage() {
 
   return (
     <div className="container mx-auto py-10">
-      {queryError && (
+      {error && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <h3 className="text-xl font-semibold italic">
             Failed to load tickets
@@ -55,7 +43,7 @@ export default function TicketsPage() {
           </Button>
         </div>
       )}
-      {!isPending && !queryError && (
+      {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
           <PageHeader
             title="Tickets"

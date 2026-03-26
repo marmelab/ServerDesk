@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PRIORITY_MAP } from '@/types';
 import { Loader2 } from 'lucide-react';
 
 const FieldWrapper = ({ label, field, children }: any) => (
@@ -64,11 +63,34 @@ export const TextAreaField = ({ label, field, ...props }: any) => {
   );
 };
 
-export const PrioritySelectField = ({ label, field }: any) => {
+interface MapOption {
+  value: string;
+  label: string;
+  color: string;
+}
+
+interface GenericSelectProps {
+  label: string;
+  field: any;
+  options: Record<string, MapOption> | MapOption[];
+  placeholder?: string;
+}
+
+export const BaseSelectField = ({
+  label,
+  field,
+  options,
+  placeholder,
+}: GenericSelectProps) => {
   if (!field) {
-    console.error(`PrioritySelectField "${label}" with no field.`);
+    console.error(`SelectField "${label}" with no field.`);
     return null;
   }
+
+  const optionsArray = Array.isArray(options)
+    ? options
+    : Object.values(options);
+
   return (
     <FieldWrapper label={label} field={field}>
       <Select
@@ -76,14 +98,14 @@ export const PrioritySelectField = ({ label, field }: any) => {
         onValueChange={(val) => field.handleChange(val)}
       >
         <SelectTrigger id={field.name} className="w-full">
-          <SelectValue placeholder="Select priority" />
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          {Object.values(PRIORITY_MAP).map((p) => (
-            <SelectItem key={p.value} value={p.value}>
+          {optionsArray.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
               <div className="flex items-center gap-2">
-                <span className={`h-2 w-2 rounded-full ${p.color}`} />
-                {p.label}
+                <span className={`h-2 w-2 rounded-full ${option.color}`} />
+                {option.label}
               </div>
             </SelectItem>
           ))}

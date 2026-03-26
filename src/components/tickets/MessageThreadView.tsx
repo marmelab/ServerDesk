@@ -1,5 +1,6 @@
 import { MessageWithDetails, TicketWithDetails } from '@/types';
 import TicketMessage from './TicketMessage';
+import { useEffect, useRef } from 'react';
 
 interface MessageThreadViewProps {
   ticket: TicketWithDetails;
@@ -14,6 +15,15 @@ export default function MessageThreadView({
   isPending,
   error,
 }: MessageThreadViewProps) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
     <div className="flex-1 overflow-y-auto">
       <div className="flex flex-col p-4">
@@ -39,6 +49,7 @@ export default function MessageThreadView({
         ) : (
           <p>Loading messages...</p>
         )}
+        <div ref={messagesEndRef} />
       </div>
     </div>
   );
