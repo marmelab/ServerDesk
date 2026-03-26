@@ -87,55 +87,56 @@ export default function TicketDetails({
             </div>
           </DrawerHeader>
           <MessageThread ticket={ticket} />
-
-          <div className="p-4 border-t bg-background shrink-0">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                form.handleSubmit();
-              }}
-              className="flex flex-col"
-            >
-              {user.role === 'agent' && (
-                <div className="flex items-center gap-2">
+          {user.role !== 'admin' && (
+            <div className="p-4 border-t bg-background shrink-0">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  form.handleSubmit();
+                }}
+                className="flex flex-col"
+              >
+                {user.role === 'agent' && (
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">
+                      Set status on reply:
+                    </label>
+                    <div className="w-[160px]">
+                      <form.Field name="status">
+                        {(field) => (
+                          <BaseSelectField
+                            label=""
+                            field={field}
+                            options={STATUS_MAP}
+                            placeholder={ticket.status}
+                          />
+                        )}
+                      </form.Field>
+                    </div>
+                  </div>
+                )}
+                <div className="flex-1 flex items-center gap-2">
                   <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                    Set status on reply:
+                    Type a reply:
                   </label>
-                  <div className="w-[160px]">
-                    <form.Field name="status">
-                      {(field) => (
-                        <BaseSelectField
-                          label=""
-                          field={field}
-                          options={STATUS_MAP}
-                          placeholder={ticket.status}
-                        />
-                      )}
+                  <div className="flex-1">
+                    <form.Field name="text">
+                      {(field) => <TextAreaField label="" field={field} />}
                     </form.Field>
                   </div>
+                  <div className="shrink-0">
+                    <Button
+                      type="submit"
+                      disabled={form.state.isSubmitting}
+                      className="rounded-full h-10 w-10 flex items-center justify-center bg-primary text-white hover:bg-primary/90 transition-colors"
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-              )}
-              <div className="flex-1 flex items-center gap-2">
-                <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                  Type a reply:
-                </label>
-                <div className="flex-1">
-                  <form.Field name="text">
-                    {(field) => <TextAreaField label="" field={field} />}
-                  </form.Field>
-                </div>
-                <div className="shrink-0">
-                  <Button
-                    type="submit"
-                    disabled={form.state.isSubmitting}
-                    className="rounded-full h-10 w-10 flex items-center justify-center bg-primary text-white hover:bg-primary/90 transition-colors"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </div>
+              </form>
+            </div>
+          )}
         </>
       )}
     </DrawerContent>
