@@ -33,13 +33,13 @@ export default function TicketSummary({
       <TableCell>
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${priorityInfo?.color}`} />
-          <span className="capitalize text-sm">{ticket.priority}</span>
+          <span className="capitalize text-sm">{priorityInfo.label}</span>
         </div>
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-2">
           <span className={`h-2 w-2 rounded-full ${statusInfo?.color}`} />
-          <span className="capitalize text-sm">{ticket.status}</span>
+          <span className="capitalize text-sm">{statusInfo.label}</span>
         </div>
       </TableCell>
       {(user?.role === 'admin' || user?.role === 'agent') && (

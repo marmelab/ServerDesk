@@ -1,18 +1,19 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { TicketInsert } from '@/types';
-import { supabase } from '@/lib/supabase';
-import { toast } from 'sonner';
+import { fetchTickets } from '@/services/Tickets';
+import { useQuery } from '@tanstack/react-query';
 
-export function useAddTicket() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async (newTicket: TicketInsert) => {
-      const { error } = await supabase.from('tickets').insert(newTicket);
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['tickets'] });
-      toast.success('Ticket created successfully!');
-    },
+export function useTickets(page: number) {
+  const query = useQuery({
+    queryKey: ['tickets', page],
+    queryFn: () => fetchTickets(page),
+    placeholderData: (previousData) => previousData,
   });
+
+  return {
+    tickets: query.data?.data ?? [],
+    totalCount: query.data?.count ?? 0,
+    isPending: query.isPending,
+    error: query.error,
+    isPlaceholderData: query.isPlaceholderData,
+    refetch: query.refetch,
+  };
 }

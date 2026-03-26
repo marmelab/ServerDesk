@@ -9,15 +9,15 @@ import {
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { FilePlus } from 'lucide-react';
-import { TicketPriority } from '@/types';
+import { PRIORITY_MAP, TicketPriority } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from './../ui/button';
-import { useAddTicket } from '@/hooks/useTickets';
+import { useCreateTicket } from '@/hooks/useCreateTickets';
 import { createFormHook, createFormHookContexts } from '@tanstack/react-form';
 import {
   TextField,
   TextAreaField,
-  PrioritySelectField,
+  BaseSelectField,
   SubmitButton,
 } from '@/components/FormInputs';
 
@@ -27,7 +27,7 @@ const { useAppForm } = createFormHook({
   fieldComponents: {
     TextField,
     TextAreaField,
-    PrioritySelectField,
+    BaseSelectField,
   },
   formComponents: {
     SubmitButton,
@@ -64,7 +64,7 @@ export default function AddTicketDialog() {
     },
   });
 
-  const { mutateAsync: addTicket } = useAddTicket();
+  const { mutateAsync: addTicket } = useCreateTicket();
 
   if (!user?.company_ids?.length) {
     console.error('User is not linked to any company.');
@@ -105,7 +105,12 @@ export default function AddTicketDialog() {
             </form.AppField>
             <form.AppField name="priority">
               {(field) => (
-                <field.PrioritySelectField label="Priority" field={field} />
+                <field.BaseSelectField
+                  label="Priority"
+                  field={field}
+                  options={PRIORITY_MAP}
+                  placeholder="Medium"
+                />
               )}
             </form.AppField>
           </div>

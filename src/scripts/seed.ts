@@ -151,6 +151,8 @@ async function runSeed() {
           .single();
         if (error) console.error('❌ Error:', error.message);
 
+        if (!ticketData?.id) return;
+
         // Create messages
         for (let i = 0; i < NB_MESSAGES; i++) {
           const newMessage: MessageInsert = {
