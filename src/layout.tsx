@@ -13,8 +13,8 @@ export default function Layout() {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b px-6 h-14 flex items-center relative">
+    <div className="h-screen flex flex-col overflow-hidden">
+      <header className="border-b px-6 h-14 flex items-center shrink-0">
         <Link
           to="/"
           className="flex-1 flex justify-start items-center hover:opacity-80 transition-opacity"
@@ -55,8 +55,10 @@ export default function Layout() {
           </>
         )}
       </header>
-      <main className="flex-1 py-10">
-        <Outlet />
+      <main className="flex-1 overflow-y-auto bg-muted/10">
+        <div className="container mx-auto py-10">
+          <Outlet />
+        </div>
       </main>
     </div>
   );
