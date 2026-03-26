@@ -29,9 +29,19 @@ export default function TicketMessage({
             : 'bg-muted text-foreground rounded-tl-none'
         }`}
       >
-        <div className="text-sm font-medium text-slate-500 mb-1">{name}</div>
+        <div
+          className={`text-sm font-medium mb-1 ${
+            isInternal ? 'text-primary-foreground/70' : 'text-muted-foreground'
+          }`}
+        >
+          {name}
+        </div>
         <div className="leading-normal">{message}</div>
-        <div className="text-xs text-slate-400 mt-2">
+        <div
+          className={`text-xs pt-1 mt-2 ${
+            isInternal ? 'text-primary-foreground/70' : 'text-muted-foreground'
+          }`}
+        >
           {new Date(created_at).toLocaleString()}
         </div>
       </div>
