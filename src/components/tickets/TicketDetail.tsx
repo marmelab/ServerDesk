@@ -41,8 +41,6 @@ export default function TicketDetails({
   const priorityInfo = PRIORITY_MAP[ticket.priority];
   const statusInfo = STATUS_MAP[ticket.status];
 
-  if (!user) return null;
-
   return (
     <DrawerContent className="h-full fixed right-0 top-0 mt-0 rounded-l-xl border-l !w-[900px] !max-w-[90vw] outline-none">
       {error && (
@@ -52,7 +50,7 @@ export default function TicketDetails({
           </h3>
         </div>
       )}
-      {!isPending && !error && ticket && (
+      {ticket && (
         <>
           <DrawerHeader className="border-b pb-4">
             <div className="flex flex-col gap-1 text-left">

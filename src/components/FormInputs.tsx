@@ -101,11 +101,11 @@ export const BaseSelectField = ({
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
-          {optionsArray.map((opt) => (
-            <SelectItem key={opt.value} value={opt.value}>
+          {optionsArray.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
               <div className="flex items-center gap-2">
-                <span className={`h-2 w-2 rounded-full ${opt.color}`} />
-                {opt.label}
+                <span className={`h-2 w-2 rounded-full ${option.color}`} />
+                {option.label}
               </div>
             </SelectItem>
           ))}
