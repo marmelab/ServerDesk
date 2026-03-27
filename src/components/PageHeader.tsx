@@ -17,7 +17,7 @@ export const PageHeader = ({
         <h2 className="text-3xl font-bold tracking-tight text-balance md:text-4xl">
           {title}
         </h2>
-        <p className="text-muted-foreground">{description}</p>
+        <p className="text-tertiary text-muted-foreground">{description}</p>
       </div>
       {children && <div>{children}</div>}
     </header>

@@ -12,7 +12,7 @@ import {
 import { Loader2 } from 'lucide-react';
 
 const FieldWrapper = ({ label, field, children }: any) => (
-  <div className="grid grid-cols-[100px_1fr] items-start gap-4 py-2">
+  <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] items-start gap-2 sm:gap-4 py-2">
     <Label htmlFor={field.name} className="mt-3 text-right">
       {label}
     </Label>

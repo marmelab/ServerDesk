@@ -58,7 +58,7 @@ export const LoginForm = ({
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
+          <CardDescription className="text-tertiary">
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>

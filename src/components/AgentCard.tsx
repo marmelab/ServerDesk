@@ -28,7 +28,9 @@ export default function AgentCard({
         <CardTitle className="text-2xl font-semibold text-balance">
           {agentInfos.name}
         </CardTitle>
-        <CardDescription>{agentInfos.email}</CardDescription>
+        <CardDescription className="text-tertiary">
+          {agentInfos.email}
+        </CardDescription>
       </CardHeader>
 
       <CardFooter className="flex flex-row flex-wrap gap-2 pt-4">

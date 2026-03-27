@@ -116,7 +116,9 @@ export const SignUpForm = ({
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Sign up</CardTitle>
-            <CardDescription>Create a new account</CardDescription>
+            <CardDescription className="text-tertiary">
+              Create a new account
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSignUp}>

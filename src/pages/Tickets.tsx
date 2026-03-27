@@ -106,14 +106,14 @@ export default function TicketsPage() {
           </div>
           <div className="flex items-center justify-between py-4">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                Page{' '}
-                <span className="font-bold text-foreground">{page + 1}</span> on{' '}
-                <span className="font-bold text-foreground">
+              <span className="text-sm text-tertiary">
+                Page <span className="font-bold text-tertiary">{page + 1}</span>{' '}
+                on{' '}
+                <span className="font-bold text-tertiary">
                   {totalPages || 1}
                 </span>
               </span>
-              <span className="text-xs text-muted-foreground ml-2">
+              <span className="text-xs text-tertiary ml-2">
                 ({totalCount} tickets)
               </span>
             </div>

@@ -64,7 +64,7 @@ export const ForgotPasswordForm = ({
         <Card className="w-full max-w-sm">
           <CardHeader>
             <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-            <CardDescription>
+            <CardDescription className="text-tertiary">
               Type in your email and we&apos;ll send you a link to reset your
               password
             </CardDescription>

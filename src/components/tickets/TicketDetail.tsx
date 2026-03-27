@@ -56,7 +56,7 @@ export default function TicketDetails({
             <div className="flex flex-col gap-1 text-left">
               <div className="flex items-start justify-between gap-4">
                 <DrawerTitle className="flex items-baseline gap-2 text-xl font-bold tracking-tight">
-                  <span className="text-muted-foreground font-mono text-sm font-normal">
+                  <span className="text-tertiary font-mono text-sm font-normal">
                     #{ticket.id}
                   </span>
                   {ticket.subject}
@@ -77,10 +77,8 @@ export default function TicketDetails({
                   </Badge>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <span className="underline underline-offset-4">
-                  {ticket.creator?.name}
-                </span>
+              <div className="flex items-center gap-1 text-sm">
+                <span className="font-bold">{ticket.creator?.name}</span>
                 <span>·</span>
                 <span>{ticket.company?.name}</span>
               </div>
@@ -98,37 +96,31 @@ export default function TicketDetails({
               >
                 {user.role === 'agent' && (
                   <div className="flex items-center gap-2">
-                    <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                      Set status on reply:
-                    </label>
-                    <div className="w-[160px]">
-                      <form.Field name="status">
-                        {(field) => (
-                          <BaseSelectField
-                            label=""
-                            field={field}
-                            options={STATUS_MAP}
-                            placeholder={ticket.status}
-                          />
-                        )}
-                      </form.Field>
-                    </div>
+                    <form.Field name="status">
+                      {(field) => (
+                        <BaseSelectField
+                          label="Set status on reply:"
+                          field={field}
+                          options={STATUS_MAP}
+                          placeholder={ticket.status}
+                        />
+                      )}
+                    </form.Field>
                   </div>
                 )}
-                <div className="flex-1 flex items-center gap-2">
-                  <label className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-                    Type a reply:
-                  </label>
+                <div className="flex items-center gap-2">
                   <div className="flex-1">
                     <form.Field name="text">
-                      {(field) => <TextAreaField label="" field={field} />}
+                      {(field) => (
+                        <TextAreaField label="Type a reply:" field={field} />
+                      )}
                     </form.Field>
                   </div>
                   <div className="shrink-0">
                     <Button
                       type="submit"
                       disabled={form.state.isSubmitting}
-                      className="rounded-full h-10 w-10 flex items-center justify-center bg-primary text-white hover:bg-primary/90 transition-colors"
+                      className="rounded-full h-10 w-10 bg-primary text-white hover:bg-primary/90 transition-colors"
                     >
                       <Send className="h-4 w-4" />
                     </Button>
