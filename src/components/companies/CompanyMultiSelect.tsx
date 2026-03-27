@@ -1,6 +1,6 @@
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { fetchCompanies } from '@/services/companies';
+import { fetchCompanies } from '@/services/Companies';
 import {
   Command,
   CommandEmpty,

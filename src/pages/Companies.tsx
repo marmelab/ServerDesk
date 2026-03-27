@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchCompanies } from '@/services/companies';
+import { fetchCompanies } from '@/services/Companies';
 import AddCompanyDialog from '@/components/companies/AddCompanyDialog';
 import CompanyCard from '@/components/companies/CompanyCard';
 import { PageHeader } from '@/components/PageHeader';

@@ -11,23 +11,32 @@ import {
 } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 
-const FieldWrapper = ({ label, field, children }: any) => (
+interface FieldWrapperProps {
+  label: string;
+  field: any;
+  children: React.ReactNode;
+}
+
+const FieldWrapper = ({ label, field, children }: FieldWrapperProps) => (
   <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] items-start gap-2 sm:gap-4 py-2">
     <Label htmlFor={field.name} className="mt-3 text-right">
       {label}
     </Label>
     <div className="flex flex-col gap-1">
       {children}
-      {field.state.meta.errors && (
-        <span className="text-xs text-destructive">
-          {field.state.meta.errors}
-        </span>
+      {field.state.meta.errors.length > 0 && (
+        <span>{field.state.meta.errors.join(', ')}</span>
       )}
     </div>
   </div>
 );
 
-export const TextField = ({ label, field, ...props }: any) => {
+interface TextFieldProps extends React.ComponentProps<typeof Input> {
+  label: string;
+  field: any;
+}
+
+export const TextField = ({ label, field, ...props }: TextFieldProps) => {
   if (!field) {
     console.error(`TextField "${label}" with no field.`);
     return null;
@@ -45,7 +54,12 @@ export const TextField = ({ label, field, ...props }: any) => {
   );
 };
 
-export const TextAreaField = ({ label, field, ...props }: any) => {
+interface TextAreaProps extends React.ComponentProps<typeof Textarea> {
+  label: string;
+  field: any;
+}
+
+export const TextAreaField = ({ label, field, ...props }: TextAreaProps) => {
   if (!field) {
     console.error(`TextAreaField "${label}" with no field.`);
     return null;
