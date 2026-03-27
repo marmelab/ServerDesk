@@ -64,7 +64,11 @@ export default function TicketDetailsView({
                     />
                     {priorityInfo.label}
                   </Badge>
-                  <Badge variant="secondary" className="whitespace-nowrap">
+                  <Badge
+                    variant="secondary"
+                    className="whitespace-nowrap"
+                    data-testid="ticket-status"
+                  >
                     <span
                       className={`h-2 w-2 rounded-full ${statusInfo.color}`}
                     />
