@@ -1,7 +1,7 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import CompaniesPage from './companies';
+import CompaniesPage from './Companies';
 import userEvent from '@testing-library/user-event';
 
 const { mockSupabase, mockState, utils } = vi.hoisted(() => {
