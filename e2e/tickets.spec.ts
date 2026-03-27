@@ -22,7 +22,7 @@ test.describe('Tickets Page', () => {
     await page.getByText(uniqueSubject).click();
     await expect(page.getByRole('dialog')).toBeVisible();
 
-    const idLocator = page.getByRole('dialog').getByRole('article');
+    const idLocator = page.getByRole('dialog').getByRole('note');
     await expect(idLocator).toBeVisible();
     const rawId = await idLocator.textContent();
     const ticketId = rawId?.replace('#', '').trim();

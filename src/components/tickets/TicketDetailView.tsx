@@ -53,7 +53,7 @@ export default function TicketDetailsView({
                 <DrawerTitle className="flex items-baseline gap-2 text-xl font-bold tracking-tight">
                   <span
                     className="text-tertiary font-mono text-sm font-normal"
-                    role="article"
+                    role="note"
                   >
                     #{ticket.id}
                   </span>
