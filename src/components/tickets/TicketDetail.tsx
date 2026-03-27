@@ -86,7 +86,7 @@ export default function TicketDetails({
           </DrawerHeader>
           <MessageThread ticket={ticket} />
           {user.role !== 'admin' && (
-            <div className="p-4 border-t bg-background shrink-0">
+            <div className="p-4 border-t shrink-0">
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
