@@ -22,7 +22,7 @@ test.describe('Tickets Page', () => {
     await page.getByText(uniqueSubject).click();
     await expect(page.getByRole('dialog')).toBeVisible();
 
-    const idLocator = page.getByRole('dialog').locator('span:has-text("#")');
+    const idLocator = page.getByRole('dialog').getByRole('article');
     await expect(idLocator).toBeVisible();
     const rawId = await idLocator.textContent();
     const ticketId = rawId?.replace('#', '').trim();
@@ -49,7 +49,6 @@ test.describe('Tickets Page', () => {
     await page.getByRole('button').click();
     await expect(statusBadge).toHaveText('Resolved');
 
-    const thread = page.locator('div:has-text("First message")');
     await expect(page.getByText('Ticket finished')).toBeVisible();
     await page.keyboard.press('Escape');
 

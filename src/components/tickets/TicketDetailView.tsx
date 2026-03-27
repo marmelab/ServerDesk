@@ -51,7 +51,10 @@ export default function TicketDetailsView({
             <div className="flex flex-col gap-1 text-left">
               <div className="flex items-start justify-between gap-4">
                 <DrawerTitle className="flex items-baseline gap-2 text-xl font-bold tracking-tight">
-                  <span className="text-tertiary font-mono text-sm font-normal">
+                  <span
+                    className="text-tertiary font-mono text-sm font-normal"
+                    role="article"
+                  >
                     #{ticket.id}
                   </span>
                   {ticket.subject}
