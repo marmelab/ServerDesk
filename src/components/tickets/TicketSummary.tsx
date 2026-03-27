@@ -27,7 +27,7 @@ export default function TicketSummary({
           <span>{ticket.subject}</span>
         </div>
       </TableCell>
-      <TableCell className="text-muted-foreground">
+      <TableCell className="text-foreground">
         {new Date(ticket.created_at).toLocaleDateString()}
       </TableCell>
       <TableCell>

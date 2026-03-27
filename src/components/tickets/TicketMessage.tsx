@@ -36,13 +36,19 @@ export default function TicketMessage({
         >
           {name}
         </div>
-        <div className="leading-normal">{message}</div>
+        <div className="leading-normal whitespace-pre-wrap">{message}</div>
         <div
           className={`text-xs pt-1 mt-2 ${
-            isInternal ? 'text-primary-foreground/70' : 'text-muted-foreground'
+            isInternal ? 'text-primary-foreground/70' : 'text-tertiary'
           }`}
         >
-          {new Date(created_at).toLocaleString()}
+          {new Date(created_at).toLocaleString('en-GB', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })}
         </div>
       </div>
     </div>

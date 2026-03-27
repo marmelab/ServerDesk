@@ -45,7 +45,7 @@ export default function AddCompanyDialog() {
               Add a new company
             </DialogTitle>
           </DialogHeader>
-          <DialogDescription className="text-muted-foreground pt-1">
+          <DialogDescription className="text-tertiary p-1">
             Enter the name of the company you want to add.
           </DialogDescription>
           <div className="flex items-center gap-2">
