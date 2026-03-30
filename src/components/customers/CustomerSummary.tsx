@@ -1,6 +1,6 @@
 import { Customer } from '@/types';
 import { TableCell, TableRow } from '../ui/table';
-import { Trash2 } from 'lucide-react';
+import { Pencil, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
 import { useState } from 'react';
 import AddCustomerDialog from './AddCustomerDialog';
@@ -18,14 +18,8 @@ export default function CustomerSummary({
     null,
   );
 
-  const handleUpdate = () => setSelectedCustomer(null);
-
   return (
-    <TableRow
-      key={customer.id}
-      className="cursor-pointer hover:bg-muted/50"
-      onClick={() => setSelectedCustomer(customer)}
-    >
+    <TableRow key={customer.id}>
       <TableCell className="font-medium">
         <div className="flex flex-col">
           <span>{customer.name}</span>
@@ -38,19 +32,29 @@ export default function CustomerSummary({
       </TableCell>
       <TableCell>
         <Button
-          onClick={(e) => {
-            e.stopPropagation();
+          variant="ghost"
+          className="hover:bg-destructive/10 hover:text-destructive text-destructive"
+          onClick={() => {
             onDelete(customer.id);
           }}
         >
           <Trash2 />
+        </Button>
+
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setSelectedCustomer(customer);
+          }}
+        >
+          <Pencil />
         </Button>
       </TableCell>
       {selectedCustomer && (
         <AddCustomerDialog
           companyId={selectedCustomer.company_id}
           initialCustomer={selectedCustomer}
-          handleSubmit={handleUpdate}
+          onClose={() => setSelectedCustomer(null)}
         />
       )}
     </TableRow>

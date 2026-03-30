@@ -70,7 +70,7 @@ export default function CustomersView({
                 <TableRow>
                   <TableHead className="w-[400px]">Name</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Delete</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

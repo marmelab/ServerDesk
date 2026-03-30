@@ -1,15 +1,24 @@
 import { supabase } from '@/lib/supabase';
 import { Customer, CustomerInsert } from '@/types';
 
-export async function fetchCustomers(companyId: number): Promise<Customer[]> {
-  const { data, error } = await supabase
+export const PAGE_SIZE = 10;
+
+export async function fetchCustomers(
+  companyId: number,
+  page: number,
+): Promise<{ data: Customer[]; count: number }> {
+  const { data, error, count } = await supabase
     .from('company_contacts')
-    .select('*')
-    .eq('company_id', companyId);
+    .select('*', { count: 'exact' })
+    .eq('company_id', companyId)
+    .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
   if (error) throw error;
 
-  return data || [];
+  return {
+    data: data || [],
+    count: count || 0,
+  };
 }
 
 export async function createCustomer(

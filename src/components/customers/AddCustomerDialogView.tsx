@@ -15,18 +15,25 @@ import { TextField } from '@/components/FormInputs';
 interface AddCustomerDialogViewProps {
   form: any;
   isUpdate: boolean;
-  handleSubmit?: any;
+  onClose?: () => void;
 }
 
 export default function AddCustomerDialogView({
   form,
   isUpdate,
-  handleSubmit,
+  onClose,
 }: AddCustomerDialogViewProps) {
   const [isOpen, setIsOpen] = useState<boolean>(isUpdate);
 
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (!open && onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       {!isUpdate && (
         <DialogTrigger asChild>
           <Button className="group-hover:bg-primary group-hover:text-primary-foreground w-fit">
@@ -41,7 +48,6 @@ export default function AddCustomerDialogView({
             e.preventDefault();
             form.handleSubmit();
             setIsOpen(false);
-            handleSubmit();
           }}
         >
           <DialogHeader>

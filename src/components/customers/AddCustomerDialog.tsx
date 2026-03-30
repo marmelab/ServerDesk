@@ -7,13 +7,13 @@ import { useUpdateCustomer } from '@/hooks/useUpdateCustomer';
 interface AddCustomerDialogProps {
   companyId: number;
   initialCustomer: Customer | null;
-  handleSubmit?: any;
+  onClose?: () => void;
 }
 
 export default function AddCustomerDialog({
   companyId,
   initialCustomer,
-  handleSubmit,
+  onClose,
 }: AddCustomerDialogProps) {
   const { mutateAsync: addCustomer } = useCreateCustomer();
   const { mutateAsync: updateCustomer } = useUpdateCustomer();
@@ -28,7 +28,7 @@ export default function AddCustomerDialog({
     <AddCustomerDialogView
       form={form}
       isUpdate={initialCustomer ? true : false}
-      handleSubmit={handleSubmit}
+      onClose={onClose}
     />
   );
 }
