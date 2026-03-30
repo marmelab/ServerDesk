@@ -6,7 +6,7 @@ import { CustomerInsert, MessageInsert, TicketInsert } from '@/types';
 
 const NB_COMPANIES: number = 15;
 const NB_TICKETS: number = 15;
-const NB_CUSTOMERS: number = 15;
+const NB_CUSTOMERS: number = 25;
 const NB_MESSAGES: number = 5;
 
 // Charge automatiquement .env, .env.local, .env.{NODE_ENV}, .env.{NODE_ENV}.local
@@ -136,7 +136,10 @@ async function runSeed() {
       if (insertCompanyError) console.error(insertCompanyError);
 
       // Create contacts
-      for (let i = 0; i < NB_CUSTOMERS; i++) {
+      const numCustomer = Math.round(
+        Math.random() * (i % 2 === 0 ? NB_CUSTOMERS : NB_CUSTOMERS / 2),
+      );
+      for (let i = 0; i < numCustomer; i++) {
         const newCustomer: CustomerInsert = {
           name: faker.person.fullName(),
           email: faker.internet.email(),

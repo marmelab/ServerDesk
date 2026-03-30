@@ -17,7 +17,7 @@ export default function CustomerSummary({
   return (
     <TableRow key={customer.id}>
       <TableCell className="font-medium">
-        <div className="flex flex-col">
+        <div className="flex flex-col font-semibold">
           <span>{customer.name}</span>
         </div>
       </TableCell>
@@ -27,24 +27,25 @@ export default function CustomerSummary({
         </div>
       </TableCell>
       <TableCell>
-        <Button
-          variant="ghost"
-          className="hover:bg-destructive/10 hover:text-destructive text-destructive"
-          onClick={() => {
-            onDelete(customer.id);
-          }}
-        >
-          <Trash2 />
-        </Button>
-
-        <Button
-          variant="ghost"
-          onClick={() => {
-            onUpdate(customer);
-          }}
-        >
-          <Pencil />
-        </Button>
+        <div className="flex justify-end">
+          <Button
+            variant="ghost"
+            onClick={() => {
+              onUpdate(customer);
+            }}
+          >
+            <Pencil />
+          </Button>
+          <Button
+            variant="ghost"
+            className="hover:bg-destructive/10 hover:text-destructive text-destructive"
+            onClick={() => {
+              onDelete(customer.id);
+            }}
+          >
+            <Trash2 />
+          </Button>
+        </div>
       </TableCell>
     </TableRow>
   );
