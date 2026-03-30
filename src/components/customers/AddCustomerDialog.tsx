@@ -19,15 +19,15 @@ export default function AddCustomerDialog({
   const { mutateAsync: updateCustomer } = useUpdateCustomer();
 
   const form = useCustomerForm({
-    companyId: companyId,
-    initialCustomer: initialCustomer,
+    companyId,
+    initialCustomer,
     handleCustomer: initialCustomer ? updateCustomer : addCustomer,
   });
 
   return (
     <AddCustomerDialogView
       form={form}
-      isUpdate={initialCustomer ? true : false}
+      isUpdate={!!initialCustomer}
       onClose={onClose}
     />
   );
