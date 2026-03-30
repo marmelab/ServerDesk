@@ -136,9 +136,7 @@ async function runSeed() {
       if (insertCompanyError) console.error(insertCompanyError);
 
       // Create contacts
-      const numCustomer = Math.round(
-        Math.random() * (i % 2 === 0 ? NB_CUSTOMERS : NB_CUSTOMERS / 2),
-      );
+      const numCustomer = Math.round(Math.random() * NB_CUSTOMERS);
       for (let i = 0; i < numCustomer; i++) {
         const newCustomer: CustomerInsert = {
           name: faker.person.fullName(),

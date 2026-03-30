@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 
 interface CustomerSummaryProps {
   customer: Customer;
-  onDelete: (customerId: number) => void;
+  onDelete: (customer: Customer) => void;
   onUpdate: (customer: Customer) => void;
 }
 
@@ -40,7 +40,7 @@ export default function CustomerSummary({
             variant="ghost"
             className="hover:bg-destructive/10 hover:text-destructive text-destructive"
             onClick={() => {
-              onDelete(customer.id);
+              onDelete(customer);
             }}
           >
             <Trash2 />

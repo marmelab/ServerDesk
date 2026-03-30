@@ -14,7 +14,7 @@ import React from 'react';
 interface CustomersViewProps {
   customers: Customer[];
   isPlaceholderData: boolean;
-  onDeleteCustomer: (customerId: number) => void;
+  onDeleteCustomer: (customer: Customer) => void;
   onUpdateCustomer: (customer: Customer) => void;
   renderCustomerDialog: () => React.ReactNode;
 }

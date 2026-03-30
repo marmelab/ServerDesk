@@ -8,11 +8,15 @@ import { PageHelper } from '@/components/PageHelper';
 import { Button } from '@/components/ui/button';
 import AddCustomerDialog from '@/components/customers/AddCustomerDialog';
 import { Customer } from '@/types';
+import { DeleteCustomerDialog } from '@/components/customers/DeleteCustomerDialog';
 
 export default function CustomersPage() {
   const user = useAuth();
   const [page, setPage] = useState<number>(0);
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null,
+  );
+  const [customerToDelete, setCustomerToDelete] = useState<Customer | null>(
     null,
   );
 
@@ -26,12 +30,14 @@ export default function CustomersPage() {
     refetch,
   } = useCustomers(companyId, page);
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
-  const { mutate: deleteMutate } = useDeleteCustomer();
 
-  const handleDelete = (customerId: number) => {
-    if (confirm('Are you sure you want to delete this customer?')) {
-      deleteMutate(customerId);
-    }
+  const { mutate: deleteMutate, isPending: isPendingDeletion } =
+    useDeleteCustomer();
+
+  const handleConfirmDelete = (customerId: number) => {
+    deleteMutate(customerId, {
+      onSuccess: () => setCustomerToDelete(null),
+    });
   };
 
   const handleUpdate = (customer: Customer) => {
@@ -72,10 +78,16 @@ export default function CustomersPage() {
               onSubmit={() => setSelectedCustomer(null)}
             />
           )}
+          <DeleteCustomerDialog
+            customer={customerToDelete}
+            onClose={() => setCustomerToDelete(null)}
+            onConfirm={handleConfirmDelete}
+            isDeleting={isPendingDeletion}
+          />
           <CustomersView
             customers={customers}
             isPlaceholderData={isPlaceholderData}
-            onDeleteCustomer={handleDelete}
+            onDeleteCustomer={setCustomerToDelete}
             onUpdateCustomer={handleUpdate}
             renderCustomerDialog={() => (
               <AddCustomerDialog
