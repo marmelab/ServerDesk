@@ -54,7 +54,7 @@ export default function CustomersPage() {
         </div>
       )}
       {!isPending && !error && (
-        <>
+        <div className="mx-auto max-w-7xl">
           <CustomersView
             customers={customers}
             companyId={companyId!}
@@ -71,7 +71,7 @@ export default function CustomersPage() {
             setPage={setPage}
             label="customers"
           />
-        </>
+        </div>
       )}
     </div>
   );

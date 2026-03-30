@@ -25,7 +25,7 @@ export default function CustomersView({
   onDeleteCustomer,
 }: CustomersViewProps) {
   return (
-    <div className="mx-auto max-w-7xl">
+    <div>
       <PageHeader
         title="Customers"
         description="View and manage all customers."
