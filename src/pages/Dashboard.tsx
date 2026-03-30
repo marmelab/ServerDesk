@@ -33,6 +33,9 @@ export default function DashboardPage() {
               <DashboardCard title="Agents" to="/admin/agents" />
             </>
           )}
+          {user?.role === 'customer_manager' && (
+            <DashboardCard title="Customers" to="/customers" />
+          )}
           <DashboardCard title="Tickets" to="/tickets" />
         </div>
       </div>

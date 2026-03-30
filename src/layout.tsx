@@ -43,6 +43,11 @@ export default function Layout() {
                       </NavigationMenuItem>
                     </>
                   )}
+                  {user?.role === 'customer_manager' && (
+                    <NavigationMenuItem>
+                      <AppNavLink to="/customers">Customers</AppNavLink>
+                    </NavigationMenuItem>
+                  )}
                   <NavigationMenuItem>
                     <AppNavLink to="/tickets">Tickets</AppNavLink>
                   </NavigationMenuItem>

@@ -24,8 +24,6 @@ test.describe('Tickets Page', () => {
 
     const idLocator = page.getByRole('dialog').getByRole('note');
     await expect(idLocator).toBeVisible();
-    const rawId = await idLocator.textContent();
-    const ticketId = rawId?.replace('#', '').trim();
 
     await page.getByRole('textbox', { name: 'Type a reply:' }).click();
     await page
