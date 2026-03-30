@@ -20,7 +20,6 @@ interface CustomersViewProps {
   isPlaceholderData: boolean;
   refetch: any;
   onDeleteCustomer: any;
-  onUpdateCustomer: any;
 }
 
 export default function CustomersView({
@@ -31,7 +30,6 @@ export default function CustomersView({
   isPlaceholderData,
   refetch,
   onDeleteCustomer,
-  onUpdateCustomer,
 }: CustomersViewProps) {
   return (
     <div className="container mx-auto py-10">
@@ -51,7 +49,7 @@ export default function CustomersView({
             title="Customers"
             description="View and manage all customers."
           >
-            <AddCustomerDialog companyId={companyId} />
+            <AddCustomerDialog companyId={companyId} initialCustomer={null} />
           </PageHeader>
           <div className="rounded-md border bg-card">
             {isPlaceholderData && (
@@ -80,7 +78,6 @@ export default function CustomersView({
                   <CustomerSummary
                     key={customer.id}
                     customer={customer}
-                    onSelect={onUpdateCustomer}
                     onDelete={onDeleteCustomer}
                   />
                 ))}
@@ -88,7 +85,7 @@ export default function CustomersView({
                   <TableRow>
                     <TableCell colSpan={4} className="h-32 text-center">
                       <div className="flex flex-col items-center justify-center text-muted-foreground">
-                        <p className="text-lg font-medium">
+                        <p className="text-lg font-medium text-tertiary">
                           No customers found
                         </p>
                       </div>
@@ -100,7 +97,6 @@ export default function CustomersView({
           </div>
         </div>
       )}
-      ;
     </div>
   );
 }

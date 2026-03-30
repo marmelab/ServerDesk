@@ -1,24 +1,28 @@
+import { Customer } from '@/types';
 import { useForm } from '@tanstack/react-form';
 
 interface UseCustomerFormProps {
   companyId: number;
-  addCustomer: (vars: any) => Promise<void>;
+  initialCustomer: Customer | null;
+  handleCustomer: (vars: any) => Promise<void>;
 }
 
 export const useCustomerForm = ({
   companyId,
-  addCustomer,
+  initialCustomer,
+  handleCustomer,
 }: UseCustomerFormProps) => {
   return useForm({
     defaultValues: {
-      name: '',
-      email: '',
+      name: initialCustomer ? initialCustomer.name : '',
+      email: initialCustomer ? initialCustomer.email : '',
     },
     onSubmit: async ({ value, formApi }) => {
       try {
-        await addCustomer({
+        await handleCustomer({
           ...value,
-          companyId: companyId,
+          company_id: companyId,
+          id: initialCustomer?.id,
         });
         formApi.reset();
       } catch (error) {

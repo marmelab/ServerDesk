@@ -6,7 +6,7 @@ export function useCustomers(companyId: number | undefined) {
     queryKey: ['customers', companyId],
     queryFn: () => {
       if (companyId === undefined) throw new Error('Company ID required');
-      fetchCustomers(companyId);
+      return fetchCustomers(companyId);
     },
     enabled: !!companyId,
     placeholderData: (previousData) => previousData,

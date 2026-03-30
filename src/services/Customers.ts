@@ -5,11 +5,11 @@ export async function fetchCustomers(companyId: number): Promise<Customer[]> {
   const { data, error } = await supabase
     .from('company_contacts')
     .select('*')
-    .eq('company', companyId);
+    .eq('company_id', companyId);
 
   if (error) throw error;
 
-  return data;
+  return data || [];
 }
 
 export async function createCustomer(

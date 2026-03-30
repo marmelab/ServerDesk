@@ -2,8 +2,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useCustomers } from '@/hooks/useCustomers';
 import CustomersView from './CustomersView';
 import { useDeleteCustomer } from '@/hooks/useDeleteCustomer';
-import { useUpdateCustomer } from '@/hooks/useUpdateCustomer';
-import { Customer } from '@/types';
 
 export default function CustomersPage() {
   const user = useAuth();
@@ -12,16 +10,11 @@ export default function CustomersPage() {
   const { customers, isPending, error, isPlaceholderData, refetch } =
     useCustomers(companyId);
   const { mutate: deleteMutate } = useDeleteCustomer();
-  const { mutate: updateMutate } = useUpdateCustomer();
 
   const handleDelete = (customerId: number) => {
     if (confirm('Are you sure you want to delete this customer?')) {
       deleteMutate(customerId);
     }
-  };
-
-  const handleUpdate = (customer: Customer) => {
-    updateMutate(customer);
   };
 
   if (!user || !user.user || user.user.company_ids.length === 0)
@@ -43,7 +36,6 @@ export default function CustomersPage() {
       isPlaceholderData={isPlaceholderData}
       refetch={refetch}
       onDeleteCustomer={handleDelete}
-      onUpdateCustomer={handleUpdate}
     />
   );
 }
