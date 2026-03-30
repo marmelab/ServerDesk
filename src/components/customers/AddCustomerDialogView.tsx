@@ -16,12 +16,14 @@ interface AddCustomerDialogViewProps {
   form: any;
   isUpdate: boolean;
   onClose?: () => void;
+  onSubmit?: () => void;
 }
 
 export default function AddCustomerDialogView({
   form,
   isUpdate,
   onClose,
+  onSubmit,
 }: AddCustomerDialogViewProps) {
   const [isOpen, setIsOpen] = useState<boolean>(isUpdate);
 
@@ -47,6 +49,9 @@ export default function AddCustomerDialogView({
           onSubmit={(e) => {
             e.preventDefault();
             form.handleSubmit();
+            if (onSubmit) {
+              onSubmit();
+            }
             setIsOpen(false);
           }}
         >

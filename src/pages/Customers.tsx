@@ -6,10 +6,15 @@ import { useState } from 'react';
 import { PAGE_SIZE } from '@/services/Customers';
 import { PageHelper } from '@/components/PageHelper';
 import { Button } from '@/components/ui/button';
+import AddCustomerDialog from '@/components/customers/AddCustomerDialog';
+import { Customer } from '@/types';
 
 export default function CustomersPage() {
   const user = useAuth();
   const [page, setPage] = useState<number>(0);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null,
+  );
 
   const companyId = user?.user?.company_ids?.[0];
   const {
@@ -27,6 +32,10 @@ export default function CustomersPage() {
     if (confirm('Are you sure you want to delete this customer?')) {
       deleteMutate(customerId);
     }
+  };
+
+  const handleUpdate = (customer: Customer) => {
+    setSelectedCustomer(customer);
   };
 
   if (!user || !user.user || user.user.company_ids.length === 0) {
@@ -55,11 +64,25 @@ export default function CustomersPage() {
       )}
       {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
+          {selectedCustomer && (
+            <AddCustomerDialog
+              companyId={selectedCustomer.company_id}
+              initialCustomer={selectedCustomer}
+              onClose={() => setSelectedCustomer(null)}
+              onSubmit={() => setSelectedCustomer(null)}
+            />
+          )}
           <CustomersView
             customers={customers}
-            companyId={companyId!}
             isPlaceholderData={isPlaceholderData}
             onDeleteCustomer={handleDelete}
+            onUpdateCustomer={handleUpdate}
+            renderCustomerDialog={() => (
+              <AddCustomerDialog
+                companyId={companyId!}
+                initialCustomer={null}
+              />
+            )}
           />
           <PageHelper
             totalPages={totalPages}

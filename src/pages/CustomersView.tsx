@@ -9,20 +9,22 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import CustomerSummary from '@/components/customers/CustomerSummary';
-import AddCustomerDialog from '@/components/customers/AddCustomerDialog';
+import React from 'react';
 
 interface CustomersViewProps {
   customers: Customer[];
-  companyId: number;
   isPlaceholderData: boolean;
-  onDeleteCustomer: any;
+  onDeleteCustomer: (customerId: number) => void;
+  onUpdateCustomer: (customer: Customer) => void;
+  renderCustomerDialog: () => React.ReactNode;
 }
 
 export default function CustomersView({
   customers,
-  companyId,
   isPlaceholderData,
   onDeleteCustomer,
+  onUpdateCustomer,
+  renderCustomerDialog,
 }: CustomersViewProps) {
   return (
     <div>
@@ -30,7 +32,7 @@ export default function CustomersView({
         title="Customers"
         description="View and manage all customers."
       >
-        <AddCustomerDialog companyId={companyId} initialCustomer={null} />
+        {renderCustomerDialog()}
       </PageHeader>
       <div className="rounded-md border bg-card">
         {isPlaceholderData && (
@@ -60,6 +62,7 @@ export default function CustomersView({
                 key={customer.id}
                 customer={customer}
                 onDelete={onDeleteCustomer}
+                onUpdate={onUpdateCustomer}
               />
             ))}
             {customers.length === 0 && (

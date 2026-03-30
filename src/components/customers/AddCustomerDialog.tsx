@@ -8,12 +8,14 @@ interface AddCustomerDialogProps {
   companyId: number;
   initialCustomer: Customer | null;
   onClose?: () => void;
+  onSubmit?: () => void;
 }
 
 export default function AddCustomerDialog({
   companyId,
   initialCustomer,
   onClose,
+  onSubmit,
 }: AddCustomerDialogProps) {
   const { mutateAsync: addCustomer } = useCreateCustomer();
   const { mutateAsync: updateCustomer } = useUpdateCustomer();
@@ -29,6 +31,7 @@ export default function AddCustomerDialog({
       form={form}
       isUpdate={!!initialCustomer}
       onClose={onClose}
+      onSubmit={onSubmit}
     />
   );
 }

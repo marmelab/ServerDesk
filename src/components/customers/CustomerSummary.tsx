@@ -2,22 +2,18 @@ import { Customer } from '@/types';
 import { TableCell, TableRow } from '../ui/table';
 import { Pencil, Trash2 } from 'lucide-react';
 import { Button } from '../ui/button';
-import { useState } from 'react';
-import AddCustomerDialog from './AddCustomerDialog';
 
 interface CustomerSummaryProps {
   customer: Customer;
   onDelete: (customerId: number) => void;
+  onUpdate: (customer: Customer) => void;
 }
 
 export default function CustomerSummary({
   customer,
   onDelete,
+  onUpdate,
 }: CustomerSummaryProps) {
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
-    null,
-  );
-
   return (
     <TableRow key={customer.id}>
       <TableCell className="font-medium">
@@ -44,19 +40,12 @@ export default function CustomerSummary({
         <Button
           variant="ghost"
           onClick={() => {
-            setSelectedCustomer(customer);
+            onUpdate(customer);
           }}
         >
           <Pencil />
         </Button>
       </TableCell>
-      {selectedCustomer && (
-        <AddCustomerDialog
-          companyId={selectedCustomer.company_id}
-          initialCustomer={selectedCustomer}
-          onClose={() => setSelectedCustomer(null)}
-        />
-      )}
     </TableRow>
   );
 }
