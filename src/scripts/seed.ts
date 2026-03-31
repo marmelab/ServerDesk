@@ -2,10 +2,11 @@ import { faker } from '@faker-js/faker';
 import * as dotenvFlow from 'dotenv-flow';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from 'supabase/types';
-import { MessageInsert, TicketInsert } from '@/types';
+import { CustomerInsert, MessageInsert, TicketInsert } from '@/types';
 
 const NB_COMPANIES: number = 15;
 const NB_TICKETS: number = 15;
+const NB_CUSTOMERS: number = 25;
 const NB_MESSAGES: number = 5;
 
 // Charge automatiquement .env, .env.local, .env.{NODE_ENV}, .env.{NODE_ENV}.local
@@ -133,6 +134,23 @@ async function runSeed() {
         .insert(rowsToInsert);
 
       if (insertCompanyError) console.error(insertCompanyError);
+
+      // Create contacts
+      const numCustomer = Math.round(Math.random() * NB_CUSTOMERS);
+      for (let i = 0; i < numCustomer; i++) {
+        const newCustomer: CustomerInsert = {
+          name: faker.person.fullName(),
+          email: faker.internet.email(),
+          company_id: companyData?.id as number,
+        };
+
+        const { error } = await supabase
+          .from('company_contacts')
+          .insert(newCustomer)
+          .select()
+          .single();
+        if (error) console.error('❌ Error:', error.message);
+      }
 
       // Create tickets
       for (let i = 0; i < NB_TICKETS; i++) {

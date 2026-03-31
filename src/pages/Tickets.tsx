@@ -17,6 +17,7 @@ import { TicketWithDetails } from '@/types';
 import { Drawer } from '@/components/ui/drawer';
 import TicketDetails from '../components/tickets/TicketDetail';
 import { useTickets } from '@/hooks/useTickets';
+import { PageHelper } from '@/components/PageHelper';
 
 export default function TicketsPage() {
   const { user } = useAuth();
@@ -104,42 +105,16 @@ export default function TicketsPage() {
               {selectedTicket && <TicketDetails ticket={selectedTicket} />}
             </Drawer>
           </div>
-          <div className="flex items-center justify-between py-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-tertiary">
-                Page <span className="font-bold text-tertiary">{page + 1}</span>{' '}
-                on{' '}
-                <span className="font-bold text-tertiary">
-                  {totalPages || 1}
-                </span>
-              </span>
-              <span className="text-xs text-tertiary ml-2">
-                ({totalCount} tickets)
-              </span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((old) => Math.max(old - 1, 0))}
-                disabled={page === 0 || isPlaceholderData}
-              >
-                Previous
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  if (tickets.length === PAGE_SIZE) {
-                    setPage((old) => old + 1);
-                  }
-                }}
-                disabled={tickets.length < PAGE_SIZE || isPlaceholderData}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
+          <PageHelper
+            totalPages={totalPages}
+            totalCount={totalCount}
+            currentCount={tickets.length}
+            page={page}
+            isPlaceholderData={isPlaceholderData}
+            pageSize={PAGE_SIZE}
+            setPage={setPage}
+            label="tickets"
+          />
         </div>
       )}
     </div>
