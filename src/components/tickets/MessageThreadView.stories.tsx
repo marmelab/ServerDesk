@@ -1,11 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import MessageThreadView from './MessageThreadView';
+import { withMockAuth } from '@/lib/decorator';
 
 const meta = {
   component: MessageThreadView,
   parameters: {
     layout: 'centered',
   },
+  decorators: [withMockAuth('admin')],
 } satisfies Meta<typeof MessageThreadView>;
 
 export default meta;
