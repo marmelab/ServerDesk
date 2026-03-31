@@ -1,25 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { fetchCompanies } from '@/services/Companies';
 import AddCompanyDialog from '@/components/companies/AddCompanyDialog';
 import CompanyCard from '@/components/companies/CompanyCard';
 import { PageHeader } from '@/components/PageHeader';
+import { useCompanies } from '@/hooks/useCompanies';
 
 export default function CompaniesPage() {
-  const {
-    data: companies = [],
-    isPending,
-    error: queryError,
-  } = useQuery({
-    queryKey: ['companies'],
-    queryFn: fetchCompanies,
-  });
-
+  const { companies, isPending, error } = useCompanies();
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
 
   return (
     <div className="container mx-auto py-10">
-      {!isPending && !queryError && (
+      {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
           <PageHeader title="Companies" description="Manage and add companies.">
             <AddCompanyDialog />

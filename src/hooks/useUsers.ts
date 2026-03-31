@@ -1,14 +1,14 @@
-import { fetchCompanies } from '@/services/Companies';
+import { fetchUsers } from '@/services/Users';
 import { useQuery } from '@tanstack/react-query';
 
-export function useCompanies() {
+export function useUsers() {
   const query = useQuery({
-    queryKey: ['companies'],
-    queryFn: fetchCompanies,
+    queryKey: ['users'],
+    queryFn: fetchUsers,
   });
 
   return {
-    companies: query.data?.data ?? [],
+    users: query.data?.data ?? [],
     isPending: query.isPending,
     error: query.error,
     count: query.data?.count,

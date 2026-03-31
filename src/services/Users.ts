@@ -1,13 +1,13 @@
 import { supabase } from '@/lib/supabase';
-import { Company } from '@/types';
+import { AppUser } from '@/types';
 
-export async function fetchCompanies(): Promise<{
-  data: Company[];
+export async function fetchUsers(): Promise<{
+  data: AppUser[];
   count: number;
 }> {
   const { data, error, count } = await supabase
-    .from('companies')
-    .select(`id, name, created_at`, { count: 'exact' });
+    .from('app_user')
+    .select(`*`, { count: 'exact' });
   if (error) {
     throw error;
   }

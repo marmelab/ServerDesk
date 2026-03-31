@@ -1,0 +1,23 @@
+import { File } from 'lucide-react';
+import { DashboardCard } from './DashboardCard';
+import { useTickets } from '@/hooks/useTickets';
+
+interface DashboardTicketsCardProp {
+  companiesId?: number[] | null;
+}
+
+export default function DashboardTicketsCard({
+  companiesId,
+}: DashboardTicketsCardProp) {
+  const { totalCount } = useTickets({ companiesId: companiesId, page: null });
+
+  return (
+    <DashboardCard
+      title="Tickets"
+      label="Tickets"
+      to="/tickets"
+      icon={<File />}
+      count={totalCount}
+    />
+  );
+}

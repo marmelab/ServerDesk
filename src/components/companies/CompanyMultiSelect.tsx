@@ -1,6 +1,5 @@
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { fetchCompanies } from '@/services/Companies';
 import {
   Command,
   CommandEmpty,
@@ -10,21 +9,14 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
-import { useQuery } from '@tanstack/react-query';
+import { useCompanies } from '@/hooks/useCompanies';
 
 interface Props {
   selectedIds: number[];
   onChange: (ids: number[]) => void;
 }
 export function CompanyMultiSelect({ selectedIds, onChange }: Props) {
-  const {
-    data: companies = [],
-    isPending,
-    error: queryError,
-  } = useQuery({
-    queryKey: ['companies'],
-    queryFn: fetchCompanies,
-  });
+  const { companies = [], isPending, error: queryError } = useCompanies();
 
   const toggleCompany = (id: number) => {
     const newSelection = selectedIds.includes(id)

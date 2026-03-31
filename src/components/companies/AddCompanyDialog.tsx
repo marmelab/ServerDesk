@@ -12,13 +12,13 @@ import {
 import { HousePlus } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from './../ui/button';
-import { useAddCompany } from '@/hooks/useCompanies';
+import { useCreateCompany } from '@/hooks/useCreateCompanies';
 
 export default function AddCompanyDialog() {
   const [company, setCompany] = useState('');
   const [isAddCompanyOpen, setIsAddCompanyOpen] = useState(false);
 
-  const { mutate: addCompany, isPending: isAdding } = useAddCompany();
+  const { mutate: addCompany, isPending: isAdding } = useCreateCompany();
 
   const handleAddCompany = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -25,7 +25,7 @@ export default function TicketsPage() {
     useState<TicketWithDetails | null>(null);
 
   const { tickets, totalCount, isPending, isPlaceholderData, error, refetch } =
-    useTickets(page);
+    useTickets({ page });
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   if (isPending)
