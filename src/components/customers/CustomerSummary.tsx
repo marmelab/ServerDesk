@@ -30,6 +30,8 @@ export default function CustomerSummary({
         <div className="flex justify-end">
           <Button
             variant="ghost"
+            title="Edit customer"
+            aria-label="Edit customer"
             onClick={() => {
               onUpdate(customer);
             }}
@@ -38,6 +40,8 @@ export default function CustomerSummary({
           </Button>
           <Button
             variant="ghost"
+            title="Delete customer"
+            aria-label="Delete customer"
             className="hover:bg-destructive/10 hover:text-destructive text-destructive"
             onClick={() => {
               onDelete(customer);

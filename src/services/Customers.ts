@@ -11,6 +11,7 @@ export async function fetchCustomers(
     .from('company_contacts')
     .select('*', { count: 'exact' })
     .eq('company_id', companyId)
+    .order('created_at', { ascending: false })
     .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
 
   if (error) throw error;
