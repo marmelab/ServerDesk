@@ -27,10 +27,9 @@ export function DeleteCustomerDialog({
     <AlertDialog open={!!customer} onOpenChange={(open) => !open && onClose()}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Delete customer account</AlertDialogTitle>
           <AlertDialogDescription className="text-tertiary">
-            This action cannot be undone. This will permanently delete the
-            customer
+            This will permanently delete the customer
             <span className="font-bold text-foreground"> {customer?.name}</span>
             .
           </AlertDialogDescription>
