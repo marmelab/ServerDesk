@@ -15,7 +15,6 @@ export default function DashboardCompanyCard({
     <DashboardCard
       title="Companies"
       label="Companies"
-      to="/admin/companies"
       icon={<Building2 />}
       count={finalCount}
     />

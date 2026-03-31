@@ -1,14 +1,10 @@
 import { fetchCustomers } from '@/services/Customers';
 import { useQuery } from '@tanstack/react-query';
 
-export function useCustomers(companyId: number | undefined, page: number) {
+export function useCustomers(companiesId?: number[], page?: number) {
   const query = useQuery({
-    queryKey: ['customers', companyId, page],
-    queryFn: () => {
-      if (companyId === undefined) throw new Error('Company ID required');
-      return fetchCustomers(companyId, page);
-    },
-    enabled: !!companyId,
+    queryKey: ['customers', companiesId, page],
+    queryFn: () => fetchCustomers(companiesId, page),
     placeholderData: (previousData) => previousData,
   });
 

@@ -1,17 +1,19 @@
 import { User } from 'lucide-react';
 import { DashboardCard } from './DashboardCard';
 import { useUsers } from '@/hooks/useUsers';
+import { useCustomers } from '@/hooks/useCustomers';
 
 export default function DashboardUsersCard() {
-  const { count } = useUsers();
+  const { count: userCount } = useUsers();
+  const { totalCount: customerCount } = useCustomers();
 
+  const totalCount = (userCount ?? 0) + (customerCount ?? 0);
   return (
     <DashboardCard
       title="Users"
       label="Users"
-      to="/admin/agents"
       icon={<User />}
-      count={count}
+      count={totalCount}
     />
   );
 }

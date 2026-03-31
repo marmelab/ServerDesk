@@ -1,17 +1,22 @@
 import { User } from 'lucide-react';
 import { DashboardCard } from './DashboardCard';
-import { useUsers } from '@/hooks/useUsers';
+import { useCustomers } from '@/hooks/useCustomers';
 
-export default function DashboardCustomersCard() {
-  const { count } = useUsers();
+interface DashboardCustomersCardProp {
+  companiesId?: number[];
+}
+
+export default function DashboardCustomersCard({
+  companiesId,
+}: DashboardCustomersCardProp) {
+  const { totalCount } = useCustomers(companiesId);
 
   return (
     <DashboardCard
       title="Users"
       label="Users"
-      to="/admin/agents"
       icon={<User />}
-      count={count}
+      count={totalCount}
     />
   );
 }

@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { login, logout } from './helpers/auth';
+import { login } from './helpers/auth';
 
 test.describe('Customers Page', () => {
-  test('Create customer', async ({ page, context }) => {
+  test('Create customer', async ({ page }) => {
     // Login as customer manager
     await login(page, 'test1@test.com', '123456');
     await page.goto('customers');
@@ -28,10 +28,10 @@ test.describe('Customers Page', () => {
 
     // Find new edit name
     const editRow = page.getByRole('row').filter({ hasText: uniqueName });
-    await expect(row).toContainText(uniqueName);
+    await expect(editRow).toContainText(uniqueName);
 
     // Test delete customer
-    await row.getByRole('button', { name: 'Delete customer' }).click();
+    await editRow.getByRole('button', { name: 'Delete customer' }).click();
 
     const dialog = page.getByRole('alertdialog');
     await expect(dialog).toBeVisible();
@@ -39,7 +39,7 @@ test.describe('Customers Page', () => {
     await page.getByRole('button', { name: 'Cancel' }).click();
 
     await expect(dialog).toBeHidden();
-    await row.getByRole('button', { name: 'Delete customer' }).click();
+    await editRow.getByRole('button', { name: 'Delete customer' }).click();
 
     await expect(dialog).toBeVisible();
     await page.getByRole('button', { name: 'Delete' }).click();

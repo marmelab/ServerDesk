@@ -45,7 +45,7 @@ export default function DashboardPage() {
           )}
           {user?.role === 'customer_manager' && (
             <>
-              <DashboardCustomersCard />
+              <DashboardCustomersCard companiesId={user.company_ids} />
               <DashboardTicketsCard companiesId={user.company_ids} />
             </>
           )}
