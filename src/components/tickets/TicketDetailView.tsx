@@ -112,7 +112,13 @@ export default function TicketDetailsView({
                 )}
                 <div className="flex items-center gap-2">
                   <div className="flex-1">
-                    <form.Field name="text">
+                    <form.Field
+                      name="text"
+                      validators={{
+                        onChange: ({ value }: { value: string }) =>
+                          !value.trim() ? 'Message cannot be empty' : undefined,
+                      }}
+                    >
                       {(field: any) => (
                         <TextAreaField label="Type a reply:" field={field} />
                       )}

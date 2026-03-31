@@ -25,7 +25,9 @@ const FieldWrapper = ({ label, field, children }: FieldWrapperProps) => (
     <div className="flex flex-col gap-1">
       {children}
       {field.state.meta.errors.length > 0 && (
-        <span>{field.state.meta.errors.join(', ')}</span>
+        <span className="text-[0.8rem] font-medium text-destructive">
+          {field.state.meta.errors.join(', ')}
+        </span>
       )}
     </div>
   </div>
