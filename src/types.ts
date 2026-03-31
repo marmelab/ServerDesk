@@ -81,3 +81,7 @@ export type InviteTokenInsert =
   Database['public']['Tables']['invite_tokens']['Insert'];
 
 export type CompanyContacts = Tables<'company_contacts'>;
+
+export type Customer = Tables<'company_contacts'>;
+export type CustomerInsert =
+  Database['public']['Tables']['company_contacts']['Insert'];
