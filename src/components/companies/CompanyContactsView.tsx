@@ -51,18 +51,15 @@ export default function CompanyContactsView({
         </div>
       )}
       {!isPending && !error && (
-        <div>
+        <div className="font-normal pl-8">
           {customerManagers.map((customerManager) => (
-            <div
-              key={customerManager.id}
-              className="flex items-center gap-3 font-semibold"
-            >
+            <div key={customerManager.id} className="flex items-center gap-3">
               <span>{customerManager.name}</span>
-              <Crown />
+              <Crown size={15} />
             </div>
           ))}
           {customers.map((customer) => (
-            <div key={customer.id} className="flex gap-3 font-semibold">
+            <div key={customer.id} className="flex gap-3">
               <span>{customer.name}</span>
             </div>
           ))}

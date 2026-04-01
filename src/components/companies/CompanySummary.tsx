@@ -29,14 +29,14 @@ export default function CompanySummary({
           onClick={() => setHasBeenOpened(true)}
           className="flex-1 font-semibold py-4"
         >
-          <span className="font-medium">{company.name}</span>
+          <span>{company.name}</span>
         </AccordionTrigger>
 
         {isAdmin && (
           <Button
             size="sm"
-            variant="ghost"
-            className="ml-2 h-8 w-8 p-0 hover:bg-primary hover:text-primary-foreground"
+            variant="secondary"
+            className="ml-2 h-8 p-0 hover:bg-primary border hover:text-primary-foreground"
             onClick={(e) => {
               e.stopPropagation();
               onAssign(company);
@@ -44,6 +44,7 @@ export default function CompanySummary({
             title="Invite Manager"
           >
             <Send className="h-4 w-4" />
+            Assign
           </Button>
         )}
       </div>

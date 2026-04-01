@@ -128,7 +128,7 @@ describe('CompaniesPage', () => {
     render(<CompaniesPage />, { wrapper: Wrapper });
     expect(await screen.findByText('Companies')).toBeInTheDocument();
     const inviteButton = await screen.findAllByRole('button', {
-      name: /invite manager/i,
+      name: /assign/i,
     });
     expect(inviteButton[0]).toBeInTheDocument();
 
