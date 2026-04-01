@@ -15,6 +15,13 @@ export const Default: Story = {
     icon: <User />,
     count: 0,
     label: 'label',
-    title: 'title',
+    singularLabel: 'singularTitle',
+  },
+};
+
+export const Singular: Story = {
+  args: {
+    ...Default.args,
+    count: 1,
   },
 };

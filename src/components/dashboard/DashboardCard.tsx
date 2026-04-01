@@ -5,10 +5,15 @@ interface DashboardCardProps {
   icon: React.ReactNode;
   count: number | undefined;
   label: string;
-  title: string;
+  singularLabel: string;
 }
 
-export function DashboardCard({ icon, count, label }: DashboardCardProps) {
+export function DashboardCard({
+  icon,
+  count,
+  label,
+  singularLabel,
+}: DashboardCardProps) {
   return (
     <div className="block group">
       <Card className="relative overflow-hidden">
@@ -21,7 +26,9 @@ export function DashboardCard({ icon, count, label }: DashboardCardProps) {
               <span className="text-7xl font-bold tracking-tight">
                 {count ?? 0}
               </span>
-              <span className="text-xs text-tertiary italic">{label}</span>
+              <span className="text-xs text-tertiary italic">
+                {count === 1 ? singularLabel : label}
+              </span>
             </div>
           </div>
         </CardContent>

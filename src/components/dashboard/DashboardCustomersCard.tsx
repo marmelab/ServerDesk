@@ -13,7 +13,7 @@ export default function DashboardCustomersCard({
 
   return (
     <DashboardCard
-      title="Users"
+      singularLabel="User"
       label="Users"
       icon={<User />}
       count={totalCount}
