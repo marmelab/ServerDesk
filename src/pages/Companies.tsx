@@ -1,26 +1,64 @@
 import AddCompanyDialog from '@/components/companies/AddCompanyDialog';
-import CompanyCard from '@/components/companies/CompanyCard';
-import { PageHeader } from '@/components/PageHeader';
+import { Button } from '@/components/ui/button';
+import { PageHelper } from '@/components/PageHelper';
+import { useState } from 'react';
 import { useCompanies } from '@/hooks/useCompanies';
+import { PAGE_SIZE } from '@/services/Companies';
+import CompaniesView from '@/components/companies/CompaniesView';
+import { InviteDialog } from '@/components/InviteDialog';
+import { useAuth } from '@/contexts/AuthContext';
+import { Company } from '@/types';
 
 export default function CompaniesPage() {
-  const { companies, isPending, error } = useCompanies();
+  const [page, setPage] = useState<number>(0);
+  const [inviteCompany, setInviteCompany] = useState<Company | null>(null);
+  const { companies, count, isPlaceholderData, isPending, error, refetch } =
+    useCompanies({ page });
+  const totalPages = Math.ceil(count / PAGE_SIZE);
+  const { user } = useAuth();
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
 
   return (
     <div className="container mx-auto py-10">
+      {error && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <h3 className="text-xl font-semibold italic">
+            Failed to load companies
+          </h3>
+          <Button variant="outline" className="mt-6" onClick={() => refetch()}>
+            Try again
+          </Button>
+        </div>
+      )}
       {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
-          <PageHeader title="Companies" description="Manage and add companies.">
-            <AddCompanyDialog />
-          </PageHeader>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {companies.map((company) => (
-              <CompanyCard key={company.id} company={company} />
-            ))}
-            {companies.length === 0 && <h2>No companies found.</h2>}
-          </div>
+          <CompaniesView
+            companies={companies}
+            isPlaceholderData={isPlaceholderData}
+            isAdmin={user?.role === 'admin'}
+            onAssign={setInviteCompany}
+            renderAddCompanyDialog={() => <AddCompanyDialog />}
+          />
+          <PageHelper
+            totalPages={totalPages}
+            totalCount={count}
+            currentCount={companies.length}
+            page={page}
+            isPlaceholderData={isPlaceholderData}
+            pageSize={PAGE_SIZE}
+            setPage={setPage}
+            label="companies"
+          />
+          <InviteDialog
+            key={inviteCompany?.id ?? 'new'}
+            open={inviteCompany != null}
+            onOpenChange={(open) => {
+              if (!open) setInviteCompany(null);
+            }}
+            initialCompanyId={inviteCompany?.id ?? null}
+            appRole={'customer_manager'}
+          />
         </div>
       )}
     </div>

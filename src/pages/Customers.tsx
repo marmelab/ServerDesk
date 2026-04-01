@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useCustomers } from '@/hooks/useCustomers';
-import CustomersView from './CustomersView';
+import CustomersView from '../components/customers/CustomersView';
 import { useDeleteCustomer } from '@/hooks/useDeleteCustomer';
 import { useState } from 'react';
 import { PAGE_SIZE } from '@/services/Customers';
