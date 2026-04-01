@@ -16,7 +16,7 @@ export default function TicketMessage({
   return (
     <div
       key={id}
-      className={`flex flex-col max-w-[80%] gap-2 p-4 ${isSentByMeOrPeer ? 'self-end items-end' : 'self-start items-start'}`}
+      className={`flex flex-col max-w-[80%] gap-2 p-2.5 ${isSentByMeOrPeer ? 'self-end items-end' : 'self-start items-start'}`}
     >
       <div
         className={`px-4 py-2 rounded-2xl text-sm ${

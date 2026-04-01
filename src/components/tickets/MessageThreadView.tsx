@@ -31,7 +31,7 @@ export default function MessageThreadView({
 
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="flex flex-col p-4">
+      <div className="flex flex-col">
         <TicketMessage
           message={ticket.description}
           isSentByMeOrPeer={!isViewerInternal}
