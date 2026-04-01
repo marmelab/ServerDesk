@@ -10,7 +10,7 @@ export default function DashboardUsersCard() {
   const totalCount = (userCount ?? 0) + (customerCount ?? 0);
   return (
     <DashboardCard
-      title="Users"
+      singularLabel="User"
       label="Users"
       icon={<User />}
       count={totalCount}

@@ -16,7 +16,7 @@ export default function DashboardCompanyCard({
   const finalCount = initialCount ?? count ?? 0;
   return (
     <DashboardCard
-      title="Companies"
+      singularLabel="Company"
       label="Companies"
       icon={<Building2 />}
       count={finalCount}
