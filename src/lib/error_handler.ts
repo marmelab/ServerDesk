@@ -31,7 +31,10 @@ export const handleSupabaseError = (error: any): AppError => {
       const statusNumber = status ? Number(status) : null;
       if (statusNumber && statusNumber >= 500 && statusNumber < 600) {
         message = 'Internal server error.';
-      } else if (error.code === '23505') {
+      } else if (
+        error.code === '23505' ||
+        error.includes('unique constraint')
+      ) {
         message = 'This record already exists.';
       }
   }

@@ -8,9 +8,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
-import { FilePlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { Button } from './../ui/button';
-import { TextField } from '@/components/FormInputs';
+import { SubmitButton, TextField } from '@/components/FormInputs';
 
 interface AddCustomerDialogViewProps {
   form: any;
@@ -39,7 +39,7 @@ export default function AddCustomerDialogView({
       {!isUpdate && (
         <DialogTrigger asChild>
           <Button className="group-hover:bg-primary group-hover:text-primary-foreground w-fit">
-            <FilePlus className="ms-2 size-4" />
+            <UserPlus className="ms-2 size-4" />
             {isUpdate ? 'Update Customer' : 'Add Customer'}
           </Button>
         </DialogTrigger>
@@ -72,9 +72,9 @@ export default function AddCustomerDialogView({
             </form.Field>
           </div>
           <DialogFooter className="sm:justify-start">
-            <Button type="submit" disabled={form.state.isSubmitting}>
+            <SubmitButton form={form}>
               {isUpdate ? 'Update Customer' : 'Add Customer'}
-            </Button>
+            </SubmitButton>
           </DialogFooter>
         </form>
       </DialogContent>

@@ -30,6 +30,7 @@
     "@tanstack/react-form": "^1.28.5",
     "@tanstack/react-form-devtools": "^0.2.19",
     "@tanstack/react-query": "^5.90.21",
+    "@tanstack/zod-form-adapter": "^0.42.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
@@ -42,7 +43,8 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
-    "vaul": "^1.1.2"
+    "vaul": "^1.1.2",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^5.0.2",

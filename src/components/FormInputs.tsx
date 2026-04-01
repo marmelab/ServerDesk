@@ -24,10 +24,17 @@ const FieldWrapper = ({ label, field, children }: FieldWrapperProps) => (
     </Label>
     <div className="flex flex-col gap-1">
       {children}
-      {field.state.meta.errors.length > 0 && (
-        <span className="text-[0.8rem] font-medium text-destructive">
-          {field.state.meta.errors.join(', ')}
-        </span>
+      {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+        <div className="flex flex-col gap-0.5 mt-1">
+          {field.state.meta.errors.map((error: any, i: number) => (
+            <span
+              key={i}
+              className="text-[0.8rem] font-medium text-destructive animate-in fade-in slide-in-from-top-1"
+            >
+              {typeof error === 'object' ? error.message : error}
+            </span>
+          ))}
+        </div>
       )}
     </div>
   </div>
@@ -141,7 +148,7 @@ export const SubmitButton = ({ children, form }: any) => {
       {([canSubmit, isSubmitting]: [boolean, boolean]) => (
         <Button
           type="submit"
-          disabled={!canSubmit || isSubmitting}
+          disabled={!canSubmit || isSubmitting || !form.state.isDirty}
           className="relative"
         >
           {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
