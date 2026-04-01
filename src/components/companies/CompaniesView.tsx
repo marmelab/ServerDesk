@@ -1,15 +1,8 @@
 import { Company } from '@/types';
 import { PageHeader } from '@/components/PageHeader';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import React from 'react';
-import CcompanySummary from './CompanySummary';
+import CompanySummary from './CompanySummary';
+import { Accordion } from '../ui/accordion';
 
 interface CompaniesViewProps {
   companies: Company[];
@@ -42,42 +35,31 @@ export default function CompaniesView({
             </span>
           </div>
         )}
-        <Table
+        <Accordion
+          type="single"
+          collapsible
           className={
             isPlaceholderData
               ? 'opacity-50 transition-opacity'
               : 'transition-opacity'
           }
         >
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[400px]">Name</TableHead>
-              <TableHead>Created at</TableHead>
-              <TableHead />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {companies.map((company) => (
-              <CcompanySummary
-                key={company.id}
-                company={company}
-                isAdmin={isAdmin}
-                onAssign={onAssign}
-              />
-            ))}
-            {companies.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={4} className="h-32 text-center">
-                  <div className="flex flex-col items-center justify-center text-muted-foreground">
-                    <p className="text-lg font-medium text-tertiary">
-                      No companies found
-                    </p>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+          {companies.map((company) => (
+            <CompanySummary
+              key={company.id}
+              company={company}
+              isAdmin={isAdmin}
+              onAssign={onAssign}
+            />
+          ))}
+          {companies.length === 0 && (
+            <div className="flex flex-col items-center justify-center text-muted-foreground">
+              <p className="text-lg font-medium text-tertiary">
+                No companies found
+              </p>
+            </div>
+          )}
+        </Accordion>
       </div>
     </div>
   );

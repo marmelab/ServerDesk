@@ -2,6 +2,10 @@ import { Database, Enums, Tables } from 'supabase/types.ts';
 
 // User
 export type AppUser = Tables<'app_user'>;
+export type AppUserWithMail = Omit<AppUser, 'id'> & {
+  id: string;
+  email: string | undefined;
+};
 
 interface AppRoleOption {
   label: string;

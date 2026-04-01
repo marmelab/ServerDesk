@@ -1,6 +1,9 @@
 import { Company } from '@/types';
-import { TableCell, TableRow } from '../ui/table';
 import { Button } from '../ui/button';
+import { AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { Send } from 'lucide-react';
+import CompanyContacts from './CompanyContacts';
+import { useState } from 'react';
 
 interface CompanySummaryProps {
   company: Company;
@@ -8,46 +11,43 @@ interface CompanySummaryProps {
   isAdmin: boolean;
 }
 
-export default function CcompanySummary({
+export default function CompanySummary({
   company,
   onAssign,
   isAdmin,
 }: CompanySummaryProps) {
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
+
   return (
-    <TableRow key={company.id}>
-      <TableCell className="font-medium">
-        <div className="flex flex-col font-semibold">
-          <span>{company.name}</span>
-        </div>
-      </TableCell>
-      <TableCell className="font-medium">
-        <div className="flex flex-col">
-          <span>{new Date(company.created_at).toLocaleDateString()}</span>
-        </div>
-      </TableCell>
-      <TableCell>
+    <AccordionItem
+      key={company.id}
+      value={company.name}
+      className="border-b px-4 last:border-b-0"
+    >
+      <div className="flex w-full items-center justify-between">
+        <AccordionTrigger
+          onClick={() => setHasBeenOpened(true)}
+          className="flex-1 font-semibold py-4"
+        >
+          <span className="font-medium">{company.name}</span>
+        </AccordionTrigger>
+
         {isAdmin && (
           <Button
-            className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
-            onClick={() => onAssign(company)}
+            size="sm"
+            variant="ghost"
+            className="ml-2 h-8 w-8 p-0 hover:bg-primary hover:text-primary-foreground"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAssign(company);
+            }}
+            title="Invite Manager"
           >
-            Invite Manager
-            <svg
-              className="ms-2 size-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
+            <Send className="h-4 w-4" />
           </Button>
         )}
-      </TableCell>
-    </TableRow>
+      </div>
+      {hasBeenOpened && <CompanyContacts companyId={company.id} />}
+    </AccordionItem>
   );
 }
