@@ -9,7 +9,7 @@ import {
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { AgentDetails, Company } from '@/types';
-import { useUpdateAgentCompanies } from '@/hooks/useAgents';
+import { useUpdateAgentCompanies } from '@/hooks/useUpdateAgentCompanies';
 
 interface AssignCompaniesDialogProps {
   open: boolean;

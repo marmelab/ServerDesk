@@ -28,7 +28,7 @@ export default function CustomersPage() {
     error,
     isPlaceholderData,
     refetch,
-  } = useCustomers(companyId, page);
+  } = useCustomers({ companiesId: user?.user?.company_ids, page });
   const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const { mutate: deleteMutate, isPending: isPendingDeletion } =

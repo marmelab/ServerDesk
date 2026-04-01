@@ -1,6 +1,9 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { PageHeader } from '@/components/PageHeader';
-import { DashboardCard } from '@/components/DashboardCard';
+import DashboardCompanyCard from '@/components/dashboard/DashboardCompanyCard';
+import DashboardUsersCard from '@/components/dashboard/DashboardUsersCard';
+import DashboardTicketsCard from '@/components/dashboard/DashboardTicketsCard';
+import DashboardCustomersCard from '@/components/dashboard/DashboardCustomersCard';
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
@@ -29,14 +32,23 @@ export default function DashboardPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {user?.role === 'admin' && (
             <>
-              <DashboardCard title="Companies" to="/admin/companies" />
-              <DashboardCard title="Agents" to="/admin/agents" />
+              <DashboardCompanyCard />
+              <DashboardUsersCard />
+              <DashboardTicketsCard />
+            </>
+          )}
+          {user?.role === 'agent' && (
+            <>
+              <DashboardCompanyCard initialCount={user.company_ids.length} />
+              <DashboardTicketsCard companiesId={user.company_ids} />
             </>
           )}
           {user?.role === 'customer_manager' && (
-            <DashboardCard title="Customers" to="/customers" />
+            <>
+              <DashboardCustomersCard companiesId={user.company_ids} />
+              <DashboardTicketsCard companiesId={user.company_ids} />
+            </>
           )}
-          <DashboardCard title="Tickets" to="/tickets" />
         </div>
       </div>
     </div>
