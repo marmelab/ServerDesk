@@ -17,7 +17,7 @@ export default function DashboardTicketsCard({
 
   return (
     <DashboardCard
-      title="Tickets"
+      singularLabel="Ticket"
       label="Tickets"
       icon={<File />}
       count={totalCount}
