@@ -1,18 +1,20 @@
-import { toast } from 'sonner';
-import { supabase } from '@/lib/supabase';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchCompanies } from '@/services/Companies';
+import { useQuery } from '@tanstack/react-query';
 
-export function useAddCompany() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (name: string) => {
-      const { error } = await supabase.from('companies').insert({ name });
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['companies'] });
-      toast.success('Company added successfully!');
-    },
+export function useCompanies(
+  isEnabled: boolean = true,
+  onlyCount: boolean = false,
+) {
+  const query = useQuery({
+    queryKey: ['companies', { onlyCount }],
+    queryFn: () => fetchCompanies(onlyCount),
+    enabled: isEnabled,
   });
+
+  return {
+    companies: query.data?.data ?? [],
+    isPending: query.isPending,
+    error: query.error,
+    count: query.data?.count,
+  };
 }

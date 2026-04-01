@@ -16,7 +16,7 @@ import { useInviteToken } from '@/hooks/useInviteToken';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { handleSupabaseError } from '@/lib/error_handler';
-import { AppRoles } from '@/types';
+import { APP_ROLES } from '@/types';
 
 export const SignUpForm = ({
   className,
@@ -153,9 +153,9 @@ export const SignUpForm = ({
                       type="text"
                       required
                       value={
-                        AppRoles.find(
-                          (role) => role.value === inviteData?.appRole,
-                        )?.label
+                        inviteData?.appRole
+                          ? APP_ROLES[inviteData.appRole]?.label
+                          : 'Unknown role'
                       }
                       disabled={true}
                     />

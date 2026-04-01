@@ -1,23 +1,15 @@
-import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { UserPlus } from 'lucide-react';
 import { useState } from 'react';
 import { InviteDialog } from '@/components/InviteDialog';
-import { fetchAgents } from '@/services/Agents';
 import AgentCard from '@/components/AgentCard';
 import { PageHeader } from '@/components/PageHeader';
+import { useAgents } from '@/hooks/useAgents';
 
 export default function AgentsPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
-  const {
-    data: agents = [],
-    isPending,
-    error: queryError,
-  } = useQuery({
-    queryKey: ['agents'],
-    queryFn: fetchAgents,
-  });
+  const { agents = [], isPending, error: queryError } = useAgents();
 
   const handleOpenInvite = () => {
     setIsInviteOpen(true);

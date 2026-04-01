@@ -4,21 +4,31 @@ import { TicketWithDetails } from '@/types';
 export const PAGE_SIZE = 10;
 
 export async function fetchTickets(
-  page: number,
+  companiesId?: number[] | null,
+  page: number | null = null,
+  onlyCount: boolean = false,
 ): Promise<{ data: TicketWithDetails[]; count: number }> {
-  const { data, error, count } = await supabase
-    .from('tickets')
-    .select(
-      `
+  let query = supabase.from('tickets').select(
+    `
       *, 
       company:companies(name),
       creator_user:app_user!customer_id(name),
       creator_contact:company_contacts!contact_id(name, email)
       `,
-      { count: 'exact' },
-    )
-    .order('updated_at', { ascending: false })
-    .range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+    { count: 'exact', head: onlyCount },
+  );
+
+  if (companiesId && companiesId.length > 0) {
+    query = query.in('company_id', companiesId);
+  }
+
+  query = query.order('updated_at', { ascending: false });
+
+  if (page !== null) {
+    query = query.range(page * PAGE_SIZE, (page + 1) * PAGE_SIZE - 1);
+  }
+
+  const { data, error, count } = await query;
   if (error) throw error;
 
   const transformedData: TicketWithDetails[] = (data || []).map(
