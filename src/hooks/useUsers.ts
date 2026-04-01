@@ -1,10 +1,14 @@
 import { fetchUsers } from '@/services/Users';
 import { useQuery } from '@tanstack/react-query';
 
-export function useUsers() {
+interface UseUsersProps {
+  onlyCount: boolean;
+}
+
+export function useUsers({ onlyCount = false }: UseUsersProps) {
   const query = useQuery({
-    queryKey: ['users'],
-    queryFn: fetchUsers,
+    queryKey: ['users', { onlyCount }],
+    queryFn: () => fetchUsers(onlyCount),
   });
 
   return {

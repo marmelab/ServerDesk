@@ -6,8 +6,12 @@ export const PAGE_SIZE = 10;
 export async function fetchCustomers(
   companiesId?: number[],
   page?: number,
+  onlyCount: boolean = false,
 ): Promise<{ data: Customer[]; count: number }> {
-  let query = supabase.from('company_contacts').select('*', { count: 'exact' });
+  let query = supabase.from('company_contacts').select('*', {
+    count: 'exact',
+    head: onlyCount,
+  });
 
   if (companiesId != null) {
     query = query.in('company_id', companiesId);

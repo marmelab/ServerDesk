@@ -1,10 +1,14 @@
 import { fetchCompanies } from '@/services/Companies';
 import { useQuery } from '@tanstack/react-query';
 
-export function useCompanies() {
+export function useCompanies(
+  isEnabled: boolean = true,
+  onlyCount: boolean = false,
+) {
   const query = useQuery({
-    queryKey: ['companies'],
-    queryFn: fetchCompanies,
+    queryKey: ['companies', { onlyCount }],
+    queryFn: () => fetchCompanies(onlyCount),
+    enabled: isEnabled,
   });
 
   return {

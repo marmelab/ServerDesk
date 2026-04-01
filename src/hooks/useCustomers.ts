@@ -1,10 +1,20 @@
 import { fetchCustomers } from '@/services/Customers';
 import { useQuery } from '@tanstack/react-query';
 
-export function useCustomers(companiesId?: number[], page?: number) {
+interface UseCustomersProps {
+  companiesId?: number[];
+  page?: number;
+  onlyCount?: boolean;
+}
+
+export function useCustomers({
+  companiesId,
+  page,
+  onlyCount = false,
+}: UseCustomersProps = {}) {
   const query = useQuery({
-    queryKey: ['customers', companiesId, page],
-    queryFn: () => fetchCustomers(companiesId, page),
+    queryKey: ['customers', companiesId, page, { onlyCount }],
+    queryFn: () => fetchCustomers(companiesId, page, onlyCount),
     placeholderData: (previousData) => previousData,
   });
 

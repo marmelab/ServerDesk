@@ -1,15 +1,20 @@
 import { fetchTickets } from '@/services/Tickets';
 import { useQuery } from '@tanstack/react-query';
 
-interface useTicketsProps {
+interface UseTicketsProps {
   companiesId?: number[] | null;
   page: number | null;
+  onlyCount?: boolean;
 }
 
-export function useTickets({ companiesId, page }: useTicketsProps) {
+export function useTickets({
+  companiesId,
+  page,
+  onlyCount = false,
+}: UseTicketsProps) {
   const query = useQuery({
-    queryKey: ['tickets', page, companiesId],
-    queryFn: () => fetchTickets(companiesId, page),
+    queryKey: ['tickets', page, companiesId, { onlyCount }],
+    queryFn: () => fetchTickets(companiesId, page, onlyCount),
     placeholderData: (previousData) => previousData,
   });
 

@@ -9,7 +9,7 @@ interface DashboardCompanyCardProps {
 export default function DashboardCompanyCard({
   initialCount,
 }: DashboardCompanyCardProps) {
-  const { count } = useCompanies();
+  const { count } = useCompanies(initialCount === undefined, true);
   const finalCount = initialCount ?? count ?? 0;
   return (
     <DashboardCard

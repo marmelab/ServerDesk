@@ -9,7 +9,11 @@ interface DashboardTicketsCardProp {
 export default function DashboardTicketsCard({
   companiesId,
 }: DashboardTicketsCardProp) {
-  const { totalCount } = useTickets({ companiesId: companiesId, page: null });
+  const { totalCount } = useTickets({
+    companiesId: companiesId,
+    page: null,
+    onlyCount: true,
+  });
 
   return (
     <DashboardCard

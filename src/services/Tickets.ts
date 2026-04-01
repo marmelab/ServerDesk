@@ -6,6 +6,7 @@ export const PAGE_SIZE = 10;
 export async function fetchTickets(
   companiesId?: number[] | null,
   page: number | null = null,
+  onlyCount: boolean = false,
 ): Promise<{ data: TicketWithDetails[]; count: number }> {
   let query = supabase.from('tickets').select(
     `
@@ -14,7 +15,7 @@ export async function fetchTickets(
       creator_user:app_user!customer_id(name),
       creator_contact:company_contacts!contact_id(name, email)
       `,
-    { count: 'exact' },
+    { count: 'exact', head: onlyCount },
   );
 
   if (companiesId && companiesId.length > 0) {
