@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-
+import { withMockAuth } from '@/lib/decorator';
 import TicketDetailView from './TicketDetailView';
 import { useForm } from '@tanstack/react-form';
 import { Drawer } from '../ui/drawer';
@@ -17,6 +17,7 @@ const meta = {
         <Story />
       </Drawer>
     ),
+    withMockAuth('admin'),
   ],
 } satisfies Meta<typeof TicketDetailView>;
 
@@ -109,6 +110,7 @@ export const Default: Story = {
 
 export const AsCustomerManager: Story = {
   render: Default.render,
+  decorators: [withMockAuth('customer_manager')],
   args: {
     ...Default.args,
     user: {

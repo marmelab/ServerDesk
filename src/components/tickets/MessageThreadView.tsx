@@ -1,6 +1,7 @@
-import { MessageWithDetails, TicketWithDetails } from '@/types';
+import { isInternalRole, MessageWithDetails, TicketWithDetails } from '@/types';
 import TicketMessage from './TicketMessage';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface MessageThreadViewProps {
   ticket: TicketWithDetails;
@@ -24,12 +25,16 @@ export default function MessageThreadView({
     scrollToBottom();
   }, [messages]);
 
+  const { user } = useAuth();
+  const userRole = user?.role;
+  const isViewerInternal = useMemo(() => isInternalRole(userRole), [userRole]);
+
   return (
     <div className="flex-1 overflow-y-auto">
-      <div className="flex flex-col p-4">
+      <div className="flex flex-col">
         <TicketMessage
           message={ticket.description}
-          role="customer_manager"
+          isSentByMeOrPeer={!isViewerInternal}
           id={ticket.id}
           created_at={ticket.created_at}
           name={ticket.creator?.name}
@@ -38,7 +43,9 @@ export default function MessageThreadView({
           messages.map((message) => (
             <TicketMessage
               message={message.text}
-              role={message.sender?.role}
+              isSentByMeOrPeer={
+                isViewerInternal === isInternalRole(message.sender?.role)
+              }
               id={message.id}
               created_at={message.created_at}
               name={message.sender?.name}

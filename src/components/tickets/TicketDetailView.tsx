@@ -47,20 +47,16 @@ export default function TicketDetailsView({
       )}
       {ticket && (
         <>
-          <DrawerHeader className="border-b pb-4">
-            <div className="flex flex-col gap-1 text-left">
-              <div className="flex items-start justify-between gap-4">
-                <DrawerTitle className="flex items-baseline gap-2 text-xl font-bold tracking-tight">
-                  <span
-                    className="text-tertiary font-mono text-sm font-normal"
-                    role="note"
-                  >
-                    #{ticket.id}
-                  </span>
-                  {ticket.subject}
-                </DrawerTitle>
-                <DrawerDescription />
-                <div className="flex gap-2 shrink-0 pt-1">
+          <DrawerHeader className="border-b pb-4 pr-6">
+            <div className="flex flex-col gap-2 text-left">
+              <div className="flex items-center justify-between">
+                <span
+                  className="text-tertiary font-mono text-sm font-normal"
+                  role="note"
+                >
+                  #{ticket.id}
+                </span>
+                <div className="flex gap-2">
                   <Badge variant="secondary" className="whitespace-nowrap">
                     <span
                       className={`h-2 w-2 rounded-full ${priorityInfo.color}`}
@@ -79,8 +75,14 @@ export default function TicketDetailsView({
                   </Badge>
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-sm">
-                <span className="font-bold">{ticket.creator?.name}</span>
+              <DrawerTitle className="text-xl font-bold tracking-tight">
+                {ticket.subject}
+              </DrawerTitle>
+              <DrawerDescription />
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <span className="font-bold text-foreground">
+                  {ticket.creator?.name}
+                </span>
                 <span>·</span>
                 <span>{ticket.company?.name}</span>
               </div>

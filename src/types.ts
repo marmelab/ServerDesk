@@ -4,16 +4,23 @@ import { Database, Enums, Tables } from 'supabase/types.ts';
 export type AppUser = Tables<'app_user'>;
 
 interface AppRoleOption {
-  value: AppUserRole;
   label: string;
+  isInternal: boolean;
 }
 
-export const AppRoles: AppRoleOption[] = [
-  { value: 'admin', label: 'Administrator' },
-  { value: 'agent', label: 'Agent' },
-  { value: 'customer_manager', label: 'Customer Manager' },
-  { value: 'customer', label: 'Customer' },
-];
+export const APP_ROLES: Record<AppUserRole, AppRoleOption> = {
+  admin: { label: 'Administrator', isInternal: true },
+  agent: { label: 'Agent', isInternal: true },
+  customer_manager: { label: 'Customer Manager', isInternal: false },
+  customer: { label: 'Customer', isInternal: false },
+};
+
+export const isInternalRole = (
+  role: AppUserRole | null | undefined,
+): boolean => {
+  if (!role) return false;
+  return APP_ROLES[role].isInternal ?? false;
+};
 
 export type AppUserRole = Enums<'app_role'>;
 
