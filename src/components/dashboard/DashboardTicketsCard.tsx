@@ -1,16 +1,24 @@
 import { File } from 'lucide-react';
 import { DashboardCard } from './DashboardCard';
-import { useTickets } from '@/hooks/useTickets';
+import { TicketFilters, useTickets } from '@/hooks/useTickets';
+import { useMemo } from 'react';
 
 interface DashboardTicketsCardProp {
-  companiesId?: number[] | null;
+  companiesId?: number[];
 }
 
 export default function DashboardTicketsCard({
   companiesId,
 }: DashboardTicketsCardProp) {
+  const filters = useMemo(
+    (): TicketFilters => ({
+      companies: companiesId,
+    }),
+    [companiesId],
+  );
+
   const { count } = useTickets({
-    companiesId: companiesId,
+    filters: filters,
     page: null,
     onlyCount: true,
   });

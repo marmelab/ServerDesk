@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -13,18 +13,73 @@ import { PAGE_SIZE } from '@/services/Tickets';
 import AddTicketDialog from '@/components/tickets/AddTicketDialog';
 import { PageHeader } from '@/components/PageHeader';
 import TicketSummary from '@/components/tickets/TicketSummary';
-import { TicketWithDetails } from '@/types';
+import {
+  PRIORITY_MAP,
+  STATUS_MAP,
+  TicketPriority,
+  TicketStatus,
+  TicketWithDetails,
+} from '@/types';
 import { Drawer } from '@/components/ui/drawer';
 import TicketDetails from '../components/tickets/TicketDetail';
-import { useTickets } from '@/hooks/useTickets';
+import { TicketFilters, useTickets } from '@/hooks/useTickets';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Pagination } from '@/components/Pagination';
 import { Placeholder } from '@/components/Placeholder';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import ErrorView from '@/components/ErrorView';
+import PendingView from '@/components/PendingView';
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { Check, Search } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group';
+import { CompanyMultiSelect } from '@/components/companies/CompanyMultiSelect';
+import { useDebounce } from 'use-debounce';
 
 export default function TicketsPage() {
   const { user } = useAuth();
   const [page, setPage] = useState<number>(0);
   const [selectedTicket, setSelectedTicket] =
     useState<TicketWithDetails | null>(null);
+
+  const [searchLabel, setSearchLabel] = useState<string>('');
+  const [selectedPriority, setSelectedPriority] = useState<
+    TicketPriority | undefined
+  >();
+  const [selectedStatus, setSelectedStatus] = useState<TicketStatus[]>([]);
+  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
+  const [debounceSearchLabel] = useDebounce(searchLabel, 500);
+
+  const filters = useMemo(
+    (): TicketFilters => ({
+      searchLabel: debounceSearchLabel,
+      status: selectedStatus,
+      priority: selectedPriority,
+      companies: selectedCompanies,
+    }),
+    [debounceSearchLabel, selectedStatus, selectedPriority, selectedCompanies],
+  );
 
   const {
     data: tickets,
@@ -33,24 +88,27 @@ export default function TicketsPage() {
     isPlaceholderData,
     error,
     refetch,
-  } = useTickets({ page });
+  } = useTickets({ filters, page });
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+
+  const toggleValue = <T,>(
+    id: T,
+    selected: T[],
+    setSelected: (value: T[]) => void,
+  ) => {
+    const newSelection = selected.includes(id)
+      ? selected.filter((i) => i !== id)
+      : [...selected, id];
+    setSelected(newSelection);
+  };
 
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
 
   return (
     <div className="container mx-auto py-10">
-      {error && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <h3 className="text-xl font-semibold italic">
-            Failed to load tickets
-          </h3>
-          <Button variant="outline" className="mt-6" onClick={() => refetch()}>
-            Try again
-          </Button>
-        </div>
-      )}
+      {error && <ErrorView label="Failed to load tickets" refetch={refetch} />}
+      {isPending && <PendingView label="Loading tickets" />}
       {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
           <PageHeader
@@ -59,8 +117,113 @@ export default function TicketsPage() {
           >
             {user?.role === 'customer_manager' && <AddTicketDialog />}
           </PageHeader>
+
+          <div className="flex py-2">
+            <InputGroup className="max-w-xs">
+              <InputGroupInput
+                placeholder="Search..."
+                value={searchLabel}
+                onChange={(e) => setSearchLabel(e.target.value)}
+              />
+              <InputGroupAddon>
+                <Search />
+              </InputGroupAddon>
+              <InputGroupAddon align="inline-end">
+                {count} results
+              </InputGroupAddon>
+            </InputGroup>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">Companies</Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <CompanyMultiSelect
+                  selectedIds={selectedCompanies}
+                  onChange={setSelectedCompanies}
+                />
+              </PopoverContent>
+            </Popover>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline">Status</Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <Command>
+                  <CommandList className="h-[200px] overflow-y-auto border-t">
+                    <CommandGroup>
+                      {Object.values(STATUS_MAP).map((status) => (
+                        <CommandItem
+                          key={status.value}
+                          onSelect={() =>
+                            toggleValue(
+                              status.value,
+                              selectedStatus,
+                              setSelectedStatus,
+                            )
+                          }
+                        >
+                          <Check
+                            className={cn(
+                              'mr-2 h-4 w-4',
+                              selectedStatus.includes(status.value)
+                                ? 'opacity-100'
+                                : 'opacity-0',
+                            )}
+                          />
+                          <Badge
+                            variant="secondary"
+                            className="whitespace-nowrap"
+                            data-testid="ticket-status"
+                          >
+                            <span
+                              className={`h-2 w-2 rounded-full ${status.color}`}
+                            />
+                            {status.label}
+                          </Badge>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+
+            <Select
+              value={selectedPriority ?? ''}
+              onValueChange={(value) =>
+                setSelectedPriority(value as TicketPriority)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {Object.values(PRIORITY_MAP).map((priority) => (
+                    <SelectItem key={priority.value} value={priority.value}>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="secondary"
+                          className="whitespace-nowrap"
+                        >
+                          <span
+                            className={`h-2 w-2 rounded-full ${priority.color}`}
+                          />
+                          {priority.label}
+                        </Badge>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="rounded-md border bg-card">
             {isPlaceholderData && <Placeholder />}
+
             <Table
               className={
                 isPlaceholderData

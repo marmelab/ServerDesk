@@ -1,10 +1,11 @@
+import { TicketFilters } from '@/hooks/useTickets';
 import { supabase } from '@/lib/supabase';
 import { TicketWithDetails } from '@/types';
 
 export const PAGE_SIZE = 10;
 
 export async function fetchTickets(
-  companiesId?: number[] | null,
+  filters?: TicketFilters,
   page: number | null = null,
   onlyCount: boolean = false,
 ): Promise<{ data: TicketWithDetails[]; count: number }> {
@@ -18,8 +19,23 @@ export async function fetchTickets(
     { count: 'exact', head: onlyCount },
   );
 
-  if (companiesId && companiesId.length > 0) {
-    query = query.in('company_id', companiesId);
+  if (filters) {
+    if (filters.searchLabel) {
+      const search = `%${filters.searchLabel}%`;
+      query = query.or(`subject.ilike.${search},description.ilike.${search}`);
+    }
+
+    if (filters.status && filters.status.length > 0) {
+      query = query.in('status', filters.status);
+    }
+
+    if (filters.priority) {
+      query = query.eq('priority', filters.priority);
+    }
+
+    if (filters.companies && filters.companies.length > 0) {
+      query = query.in('company_id', filters.companies);
+    }
   }
 
   query = query.order('updated_at', { ascending: false });
