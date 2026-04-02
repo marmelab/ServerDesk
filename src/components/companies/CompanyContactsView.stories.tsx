@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import CompanyContactsView from './CompanyContactsView';
-import { Accordion, AccordionItem, AccordionTrigger } from '../ui/accordion';
-import { fn } from 'storybook/test';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '../ui/accordion';
 
 const meta = {
   component: CompanyContactsView,
@@ -10,8 +14,12 @@ const meta = {
     (Story) => (
       <Accordion type="single" collapsible className="w-full max-w-md">
         <AccordionItem value="Test" className="border-b px-4 last:border-b-0">
-          <AccordionTrigger className="flex-1 font-semibold py-4" />
-          <Story />
+          <AccordionTrigger className="flex-1 font-semibold py-4">
+            acme
+          </AccordionTrigger>
+          <AccordionContent>
+            <Story />
+          </AccordionContent>
         </AccordionItem>
       </Accordion>
     ),
@@ -41,24 +49,5 @@ export const Default: Story = {
         created_at: new Date().toISOString(),
       },
     ],
-    isPending: false,
-    error: null,
-    errorCM: null,
-    refetch: fn(),
-    refetchCM: fn(),
-  },
-};
-
-export const IsPending: Story = {
-  args: {
-    ...Default.args,
-    isPending: true,
-  },
-};
-
-export const Error: Story = {
-  args: {
-    ...Default.args,
-    error: { name: 'Error', message: 'An error arrived' },
   },
 };

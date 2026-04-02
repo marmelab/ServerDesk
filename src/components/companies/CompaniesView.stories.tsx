@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import CompaniesView from './CompaniesView';
-import { Button } from '../ui/button';
 
 const meta = {
   component: CompaniesView,
@@ -28,13 +27,5 @@ export const Default: Story = {
     isPlaceholderData: false,
     isAdmin: true,
     onAssign: () => {},
-    renderAddCompanyDialog: () => <Button>Add Company (Mock)</Button>,
-  },
-};
-
-export const Placeholder: Story = {
-  args: {
-    ...Default.args,
-    isPlaceholderData: true,
   },
 };

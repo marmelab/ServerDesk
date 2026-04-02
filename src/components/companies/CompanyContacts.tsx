@@ -1,6 +1,9 @@
 import { useCustomers } from '@/hooks/useCustomers';
 import CompanyContactsView from './CompanyContactsView';
 import { useCustomerManagers } from '@/hooks/useCustomerManagers';
+import { AccordionContent } from '../ui/accordion';
+import { CompanyContactError } from './CompanyContactError';
+import CompanyContactPending from './CompanyContactPending';
 
 interface CompanyContactsProps {
   companyId: number;
@@ -12,20 +15,24 @@ export default function CompanyContacts({ companyId }: CompanyContactsProps) {
   });
   const {
     data: dataCM,
-    isPending: isPendingCM,
-    error: errorCM,
-    refetch: refetchCM,
+    isPending: isPendingCustomerManager,
+    error: errorCustomerManager,
+    refetch: refetchCustomerManager,
   } = useCustomerManagers(companyId);
 
   return (
-    <CompanyContactsView
-      customerManagers={dataCM}
-      customers={data}
-      isPending={isPending && isPendingCM}
-      error={error}
-      errorCM={errorCM}
-      refetch={refetch}
-      refetchCM={refetchCM}
-    />
+    <AccordionContent>
+      {(error || errorCustomerManager) && (
+        <CompanyContactError
+          errorCustomerManager={!!errorCustomerManager}
+          refetch={refetch}
+          refetchCustomerManager={refetchCustomerManager}
+        />
+      )}
+      {(isPending || isPendingCustomerManager) && <CompanyContactPending />}
+      {!isPending && !error && (
+        <CompanyContactsView customerManagers={dataCM} customers={data} />
+      )}
+    </AccordionContent>
   );
 }

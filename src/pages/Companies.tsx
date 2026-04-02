@@ -1,5 +1,4 @@
 import AddCompanyDialog from '@/components/companies/AddCompanyDialog';
-import { Button } from '@/components/ui/button';
 import { Pagination } from '@/components/Pagination';
 import { useState } from 'react';
 import { useCompanies } from '@/hooks/useCompanies';
@@ -8,6 +7,10 @@ import CompaniesView from '@/components/companies/CompaniesView';
 import { InviteDialog } from '@/components/InviteDialog';
 import { useAuth } from '@/contexts/AuthContext';
 import { Company } from '@/types';
+import { PageHeader } from '@/components/PageHeader';
+import ErrorView from '@/components/ErrorView';
+import PendingView from '@/components/PendingView';
+import { Placeholder } from '@/components/Placeholder';
 
 export default function CompaniesPage() {
   const [page, setPage] = useState<number>(0);
@@ -27,16 +30,17 @@ export default function CompaniesPage() {
 
   return (
     <div className="container mx-auto py-10">
+      <PageHeader
+        title="Companies"
+        description="View and manage all companies."
+      >
+        <AddCompanyDialog />
+      </PageHeader>
       {error && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <h3 className="text-xl font-semibold italic">
-            Failed to load companies
-          </h3>
-          <Button variant="outline" className="mt-6" onClick={() => refetch()}>
-            Try again
-          </Button>
-        </div>
+        <ErrorView label="Failed to load companies" refetch={refetch} />
       )}
+      {isPending && <PendingView label="Loading companies" />}
+      {isPlaceholderData && <Placeholder />}
       {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
           <CompaniesView
@@ -44,7 +48,6 @@ export default function CompaniesPage() {
             isPlaceholderData={isPlaceholderData}
             isAdmin={user?.role === 'admin'}
             onAssign={setInviteCompany}
-            renderAddCompanyDialog={() => <AddCompanyDialog />}
           />
           <Pagination
             totalPages={totalPages}
