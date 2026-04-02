@@ -17,11 +17,13 @@ export const Default: Story = {
         id: 1,
         name: 'acme',
         created_at: new Date().toISOString(),
+        tickets: [{ status: 'open' }],
       },
       {
         id: 2,
         name: 'uncharted',
         created_at: new Date().toISOString(),
+        tickets: [{ status: 'open' }],
       },
     ],
     isPlaceholderData: false,

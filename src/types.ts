@@ -81,6 +81,9 @@ export const STATUS_MAP: Record<TicketStatus, StatusOption> = {
 
 // Companies
 export type Company = Tables<'companies'>;
+export type CompanyWithTickets = Company & {
+  tickets: { status: TicketStatus }[];
+};
 export type CompanyInsert = Database['public']['Tables']['companies']['Insert'];
 
 export type AgentDetails = Tables<'agent_details'>;
