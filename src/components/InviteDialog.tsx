@@ -40,10 +40,10 @@ export function InviteDialog({
   }, [createInvite, appRole, selectedIds]);
 
   useEffect(() => {
-    if (initialCompanyId) {
+    if (open && initialCompanyId) {
       createInvite({ company_id: [initialCompanyId], app_role: appRole });
     }
-  }, [initialCompanyId, createInvite, appRole]);
+  }, [open, initialCompanyId, appRole, createInvite]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

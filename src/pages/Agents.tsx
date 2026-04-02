@@ -9,7 +9,7 @@ import { useAgents } from '@/hooks/useAgents';
 export default function AgentsPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
-  const { agents = [], isPending, error: queryError } = useAgents();
+  const { data: agents = [], isPending, error: queryError } = useAgents();
 
   const handleOpenInvite = () => {
     setIsInviteOpen(true);

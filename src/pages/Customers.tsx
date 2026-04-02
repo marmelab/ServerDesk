@@ -1,10 +1,10 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useCustomers } from '@/hooks/useCustomers';
-import CustomersView from './CustomersView';
+import CustomersView from '../components/customers/CustomersView';
 import { useDeleteCustomer } from '@/hooks/useDeleteCustomer';
 import { useState } from 'react';
 import { PAGE_SIZE } from '@/services/Customers';
-import { PageHelper } from '@/components/PageHelper';
+import { Pagination } from '@/components/Pagination';
 import { Button } from '@/components/ui/button';
 import AddCustomerDialog from '@/components/customers/AddCustomerDialog';
 import { Customer } from '@/types';
@@ -21,15 +21,9 @@ export default function CustomersPage() {
   );
 
   const companyId = user?.user?.company_ids?.[0];
-  const {
-    customers,
-    totalCount,
-    isPending,
-    error,
-    isPlaceholderData,
-    refetch,
-  } = useCustomers({ companiesId: user?.user?.company_ids, page });
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  const { data, count, isPending, error, isPlaceholderData, refetch } =
+    useCustomers({ companiesId: user?.user?.company_ids, page });
+  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
 
   const { mutate: deleteMutate, isPending: isPendingDeletion } =
     useDeleteCustomer();
@@ -85,7 +79,7 @@ export default function CustomersPage() {
             isDeleting={isPendingDeletion}
           />
           <CustomersView
-            customers={customers}
+            customers={data}
             isPlaceholderData={isPlaceholderData}
             onDeleteCustomer={setCustomerToDelete}
             onUpdateCustomer={handleUpdate}
@@ -96,10 +90,10 @@ export default function CustomersPage() {
               />
             )}
           />
-          <PageHelper
+          <Pagination
             totalPages={totalPages}
-            totalCount={totalCount}
-            currentCount={customers.length}
+            totalCount={count ?? 0}
+            currentCount={data.length}
             page={page}
             isPlaceholderData={isPlaceholderData}
             pageSize={PAGE_SIZE}

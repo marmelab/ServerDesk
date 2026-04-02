@@ -16,7 +16,7 @@ interface Props {
   onChange: (ids: number[]) => void;
 }
 export function CompanyMultiSelect({ selectedIds, onChange }: Props) {
-  const { companies = [], isPending, error: queryError } = useCompanies();
+  const { data: companies = [], isPending, error: queryError } = useCompanies();
 
   const toggleCompany = (id: number) => {
     const newSelection = selectedIds.includes(id)

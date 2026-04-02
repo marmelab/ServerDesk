@@ -9,7 +9,7 @@ interface DashboardTicketsCardProp {
 export default function DashboardTicketsCard({
   companiesId,
 }: DashboardTicketsCardProp) {
-  const { totalCount } = useTickets({
+  const { count } = useTickets({
     companiesId: companiesId,
     page: null,
     onlyCount: true,
@@ -20,7 +20,7 @@ export default function DashboardTicketsCard({
       singularLabel="Ticket"
       label="Tickets"
       icon={<File />}
-      count={totalCount}
+      count={count}
     />
   );
 }

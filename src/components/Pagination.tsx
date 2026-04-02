@@ -1,6 +1,6 @@
 import { Button } from './ui/button';
 
-interface PageHelperProps {
+interface PaginationProps {
   totalPages: number;
   totalCount: number;
   currentCount: number;
@@ -11,7 +11,7 @@ interface PageHelperProps {
   label: string;
 }
 
-export function PageHelper({
+export function Pagination({
   totalPages,
   totalCount,
   currentCount,
@@ -20,7 +20,7 @@ export function PageHelper({
   pageSize,
   setPage,
   label,
-}: PageHelperProps) {
+}: PaginationProps) {
   return (
     <div className="flex items-center justify-between py-4">
       <div className="flex items-center gap-2">

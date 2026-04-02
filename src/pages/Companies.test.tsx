@@ -12,6 +12,11 @@ const { mockSupabase, mockState, utils } = vi.hoisted(() => {
 
   const supabaseMock = {
     from: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    match: vi.fn().mockReturnThis(),
+    eq: vi.fn().mockReturnThis(),
+    range: vi.fn().mockReturnThis(),
+    order: vi.fn().mockReturnThis(),
     insert: vi.fn().mockImplementation(function (this: any, newData) {
       const dataToInsert = Array.isArray(newData) ? newData[0] : newData;
       const newEntry = {
@@ -22,22 +27,19 @@ const { mockSupabase, mockState, utils } = vi.hoisted(() => {
       internalState.companies.push(newEntry);
       return this;
     }),
-    select: vi.fn().mockImplementation(function (this: any, columns) {
-      if (columns === 'token') {
-        return this;
-      }
-      return Promise.resolve({
-        data: [...internalState.companies],
-        error: null,
-      });
-    }),
     single: vi
       .fn()
       .mockImplementation(() =>
         Promise.resolve({ data: { token: 'mock-token-123' }, error: null }),
       ),
-    match: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
+    then: vi.fn().mockImplementation(function (this: any, onFulfilled) {
+      const result = {
+        data: [...internalState.companies],
+        count: internalState.companies.length,
+        error: null,
+      };
+      return Promise.resolve(result).then(onFulfilled);
+    }),
   };
 
   return {
@@ -126,7 +128,7 @@ describe('CompaniesPage', () => {
     render(<CompaniesPage />, { wrapper: Wrapper });
     expect(await screen.findByText('Companies')).toBeInTheDocument();
     const inviteButton = await screen.findAllByRole('button', {
-      name: /invite manager/i,
+      name: /assign/i,
     });
     expect(inviteButton[0]).toBeInTheDocument();
 

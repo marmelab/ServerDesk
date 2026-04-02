@@ -13,7 +13,7 @@ interface TicketDetailsProps {
 export default function TicketDetails({
   ticket: initialTicket,
 }: TicketDetailsProps) {
-  const { ticket, isPending, error } = useTicket(initialTicket.id);
+  const { data: ticket, isPending, error } = useTicket(initialTicket.id);
 
   const { user } = useAuth();
   const { mutateAsync: addMessage } = useCreateMessageAndStatus();
