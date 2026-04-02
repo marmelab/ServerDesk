@@ -90,6 +90,7 @@ export default function TicketsPage() {
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}
             clearFilters={clearFilters}
+            role={user?.role}
           />
 
           <div className="rounded-md border bg-card">
