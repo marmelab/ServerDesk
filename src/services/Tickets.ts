@@ -1,11 +1,11 @@
-import { TicketFilters } from '@/hooks/useTickets';
+import { UseTicketFilters } from '@/hooks/useTickets';
 import { supabase } from '@/lib/supabase';
 import { TicketWithDetails } from '@/types';
 
 export const PAGE_SIZE = 10;
 
 export async function fetchTickets(
-  filters?: TicketFilters,
+  filters?: UseTicketFilters,
   page: number | null = null,
   onlyCount: boolean = false,
 ): Promise<{ data: TicketWithDetails[]; count: number }> {

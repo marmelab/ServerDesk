@@ -3,7 +3,7 @@ import { fetchTickets } from '@/services/Tickets';
 import { TicketPriority, TicketStatus, TicketWithDetails } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
-export interface TicketFilters {
+export interface UseTicketFilters {
   searchLabel?: string;
   status?: TicketStatus[];
   priority?: TicketPriority;
@@ -13,7 +13,7 @@ export interface TicketFilters {
 interface UseTicketsProps {
   page: number | null;
   onlyCount?: boolean;
-  filters?: TicketFilters;
+  filters?: UseTicketFilters;
 }
 
 export type FetchTicketsResponse = { data: TicketWithDetails[]; count: number };

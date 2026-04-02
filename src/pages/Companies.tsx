@@ -25,8 +25,6 @@ export default function CompaniesPage() {
   } = useCompanies({ page });
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
   const { user } = useAuth();
-  if (isPending)
-    return <p className="text-muted-foreground p-10">Loading...</p>;
 
   return (
     <div className="container mx-auto py-10">
