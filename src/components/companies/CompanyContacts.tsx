@@ -7,11 +7,11 @@ interface CompanyContactsProps {
 }
 
 export default function CompanyContacts({ companyId }: CompanyContactsProps) {
-  const { customers, isPending, error, refetch } = useCustomers({
+  const { data, isPending, error, refetch } = useCustomers({
     companiesId: [companyId],
   });
   const {
-    customerManagers,
+    data: dataCM,
     isPending: isPendingCM,
     error: errorCM,
     refetch: refetchCM,
@@ -19,8 +19,8 @@ export default function CompanyContacts({ companyId }: CompanyContactsProps) {
 
   return (
     <CompanyContactsView
-      customerManagers={customerManagers}
-      customers={customers}
+      customerManagers={dataCM}
+      customers={data}
       isPending={isPending && isPendingCM}
       error={error}
       errorCM={errorCM}

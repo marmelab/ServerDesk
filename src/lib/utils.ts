@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,4 +32,15 @@ export function getInitials(name: string | undefined | null): string {
   if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
 
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
+export interface UseResourceData<TData, TResponse = TData> {
+  data: TData;
+  count?: number;
+  isPending: boolean;
+  error: Error | null;
+  isPlaceholderData: boolean;
+  refetch: (
+    options?: RefetchOptions,
+  ) => Promise<QueryObserverResult<TResponse, Error>>;
 }

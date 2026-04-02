@@ -1,16 +1,23 @@
-import { fetchCustomerManager } from '@/services/Users';
+import { UseResourceData } from '@/lib/utils';
+import { fetchCustomerManagers } from '@/services/Users';
+import { AppUser } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
-export function useCustomerManagers(companyId: number) {
+export type FetchCustomerManagersResponse = { data: AppUser[] };
+
+export function useCustomerManagers(
+  companyId: number,
+): UseResourceData<AppUser[], FetchCustomerManagersResponse> {
   const query = useQuery({
     queryKey: ['users', companyId],
-    queryFn: () => fetchCustomerManager(companyId),
+    queryFn: () => fetchCustomerManagers(companyId),
   });
 
   return {
-    customerManagers: query.data?.data ?? [],
+    data: query.data?.data ?? [],
     isPending: query.isPending,
     error: query.error,
+    isPlaceholderData: query.isPlaceholderData,
     refetch: query.refetch,
   };
 }

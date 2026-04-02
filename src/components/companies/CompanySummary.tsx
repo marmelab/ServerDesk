@@ -16,7 +16,7 @@ export default function CompanySummary({
   onAssign,
   isAdmin,
 }: CompanySummaryProps) {
-  const [hasBeenOpened, setHasBeenOpened] = useState(false);
+  const [opened, setOpened] = useState(false);
 
   return (
     <AccordionItem
@@ -26,7 +26,7 @@ export default function CompanySummary({
     >
       <div className="flex w-full items-center justify-between">
         <AccordionTrigger
-          onClick={() => setHasBeenOpened(true)}
+          onClick={() => setOpened(true)}
           className="flex-1 font-semibold py-4"
         >
           <span>{company.name}</span>
@@ -48,7 +48,7 @@ export default function CompanySummary({
           </Button>
         )}
       </div>
-      {hasBeenOpened && <CompanyContacts companyId={company.id} />}
+      {opened && <CompanyContacts companyId={company.id} />}
     </AccordionItem>
   );
 }

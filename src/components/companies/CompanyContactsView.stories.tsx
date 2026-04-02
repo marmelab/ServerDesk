@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import CompanyContactsView from './CompanyContactsView';
 import { Accordion, AccordionItem, AccordionTrigger } from '../ui/accordion';
+import { fn } from 'storybook/test';
 
 const meta = {
   component: CompanyContactsView,
@@ -43,8 +44,8 @@ export const Default: Story = {
     isPending: false,
     error: null,
     errorCM: null,
-    refetch: null,
-    refetchCM: null,
+    refetch: fn(),
+    refetchCM: fn(),
   },
 };
 
@@ -58,6 +59,6 @@ export const IsPending: Story = {
 export const Error: Story = {
   args: {
     ...Default.args,
-    error: 'Some error',
+    error: { name: 'Error', message: 'An error arrived' },
   },
 };

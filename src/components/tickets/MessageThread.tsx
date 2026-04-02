@@ -7,12 +7,12 @@ interface MessageThreadProps {
 }
 
 export default function MessageThread({ ticket }: MessageThreadProps) {
-  const { messages, isPending, error } = useMessages(ticket.id);
+  const { data, isPending, error } = useMessages(ticket.id);
 
   return (
     <MessageThreadView
       ticket={ticket}
-      messages={messages}
+      messages={data}
       isPending={isPending}
       error={error}
     />

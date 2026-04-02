@@ -9,14 +9,14 @@ interface DashboardCustomersCardProp {
 export default function DashboardCustomersCard({
   companiesId,
 }: DashboardCustomersCardProp) {
-  const { totalCount } = useCustomers({ companiesId, onlyCount: true });
+  const { count } = useCustomers({ companiesId, onlyCount: true });
 
   return (
     <DashboardCard
       singularLabel="User"
       label="Users"
       icon={<User />}
-      count={totalCount}
+      count={count}
     />
   );
 }

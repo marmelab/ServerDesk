@@ -1,6 +1,6 @@
 import AddCompanyDialog from '@/components/companies/AddCompanyDialog';
 import { Button } from '@/components/ui/button';
-import { PageHelper } from '@/components/PageHelper';
+import { Pagination } from '@/components/Pagination';
 import { useState } from 'react';
 import { useCompanies } from '@/hooks/useCompanies';
 import { PAGE_SIZE } from '@/services/Companies';
@@ -12,9 +12,15 @@ import { Company } from '@/types';
 export default function CompaniesPage() {
   const [page, setPage] = useState<number>(0);
   const [inviteCompany, setInviteCompany] = useState<Company | null>(null);
-  const { companies, count, isPlaceholderData, isPending, error, refetch } =
-    useCompanies({ page });
-  const totalPages = Math.ceil(count / PAGE_SIZE);
+  const {
+    data: companies,
+    count,
+    isPlaceholderData,
+    isPending,
+    error,
+    refetch,
+  } = useCompanies({ page });
+  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
   const { user } = useAuth();
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
@@ -40,9 +46,9 @@ export default function CompaniesPage() {
             onAssign={setInviteCompany}
             renderAddCompanyDialog={() => <AddCompanyDialog />}
           />
-          <PageHelper
+          <Pagination
             totalPages={totalPages}
-            totalCount={count}
+            totalCount={count ?? 0}
             currentCount={companies.length}
             page={page}
             isPlaceholderData={isPlaceholderData}

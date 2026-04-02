@@ -1,4 +1,6 @@
+import { UseResourceData } from '@/lib/utils';
 import { fetchCustomers } from '@/services/Customers';
+import { Customer } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
 interface UseCustomersProps {
@@ -7,11 +9,16 @@ interface UseCustomersProps {
   onlyCount?: boolean;
 }
 
+export type FetchCustomersResponse = { data: Customer[]; count: number };
+
 export function useCustomers({
   companiesId,
   page,
   onlyCount = false,
-}: UseCustomersProps = {}) {
+}: UseCustomersProps = {}): UseResourceData<
+  Customer[],
+  FetchCustomersResponse
+> {
   const query = useQuery({
     queryKey: ['customers', companiesId, page, { onlyCount }],
     queryFn: () => fetchCustomers(companiesId, page, onlyCount),
@@ -19,8 +26,8 @@ export function useCustomers({
   });
 
   return {
-    customers: query.data?.data ?? [],
-    totalCount: query.data?.count ?? 0,
+    data: query.data?.data ?? [],
+    count: query.data?.count ?? 0,
     isPending: query.isPending,
     error: query.error,
     isPlaceholderData: query.isPlaceholderData,

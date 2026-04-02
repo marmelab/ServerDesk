@@ -17,7 +17,7 @@ export async function fetchUsers(onlyCount: boolean = false): Promise<{
   };
 }
 
-export async function fetchCustomerManager(companyId: number): Promise<{
+export async function fetchCustomerManagers(companyId: number): Promise<{
   data: AppUser[];
 }> {
   const { data, error } = await supabase

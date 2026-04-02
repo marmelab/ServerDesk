@@ -2,15 +2,22 @@ import { AppUser, Customer } from '@/types';
 import { AccordionContent } from '../ui/accordion';
 import { Button } from '../ui/button';
 import { AlertCircle, Crown } from 'lucide-react';
+import { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
+import { FetchCustomersResponse } from '@/hooks/useCustomers';
+import { FetchCustomerManagersResponse } from '@/hooks/useCustomerManagers';
 
 interface CompanyContactsViewProps {
   customerManagers: AppUser[];
   customers: Customer[];
   isPending: boolean;
-  error: any;
-  errorCM: any;
-  refetch: any;
-  refetchCM: any;
+  error: Error | null;
+  errorCM: Error | null;
+  refetch: (
+    options?: RefetchOptions,
+  ) => Promise<QueryObserverResult<FetchCustomersResponse, Error>>;
+  refetchCM: (
+    options?: RefetchOptions,
+  ) => Promise<QueryObserverResult<FetchCustomerManagersResponse, Error>>;
 }
 
 export default function CompanyContactsView({
@@ -52,12 +59,18 @@ export default function CompanyContactsView({
       )}
       {!isPending && !error && (
         <div className="font-normal pl-8">
-          {customerManagers.map((customerManager) => (
-            <div key={customerManager.id} className="flex items-center gap-3">
-              <span>{customerManager.name}</span>
-              <Crown size={15} />
-            </div>
-          ))}
+          <div className={customerManagers.length > 0 ? 'mb-2' : undefined}>
+            {customerManagers.map((customerManager) => (
+              <div
+                key={customerManager.id}
+                title="Customer Manager"
+                className="flex items-center gap-3"
+              >
+                <span>{customerManager.name}</span>
+                <Crown size={15} aria-label="Customer Manager" />
+              </div>
+            ))}
+          </div>
           {customers.map((customer) => (
             <div key={customer.id} className="flex gap-3">
               <span>{customer.name}</span>

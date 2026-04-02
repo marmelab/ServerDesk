@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/table';
 import CustomerSummary from '@/components/customers/CustomerSummary';
 import React from 'react';
+import { Placeholder } from '../Placeholder';
 
 interface CustomersViewProps {
   customers: Customer[];
@@ -35,13 +36,7 @@ export default function CustomersView({
         {renderCustomerDialog()}
       </PageHeader>
       <div className="rounded-md border bg-card">
-        {isPlaceholderData && (
-          <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center">
-            <span className="text-xs font-medium bg-primary text-primary-foreground px-2 py-1 rounded-full animate-pulse">
-              Updating...
-            </span>
-          </div>
-        )}
+        {isPlaceholderData && <Placeholder />}
         <Table
           className={
             isPlaceholderData

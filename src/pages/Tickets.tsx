@@ -17,7 +17,8 @@ import { TicketWithDetails } from '@/types';
 import { Drawer } from '@/components/ui/drawer';
 import TicketDetails from '../components/tickets/TicketDetail';
 import { useTickets } from '@/hooks/useTickets';
-import { PageHelper } from '@/components/PageHelper';
+import { Pagination } from '@/components/Pagination';
+import { Placeholder } from '@/components/Placeholder';
 
 export default function TicketsPage() {
   const { user } = useAuth();
@@ -25,9 +26,15 @@ export default function TicketsPage() {
   const [selectedTicket, setSelectedTicket] =
     useState<TicketWithDetails | null>(null);
 
-  const { tickets, totalCount, isPending, isPlaceholderData, error, refetch } =
-    useTickets({ page });
-  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
+  const {
+    data: tickets,
+    count,
+    isPending,
+    isPlaceholderData,
+    error,
+    refetch,
+  } = useTickets({ page });
+  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
 
   if (isPending)
     return <p className="text-muted-foreground p-10">Loading...</p>;
@@ -53,13 +60,7 @@ export default function TicketsPage() {
             {user?.role === 'customer_manager' && <AddTicketDialog />}
           </PageHeader>
           <div className="rounded-md border bg-card">
-            {isPlaceholderData && (
-              <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center">
-                <span className="text-xs font-medium bg-primary text-primary-foreground px-2 py-1 rounded-full animate-pulse">
-                  Updating...
-                </span>
-              </div>
-            )}
+            {isPlaceholderData && <Placeholder />}
             <Table
               className={
                 isPlaceholderData
@@ -105,9 +106,9 @@ export default function TicketsPage() {
               {selectedTicket && <TicketDetails ticket={selectedTicket} />}
             </Drawer>
           </div>
-          <PageHelper
+          <Pagination
             totalPages={totalPages}
-            totalCount={totalCount}
+            totalCount={count ?? 0}
             currentCount={tickets.length}
             page={page}
             isPlaceholderData={isPlaceholderData}

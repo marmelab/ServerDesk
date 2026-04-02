@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/PageHeader';
 import React from 'react';
 import CompanySummary from './CompanySummary';
 import { Accordion } from '../ui/accordion';
+import { Placeholder } from '../Placeholder';
 
 interface CompaniesViewProps {
   companies: Company[];
@@ -28,13 +29,7 @@ export default function CompaniesView({
         {renderAddCompanyDialog()}
       </PageHeader>
       <div className="rounded-md border bg-card">
-        {isPlaceholderData && (
-          <div className="absolute inset-0 bg-white/10 backdrop-blur-[1px] z-10 flex items-center justify-center">
-            <span className="text-xs font-medium bg-primary text-primary-foreground px-2 py-1 rounded-full animate-pulse">
-              Updating...
-            </span>
-          </div>
-        )}
+        {isPlaceholderData && <Placeholder />}
         <Accordion
           type="single"
           collapsible

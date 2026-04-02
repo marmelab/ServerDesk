@@ -1,4 +1,6 @@
+import { UseResourceData } from '@/lib/utils';
 import { fetchCompanies } from '@/services/Companies';
+import { Company } from '@/types';
 import { useQuery } from '@tanstack/react-query';
 
 interface UseCompaniesProps {
@@ -6,12 +8,13 @@ interface UseCompaniesProps {
   onlyCount?: boolean;
   page?: number;
 }
+export type FetchCompaniesResponse = { data: Company[]; count: number };
 
 export function useCompanies({
   isEnabled = true,
   onlyCount = false,
   page,
-}: UseCompaniesProps = {}) {
+}: UseCompaniesProps = {}): UseResourceData<Company[], FetchCompaniesResponse> {
   const query = useQuery({
     queryKey: ['companies', page, { onlyCount }],
     queryFn: () => fetchCompanies(page, onlyCount),
@@ -20,7 +23,7 @@ export function useCompanies({
   });
 
   return {
-    companies: query.data?.data ?? [],
+    data: query.data?.data ?? [],
     isPending: query.isPending,
     error: query.error,
     count: query.data?.count ?? 0,
