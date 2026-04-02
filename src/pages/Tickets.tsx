@@ -33,7 +33,9 @@ export default function TicketsPage() {
   const [selectedPriority, setSelectedPriority] = useState<
     TicketPriority | undefined
   >();
-  const [selectedStatus, setSelectedStatus] = useState<TicketStatus[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<
+    TicketStatus | undefined
+  >();
   const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
   const [debounceSearchLabel] = useDebounce(searchLabel, 500);
 
@@ -56,6 +58,13 @@ export default function TicketsPage() {
     refetch,
   } = useTickets({ filters, page });
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+
+  const clearFilters = () => {
+    setSearchLabel('');
+    setSelectedCompanies([]);
+    setSelectedPriority(undefined);
+    setSelectedStatus(undefined);
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -80,6 +89,7 @@ export default function TicketsPage() {
             setSelectedPriority={setSelectedPriority}
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}
+            clearFilters={clearFilters}
           />
 
           <div className="rounded-md border bg-card">

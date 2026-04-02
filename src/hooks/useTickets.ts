@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export interface UseTicketFilters {
   searchLabel?: string;
-  status?: TicketStatus[];
+  status?: TicketStatus;
   priority?: TicketPriority;
   companies?: number[];
 }

@@ -1,13 +1,5 @@
-import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { PRIORITY_MAP, TicketPriority } from '@/types';
+import TicketSelectFilter from './TicketSelectFilter';
 
 interface TicketPriorityFilterProps {
   selectedPriority?: TicketPriority;
@@ -19,27 +11,11 @@ export default function TicketPriorityFilter({
   setSelectedPriority,
 }: TicketPriorityFilterProps) {
   return (
-    <Select
-      value={selectedPriority ?? ''}
-      onValueChange={(value) => setSelectedPriority(value as TicketPriority)}
-    >
-      <SelectTrigger>
-        <SelectValue placeholder="Priority" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          {Object.values(PRIORITY_MAP).map((priority) => (
-            <SelectItem key={priority.value} value={priority.value}>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="whitespace-nowrap">
-                  <span className={`h-2 w-2 rounded-full ${priority.color}`} />
-                  {priority.label}
-                </Badge>
-              </div>
-            </SelectItem>
-          ))}
-        </SelectGroup>
-      </SelectContent>
-    </Select>
+    <TicketSelectFilter<TicketPriority>
+      label="Priority"
+      map={PRIORITY_MAP}
+      selected={selectedPriority ?? ''}
+      setSelected={setSelectedPriority}
+    />
   );
 }

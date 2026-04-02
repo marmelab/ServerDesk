@@ -26,7 +26,7 @@ export async function fetchTickets(
     }
 
     if (filters.status && filters.status.length > 0) {
-      query = query.in('status', filters.status);
+      query = query.eq('status', filters.status);
     }
 
     if (filters.priority) {

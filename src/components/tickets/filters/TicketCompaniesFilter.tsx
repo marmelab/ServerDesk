@@ -18,7 +18,9 @@ export default function TicketCompaniesFilter({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">Companies</Button>
+        <Button variant="outline" className="text-primary">
+          Companies
+        </Button>
       </PopoverTrigger>
       <PopoverContent>
         <CompanyMultiSelect

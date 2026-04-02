@@ -26,7 +26,9 @@ export default function TicketSearchFilter({
       <InputGroupAddon>
         <Search />
       </InputGroupAddon>
-      <InputGroupAddon align="inline-end">{count} results</InputGroupAddon>
+      <InputGroupAddon className="text-tertiary" align="inline-end">
+        {count} results
+      </InputGroupAddon>
     </InputGroup>
   );
 }
