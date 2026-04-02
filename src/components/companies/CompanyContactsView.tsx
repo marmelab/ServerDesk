@@ -29,6 +29,9 @@ export default function CompanyContactsView({
           <span>{customer.name}</span>
         </div>
       ))}
+      {customers.length === 0 && customerManagers.length === 0 && (
+        <span className="text-tertiary">No customers yet.</span>
+      )}
     </div>
   );
 }
