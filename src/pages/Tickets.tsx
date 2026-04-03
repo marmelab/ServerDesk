@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { useMemo, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Table,
@@ -13,18 +12,42 @@ import { PAGE_SIZE } from '@/services/Tickets';
 import AddTicketDialog from '@/components/tickets/AddTicketDialog';
 import { PageHeader } from '@/components/PageHeader';
 import TicketSummary from '@/components/tickets/TicketSummary';
-import { TicketWithDetails } from '@/types';
+import { TicketPriority, TicketStatus, TicketWithDetails } from '@/types';
 import { Drawer } from '@/components/ui/drawer';
 import TicketDetails from '../components/tickets/TicketDetail';
-import { useTickets } from '@/hooks/useTickets';
+import { UseTicketFilters, useTickets } from '@/hooks/useTickets';
 import { Pagination } from '@/components/Pagination';
 import { Placeholder } from '@/components/Placeholder';
+import ErrorView from '@/components/ErrorView';
+import PendingView from '@/components/PendingView';
+import { useDebounce } from 'use-debounce';
+import TicketFilters from '@/components/tickets/filters/TicketFilters';
 
 export default function TicketsPage() {
   const { user } = useAuth();
   const [page, setPage] = useState<number>(0);
   const [selectedTicket, setSelectedTicket] =
     useState<TicketWithDetails | null>(null);
+
+  const [searchLabel, setSearchLabel] = useState<string>('');
+  const [selectedPriority, setSelectedPriority] = useState<
+    TicketPriority | undefined
+  >();
+  const [selectedStatus, setSelectedStatus] = useState<
+    TicketStatus | undefined
+  >();
+  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
+  const [debounceSearchLabel] = useDebounce(searchLabel, 500);
+
+  const filters = useMemo(
+    (): UseTicketFilters => ({
+      searchLabel: debounceSearchLabel,
+      status: selectedStatus,
+      priority: selectedPriority,
+      companies: selectedCompanies,
+    }),
+    [debounceSearchLabel, selectedStatus, selectedPriority, selectedCompanies],
+  );
 
   const {
     data: tickets,
@@ -33,24 +56,20 @@ export default function TicketsPage() {
     isPlaceholderData,
     error,
     refetch,
-  } = useTickets({ page });
+  } = useTickets({ filters, page });
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
 
-  if (isPending)
-    return <p className="text-muted-foreground p-10">Loading...</p>;
+  const clearFilters = () => {
+    setSearchLabel('');
+    setSelectedCompanies([]);
+    setSelectedPriority(undefined);
+    setSelectedStatus(undefined);
+  };
 
   return (
     <div className="container mx-auto py-10">
-      {error && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <h3 className="text-xl font-semibold italic">
-            Failed to load tickets
-          </h3>
-          <Button variant="outline" className="mt-6" onClick={() => refetch()}>
-            Try again
-          </Button>
-        </div>
-      )}
+      {error && <ErrorView label="Failed to load tickets" refetch={refetch} />}
+      {isPending && <PendingView label="Loading tickets" />}
       {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
           <PageHeader
@@ -59,8 +78,23 @@ export default function TicketsPage() {
           >
             {user?.role === 'customer_manager' && <AddTicketDialog />}
           </PageHeader>
+
+          <TicketFilters
+            count={count ?? 0}
+            searchLabel={searchLabel}
+            setSearchLabel={setSearchLabel}
+            selectedCompanies={selectedCompanies}
+            setSelectedCompanies={setSelectedCompanies}
+            selectedPriority={selectedPriority}
+            setSelectedPriority={setSelectedPriority}
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+            clearFilters={clearFilters}
+          />
+
           <div className="rounded-md border bg-card">
             {isPlaceholderData && <Placeholder />}
+
             <Table
               className={
                 isPlaceholderData
@@ -89,9 +123,9 @@ export default function TicketsPage() {
                 ))}
                 {tickets.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-32 text-center">
-                      <div className="flex flex-col items-center justify-center text-muted-foreground">
-                        <p className="text-lg font-medium">No tickets found</p>
+                    <TableCell colSpan={5} className="h-32 text-center">
+                      <div className="flex flex-col items-center justify-center text-tertiary">
+                        <p className="text-sm font-medium">No tickets found</p>
                       </div>
                     </TableCell>
                   </TableRow>

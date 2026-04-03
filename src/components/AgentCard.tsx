@@ -21,10 +21,10 @@ export default function AgentCard({
   return (
     <Card
       key={agentInfos.id}
-      className="group relative flex flex-col gap-2 overflow-hidden pt-0"
+      className="group relative flex flex-col overflow-hidden pt-0"
       data-testid="agent-card"
     >
-      <CardHeader className="flex-1 pt-4">
+      <CardHeader className="pt-4">
         <CardTitle className="text-2xl font-semibold text-balance">
           {agentInfos.name}
         </CardTitle>
@@ -33,24 +33,25 @@ export default function AgentCard({
         </CardDescription>
       </CardHeader>
 
-      <CardFooter className="flex flex-row flex-wrap gap-2 pt-4">
-        {(agentInfos.companies as CompanyJson[])?.length > 0 ? (
-          (agentInfos.companies as CompanyJson[]).map((company) => (
-            <Badge
-              key={company.name}
-              variant="secondary"
-              className="whitespace-nowrap"
-            >
-              {company.name}
-            </Badge>
-          ))
-        ) : (
-          <span className="text-sm text-muted-foreground">
-            No companies assigned
-          </span>
-        )}
+      <CardFooter className="flex flex-col gap-2 mt-auto">
+        <div className="flex flex-wrap gap-2 items-center">
+          {(agentInfos.companies as CompanyJson[])?.length > 0 ? (
+            (agentInfos.companies as CompanyJson[]).map((company) => (
+              <Badge
+                key={company.name}
+                variant="secondary"
+                className="whitespace-nowrap"
+              >
+                {company.name}
+              </Badge>
+            ))
+          ) : (
+            <span className="text-sm text-tertiary">No companies assigned</span>
+          )}
+        </div>
         <Button
-          className="group-hover:bg-primary group-hover:text-primary-foreground w-full cursor-pointer"
+          variant="secondary"
+          className="w-full hover:bg-primary border hover:text-primary-foreground"
           onClick={() => setIsAssignCompaniesOpen(true)}
         >
           Assign companies

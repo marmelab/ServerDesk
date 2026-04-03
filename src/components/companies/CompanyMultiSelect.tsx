@@ -46,7 +46,7 @@ export function CompanyMultiSelect({ selectedIds, onChange }: Props) {
               })
             ) : (
               <span className="text-sm text-muted-foreground italic">
-                No companies assigned
+                No companies selected
               </span>
             )}
           </div>
