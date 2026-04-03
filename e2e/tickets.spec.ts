@@ -19,13 +19,14 @@ test.describe('Tickets Page', () => {
     await page.getByRole('button', { name: 'Add Ticket' }).click();
 
     // Test filters
-    await page.getByRole('textbox', { name: 'Search...' }).click();
+    const labelSearch = 'Search by subject or description';
+    await page.getByRole('textbox', { name: labelSearch }).click();
     await page
-      .getByRole('textbox', { name: 'Search...' })
+      .getByRole('textbox', { name: labelSearch })
       .fill('Test ticket description');
     await expect(page.getByText(uniqueSubject)).toBeVisible();
-    await page.getByRole('textbox', { name: 'Search...' }).click();
-    await page.getByRole('textbox', { name: 'Search...' }).fill('blablabla');
+    await page.getByRole('textbox', { name: labelSearch }).click();
+    await page.getByRole('textbox', { name: labelSearch }).fill('blablabla');
     await expect(page.getByText(uniqueSubject)).not.toBeVisible();
     await page.getByRole('button', { name: 'Clear filters' }).click();
     await expect(page.getByText(uniqueSubject)).toBeVisible();
