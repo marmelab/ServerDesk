@@ -5,6 +5,7 @@ import { Send } from 'lucide-react';
 import CompanyContacts from './CompanyContacts';
 import { useMemo, useState } from 'react';
 import { Badge } from '../ui/badge';
+import { cn } from '@/lib/utils';
 
 interface CompanySummaryProps {
   company: CompanyWithTickets;
@@ -35,44 +36,59 @@ export default function CompanySummary({
       value={company.name}
       className="border-b px-4 last:border-b-0"
     >
-      <div className="flex w-full items-center justify-between">
+      <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 sm:gap-4 w-full overflow-hidden">
         <AccordionTrigger
           onClick={() => setOpened(true)}
-          className="flex flex-1 py-4 font-semibold hover:no-underline"
+          className="py-4 font-semibold hover:no-underline min-w-0 flex-1 overflow-hidden"
         >
-          <span className="shrink-0">{company.name}</span>
-          <div className="ml-auto mr-4 flex items-end gap-1.5">
-            {Object.values(STATUS_MAP).map((status) => {
-              const count = StatusNumber[status.value];
-              if (!count) return null;
-              return (
-                <div key={status.value} className="flex justify-end gap-2">
-                  <Badge variant="secondary" className="whitespace-nowrap">
-                    <span className={`h-2 w-2 rounded-full ${status.color}`} />
-                    <span>{status.label}</span>
-                    <span className="text-xs opacity-50">-</span>
-                    <span className="min-w-[1ch] text-center">{count}</span>
-                  </Badge>
-                </div>
-              );
-            })}
-          </div>
+          <span className="truncate text-left block w-full">
+            {company.name}
+          </span>
         </AccordionTrigger>
 
+        <div className="hidden md:flex items-center justify-end">
+          {Object.values(STATUS_MAP).map((status) => {
+            const count = StatusNumber[status.value];
+
+            return (
+              <div
+                key={status.value}
+                className="w-[65px] xl:w-[150px] flex justify-end shrink-0"
+              >
+                {count > 0 && (
+                  <Badge
+                    variant="ghost"
+                    className="whitespace-nowrap px-1 flex items-center gap-1.5"
+                  >
+                    <span
+                      className={cn('h-2 w-2 rounded-full', status.color)}
+                    />
+                    <span className="hidden xl:inline text-muted-foreground font-normal text-[11px]">
+                      {status.label}
+                    </span>
+                    <span className="font-bold text-xs">{count}</span>
+                  </Badge>
+                )}
+              </div>
+            );
+          })}
+        </div>
         {isAdmin && (
-          <Button
-            size="sm"
-            variant="secondary"
-            className="ml-2 h-8 p-0 hover:bg-primary border hover:text-primary-foreground"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAssign(company);
-            }}
-            title="Invite Manager"
-          >
-            <Send className="h-4 w-4" />
-            Assign
-          </Button>
+          <div className="flex shrink-0">
+            <Button
+              size="sm"
+              variant="secondary"
+              className="h-8 px-3 gap-2 hover:bg-primary border hover:text-primary-foreground"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAssign(company);
+              }}
+              title="Invite Manager"
+            >
+              <Send className="h-4 w-4" />
+              Assign
+            </Button>
+          </div>
         )}
       </div>
       {opened && <CompanyContacts companyId={company.id} />}
