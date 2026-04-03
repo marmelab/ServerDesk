@@ -5,10 +5,12 @@ import { useDeleteCustomer } from '@/hooks/useDeleteCustomer';
 import { useState } from 'react';
 import { PAGE_SIZE } from '@/services/Customers';
 import { Pagination } from '@/components/Pagination';
-import { Button } from '@/components/ui/button';
 import AddCustomerDialog from '@/components/customers/AddCustomerDialog';
 import { Customer } from '@/types';
 import { DeleteCustomerDialog } from '@/components/customers/DeleteCustomerDialog';
+import ErrorView from '@/components/ErrorView';
+import PendingView from '@/components/PendingView';
+import { Placeholder } from '@/components/Placeholder';
 
 export default function CustomersPage() {
   const user = useAuth();
@@ -46,22 +48,13 @@ export default function CustomersPage() {
     );
   }
 
-  if (isPending) {
-    return <p className="text-muted-foreground p-10">Loading...</p>;
-  }
-
   return (
     <div className="container mx-auto py-10">
       {error && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <h3 className="text-xl font-semibold italic">
-            Failed to load customers
-          </h3>
-          <Button variant="outline" className="mt-6" onClick={() => refetch()}>
-            Try again
-          </Button>
-        </div>
+        <ErrorView label="Failed to load customers" refetch={refetch} />
       )}
+      {isPending && <PendingView label="Loading customers" />}
+      {isPlaceholderData && <Placeholder />}
       {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
           {selectedCustomer && (

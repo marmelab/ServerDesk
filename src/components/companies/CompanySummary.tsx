@@ -19,8 +19,11 @@ export default function CompanySummary({
   isAdmin,
 }: CompanySummaryProps) {
   const StatusNumber = useMemo(() => {
-    return company.tickets.reduce(
-      (acc, t) => {
+    return company.tickets.reduce<Record<string, number>>(
+      (
+        acc: Record<string, number>,
+        t: CompanyWithTickets['tickets'][number],
+      ) => {
         acc[t.status] = (acc[t.status] || 0) + 1;
         return acc;
       },
@@ -60,7 +63,7 @@ export default function CompanySummary({
               >
                 <Badge
                   variant="ghost"
-                  className="whitespace-nowrap px-0 flex items-center gap-2"
+                  className="whitespace-nowrap px-0 flex items-center gap-1"
                 >
                   <span
                     className={cn(
@@ -71,9 +74,7 @@ export default function CompanySummary({
                   <span className="hidden xl:inline text-muted-foreground font-normal text-[11px]">
                     {status.label}
                   </span>
-                  <span className="font-bold text-xs min-w-[1.5ch] text-right">
-                    {count}
-                  </span>
+                  <span className="font-bold text-xs text-right">{count}</span>
                 </Badge>
               </div>
             );

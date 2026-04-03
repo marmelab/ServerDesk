@@ -3,21 +3,17 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group';
+import { useTicketsFiltersContext } from '@/contexts/TicketsFiltersContext';
 import { Search } from 'lucide-react';
 
 interface TicketSearchFilterProps {
-  searchLabel: string;
-  setSearchLabel: (value: string) => void;
   count: number;
 }
 
-export default function TicketSearchFilter({
-  searchLabel,
-  setSearchLabel,
-  count,
-}: TicketSearchFilterProps) {
+export default function TicketSearchFilter({ count }: TicketSearchFilterProps) {
+  const { searchLabel, setSearchLabel } = useTicketsFiltersContext();
   return (
-    <InputGroup className="max-w-xs">
+    <InputGroup className="max-w-sm">
       <InputGroupInput
         placeholder="Search by subject or description"
         value={searchLabel}

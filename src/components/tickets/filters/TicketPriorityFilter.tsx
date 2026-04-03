@@ -1,15 +1,9 @@
 import { PRIORITY_MAP, TicketPriority } from '@/types';
 import TicketSelectFilter from './TicketSelectFilter';
+import { useTicketsFiltersContext } from '@/contexts/TicketsFiltersContext';
 
-interface TicketPriorityFilterProps {
-  selectedPriority?: TicketPriority;
-  setSelectedPriority: (value: TicketPriority) => void;
-}
-
-export default function TicketPriorityFilter({
-  selectedPriority,
-  setSelectedPriority,
-}: TicketPriorityFilterProps) {
+export default function TicketPriorityFilter() {
+  const { selectedPriority, setSelectedPriority } = useTicketsFiltersContext();
   return (
     <TicketSelectFilter<TicketPriority>
       label="Priority"

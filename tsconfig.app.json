@@ -17,8 +17,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    "baseUrl": ".",
     "paths": {
+      "supabase/*": ["./supabase/*"],
       "@/*": ["./src/*"]
     }
   },
