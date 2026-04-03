@@ -6,7 +6,9 @@ import userEvent from '@testing-library/user-event';
 
 const { mockSupabase, mockState, utils } = vi.hoisted(() => {
   const internalState = {
-    companies: [{ id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' }],
+    companies: [
+      { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z', tickets: [] },
+    ],
     user: null as any,
   };
 
@@ -23,6 +25,7 @@ const { mockSupabase, mockState, utils } = vi.hoisted(() => {
         id: Math.random(),
         name: dataToInsert?.name || 'New Company',
         created_at: new Date().toISOString(),
+        tickets: [],
       };
       internalState.companies.push(newEntry);
       return this;
@@ -48,7 +51,12 @@ const { mockSupabase, mockState, utils } = vi.hoisted(() => {
     utils: {
       reset: () => {
         internalState.companies = [
-          { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' },
+          {
+            id: 1,
+            name: 'acme',
+            created_at: '2026-02-25T00:00:00Z',
+            tickets: [],
+          },
         ];
         internalState.user = null;
       },
