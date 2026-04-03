@@ -19,7 +19,7 @@ export default function TicketSearchFilter({
   return (
     <InputGroup className="max-w-xs">
       <InputGroupInput
-        placeholder="Search..."
+        placeholder="Search by subject or description"
         value={searchLabel}
         onChange={(e) => setSearchLabel(e.target.value)}
       />
