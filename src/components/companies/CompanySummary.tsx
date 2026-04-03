@@ -36,39 +36,45 @@ export default function CompanySummary({
       value={company.name}
       className="border-b px-4 last:border-b-0"
     >
-      <div className="grid grid-cols-[1fr_auto_auto] items-center gap-2 sm:gap-4 w-full overflow-hidden">
+      <div className="grid grid-cols-[1fr_auto_auto] items-center gap-4 w-full overflow-hidden">
         <AccordionTrigger
           onClick={() => setOpened(true)}
-          className="py-4 font-semibold hover:no-underline min-w-0 flex-1 overflow-hidden"
+          className="py-4 font-semibold hover:no-underline min-w-0 flex-1"
         >
-          <span className="truncate text-left block w-full">
+          <span className="truncate text-left block w-full pr-4">
             {company.name}
           </span>
         </AccordionTrigger>
 
-        <div className="hidden md:flex items-center justify-end">
+        <div className="hidden md:flex items-center justify-end gap-4 ml-auto">
           {Object.values(STATUS_MAP).map((status) => {
-            const count = StatusNumber[status.value];
+            const count = StatusNumber[status.value] || 0;
 
             return (
               <div
                 key={status.value}
-                className="w-[65px] xl:w-[150px] flex justify-end shrink-0"
-              >
-                {count > 0 && (
-                  <Badge
-                    variant="ghost"
-                    className="whitespace-nowrap px-1 flex items-center gap-1.5"
-                  >
-                    <span
-                      className={cn('h-2 w-2 rounded-full', status.color)}
-                    />
-                    <span className="hidden xl:inline text-muted-foreground font-normal text-[11px]">
-                      {status.label}
-                    </span>
-                    <span className="font-bold text-xs">{count}</span>
-                  </Badge>
+                className={cn(
+                  'flex items-center transition-opacity',
+                  count === 0 ? 'invisible' : 'visible',
                 )}
+              >
+                <Badge
+                  variant="ghost"
+                  className="whitespace-nowrap px-0 flex items-center gap-2"
+                >
+                  <span
+                    className={cn(
+                      'h-2 w-2 rounded-full shrink-0',
+                      status.color,
+                    )}
+                  />
+                  <span className="hidden xl:inline text-muted-foreground font-normal text-[11px]">
+                    {status.label}
+                  </span>
+                  <span className="font-bold text-xs min-w-[1.5ch] text-right">
+                    {count}
+                  </span>
+                </Badge>
               </div>
             );
           })}
