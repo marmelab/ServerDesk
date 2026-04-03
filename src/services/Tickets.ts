@@ -19,23 +19,23 @@ export async function fetchTickets(
     { count: 'exact', head: onlyCount },
   );
 
-  if (filters) {
-    if (filters.searchLabel) {
-      const search = `%${filters.searchLabel}%`;
-      query = query.or(`subject.ilike.${search},description.ilike.${search}`);
-    }
+  const { searchLabel, status, priority, companies = [] } = filters ?? {};
 
-    if (filters.status && filters.status.length > 0) {
-      query = query.eq('status', filters.status);
-    }
+  if (searchLabel) {
+    const search = `%${searchLabel}%`;
+    query = query.or(`subject.ilike.${search},description.ilike.${search}`);
+  }
 
-    if (filters.priority) {
-      query = query.eq('priority', filters.priority);
-    }
+  if (status) {
+    query = query.eq('status', status);
+  }
 
-    if (filters.companies && filters.companies.length > 0) {
-      query = query.in('company_id', filters.companies);
-    }
+  if (priority) {
+    query = query.eq('priority', priority);
+  }
+
+  if (companies && companies.length > 0) {
+    query = query.in('company_id', companies);
   }
 
   query = query.order('updated_at', { ascending: false });

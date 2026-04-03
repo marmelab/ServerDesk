@@ -29,7 +29,7 @@ export default function TicketSelectFilter<T extends string>({
 }: TicketSelectFilterProps<T>) {
   return (
     <Select value={selected} onValueChange={(value) => setSelected(value as T)}>
-      <SelectTrigger className="w-[180px] data-[placeholder]:text-primary">
+      <SelectTrigger className="w-[200px] data-[placeholder]:text-primary">
         <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent position="popper">

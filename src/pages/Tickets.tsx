@@ -90,7 +90,6 @@ export default function TicketsPage() {
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}
             clearFilters={clearFilters}
-            role={user?.role}
           />
 
           <div className="rounded-md border bg-card">
@@ -124,9 +123,9 @@ export default function TicketsPage() {
                 ))}
                 {tickets.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="h-32 text-center">
-                      <div className="flex flex-col items-center justify-center text-muted-foreground">
-                        <p className="text-lg font-medium">No tickets found</p>
+                    <TableCell colSpan={5} className="h-32 text-center">
+                      <div className="flex flex-col items-center justify-center text-tertiary">
+                        <p className="text-sm font-medium">No tickets found</p>
                       </div>
                     </TableCell>
                   </TableRow>

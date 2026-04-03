@@ -1,10 +1,11 @@
-import { AppUserRole, TicketPriority, TicketStatus } from '@/types';
+import { TicketPriority, TicketStatus } from '@/types';
 import TicketCompaniesFilter from './TicketCompaniesFilter';
 import TicketPriorityFilter from './TicketPriorityFilter';
 import TicketSearchFilter from './TicketSearchFilter';
 import TicketStatusFilter from './TicketStatusFilter';
 import { CircleX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface TicketFiltersProps {
   selectedStatus?: TicketStatus;
@@ -17,7 +18,6 @@ interface TicketFiltersProps {
   selectedCompanies: number[];
   setSelectedCompanies: (value: number[]) => void;
   clearFilters: () => void;
-  role: AppUserRole | undefined;
 }
 
 export default function TicketFilters({
@@ -31,8 +31,14 @@ export default function TicketFilters({
   selectedCompanies,
   setSelectedCompanies,
   clearFilters,
-  role,
 }: TicketFiltersProps) {
+  const { user } = useAuth();
+  const showCompanies = user
+    ? user.role
+      ? ['admin', 'agent'].includes(user.role)
+      : false
+    : false;
+
   return (
     <div className="flex gap-2 py-2">
       <TicketSearchFilter
@@ -40,13 +46,12 @@ export default function TicketFilters({
         setSearchLabel={setSearchLabel}
         count={count}
       />
-      {role === 'admin' ||
-        (role === 'agent' && (
-          <TicketCompaniesFilter
-            selectedCompanies={selectedCompanies}
-            setSelectedCompanies={setSelectedCompanies}
-          />
-        ))}
+      {showCompanies && (
+        <TicketCompaniesFilter
+          selectedCompanies={selectedCompanies}
+          setSelectedCompanies={setSelectedCompanies}
+        />
+      )}
       <TicketStatusFilter
         selectedStatus={selectedStatus}
         setSelectedStatus={setSelectedStatus}
