@@ -42,10 +42,10 @@ test.describe('Tickets Page', () => {
     await expect(page.getByText(uniqueSubject)).toBeVisible();
 
     await page.getByRole('combobox').filter({ hasText: 'Priority' }).click();
-    await page.getByText('Low').click();
+    await page.getByRole('option', { name: 'Low' }).click();
     await expect(page.getByText(uniqueSubject)).not.toBeVisible();
     await page.getByRole('combobox').filter({ hasText: 'Low' }).click();
-    await page.getByText('High').click();
+    await page.getByRole('option', { name: 'High' }).click();
     await expect(page.getByText(uniqueSubject)).toBeVisible();
 
     // Add first message
