@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import TicketsPage from './Tickets';
+import { TicketsFiltersProvider } from '@/contexts/TicketsFiltersContext';
 
 const mockUser: any = {
   id: '1',
@@ -74,7 +75,9 @@ function Wrapper({ children }: { children: React.ReactNode }) {
     defaultOptions: { queries: { retry: false } },
   });
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <TicketsFiltersProvider>{children}</TicketsFiltersProvider>
+    </QueryClientProvider>
   );
 }
 

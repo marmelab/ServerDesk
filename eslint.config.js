@@ -5,16 +5,17 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 import react from 'eslint-plugin-react';
-import { defineConfig, globalIgnores } from 'eslint/config';
 
-export default defineConfig([
-  globalIgnores([
-    '**/node_modules',
-    '**/dist',
-    '**/build',
-    'playwright-report',
-    '**/prism.js',
-  ]),
+export default [
+  {
+    ignores: [
+      '**/node_modules',
+      '**/dist',
+      '**/build',
+      'playwright-report',
+      '**/prism.js',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
@@ -87,4 +88,4 @@ export default defineConfig([
     },
   },
   ...storybook.configs['flat/recommended'],
-]);
+];

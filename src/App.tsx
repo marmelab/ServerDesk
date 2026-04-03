@@ -12,6 +12,7 @@ import { ForgotPasswordForm } from './components/ForgotPasswordForm';
 import TicketsPage from '@/pages/Tickets';
 import { ErrorFallback } from './components/ErrorFallback';
 import CustomersPage from './pages/Customers';
+import { TicketsFiltersProvider } from './contexts/TicketsFiltersContext';
 
 export const router = createBrowserRouter(
   [
@@ -29,7 +30,14 @@ export const router = createBrowserRouter(
         { path: '/auth/forgot-password', element: <ForgotPasswordForm /> },
         { path: '/admin', element: <DashboardPage /> },
         { path: '/agent', element: <DashboardPage /> },
-        { path: '/tickets', element: <TicketsPage /> },
+        {
+          path: '/tickets',
+          element: (
+            <TicketsFiltersProvider>
+              <TicketsPage />
+            </TicketsFiltersProvider>
+          ),
+        },
         { path: '/customers', element: <CustomersPage /> },
       ],
     },

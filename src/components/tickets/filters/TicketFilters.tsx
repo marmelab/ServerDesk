@@ -1,4 +1,3 @@
-import { TicketPriority, TicketStatus } from '@/types';
 import TicketCompaniesFilter from './TicketCompaniesFilter';
 import TicketPriorityFilter from './TicketPriorityFilter';
 import TicketSearchFilter from './TicketSearchFilter';
@@ -6,33 +5,15 @@ import TicketStatusFilter from './TicketStatusFilter';
 import { CircleX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTicketsFiltersContext } from '@/contexts/TicketsFiltersContext';
 
 interface TicketFiltersProps {
-  selectedStatus?: TicketStatus;
-  setSelectedStatus: (value: TicketStatus) => void;
-  selectedPriority?: TicketPriority;
-  setSelectedPriority: (value: TicketPriority) => void;
-  searchLabel: string;
-  setSearchLabel: (value: string) => void;
   count: number;
-  selectedCompanies: number[];
-  setSelectedCompanies: (value: number[]) => void;
-  clearFilters: () => void;
 }
 
-export default function TicketFilters({
-  selectedStatus,
-  setSelectedStatus,
-  selectedPriority,
-  setSelectedPriority,
-  searchLabel,
-  setSearchLabel,
-  count,
-  selectedCompanies,
-  setSelectedCompanies,
-  clearFilters,
-}: TicketFiltersProps) {
+export default function TicketFilters({ count }: TicketFiltersProps) {
   const { user } = useAuth();
+  const { clearFilters } = useTicketsFiltersContext();
   const showCompanies = user
     ? user.role
       ? ['admin', 'agent'].includes(user.role)
@@ -41,25 +22,10 @@ export default function TicketFilters({
 
   return (
     <div className="flex gap-2 py-2">
-      <TicketSearchFilter
-        searchLabel={searchLabel}
-        setSearchLabel={setSearchLabel}
-        count={count}
-      />
-      {showCompanies && (
-        <TicketCompaniesFilter
-          selectedCompanies={selectedCompanies}
-          setSelectedCompanies={setSelectedCompanies}
-        />
-      )}
-      <TicketStatusFilter
-        selectedStatus={selectedStatus}
-        setSelectedStatus={setSelectedStatus}
-      />
-      <TicketPriorityFilter
-        selectedPriority={selectedPriority}
-        setSelectedPriority={setSelectedPriority}
-      />
+      <TicketSearchFilter count={count} />
+      {showCompanies && <TicketCompaniesFilter />}
+      <TicketStatusFilter />
+      <TicketPriorityFilter />
       <Button variant="ghost" onClick={clearFilters} title="Clear filters">
         <CircleX />
       </Button>

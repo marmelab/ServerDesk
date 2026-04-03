@@ -5,16 +5,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useTicketsFiltersContext } from '@/contexts/TicketsFiltersContext';
 
-interface TicketCompaniesFilterProps {
-  selectedCompanies: number[];
-  setSelectedCompanies: (value: number[]) => void;
-}
-
-export default function TicketCompaniesFilter({
-  selectedCompanies,
-  setSelectedCompanies,
-}: TicketCompaniesFilterProps) {
+export default function TicketCompaniesFilter() {
+  const { selectedCompanies, setSelectedCompanies } =
+    useTicketsFiltersContext();
   return (
     <Popover>
       <PopoverTrigger asChild>

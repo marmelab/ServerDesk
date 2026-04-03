@@ -5,22 +5,33 @@ import { InviteDialog } from '@/components/InviteDialog';
 import AgentCard from '@/components/AgentCard';
 import { PageHeader } from '@/components/PageHeader';
 import { useAgents } from '@/hooks/useAgents';
+import ErrorView from '@/components/ErrorView';
+import PendingView from '@/components/PendingView';
+import { Placeholder } from '@/components/Placeholder';
 
 export default function AgentsPage() {
   const [isInviteOpen, setIsInviteOpen] = useState(false);
 
-  const { data: agents = [], isPending, error: queryError } = useAgents();
+  const {
+    data: agents = [],
+    isPending,
+    error: queryError,
+    refetch,
+    isPlaceholderData,
+  } = useAgents();
 
   const handleOpenInvite = () => {
     setIsInviteOpen(true);
   };
 
-  if (isPending)
-    return <p className="text-muted-foreground p-10">Loading...</p>;
-
   return (
     <div className="container mx-auto py-10">
-      {!queryError && (
+      {queryError && (
+        <ErrorView label="Failed to load agents" refetch={refetch} />
+      )}
+      {isPending && <PendingView label="Loading agents" />}
+      {isPlaceholderData && <Placeholder />}
+      {!isPending && !queryError && (
         <div className="mx-auto max-w-7xl">
           <PageHeader
             title="Agents"

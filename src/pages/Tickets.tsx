@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   Table,
@@ -12,42 +12,23 @@ import { PAGE_SIZE } from '@/services/Tickets';
 import AddTicketDialog from '@/components/tickets/AddTicketDialog';
 import { PageHeader } from '@/components/PageHeader';
 import TicketSummary from '@/components/tickets/TicketSummary';
-import { TicketPriority, TicketStatus, TicketWithDetails } from '@/types';
+import { TicketWithDetails } from '@/types';
 import { Drawer } from '@/components/ui/drawer';
 import TicketDetails from '../components/tickets/TicketDetail';
-import { UseTicketFilters, useTickets } from '@/hooks/useTickets';
+import { useTickets } from '@/hooks/useTickets';
 import { Pagination } from '@/components/Pagination';
 import { Placeholder } from '@/components/Placeholder';
 import ErrorView from '@/components/ErrorView';
 import PendingView from '@/components/PendingView';
-import { useDebounce } from 'use-debounce';
 import TicketFilters from '@/components/tickets/filters/TicketFilters';
+import { useTicketsFiltersContext } from '@/contexts/TicketsFiltersContext';
 
 export default function TicketsPage() {
   const { user } = useAuth();
-  const [page, setPage] = useState<number>(0);
   const [selectedTicket, setSelectedTicket] =
     useState<TicketWithDetails | null>(null);
 
-  const [searchLabel, setSearchLabel] = useState<string>('');
-  const [selectedPriority, setSelectedPriority] = useState<
-    TicketPriority | undefined
-  >();
-  const [selectedStatus, setSelectedStatus] = useState<
-    TicketStatus | undefined
-  >();
-  const [selectedCompanies, setSelectedCompanies] = useState<number[]>([]);
-  const [debounceSearchLabel] = useDebounce(searchLabel, 500);
-
-  const filters = useMemo(
-    (): UseTicketFilters => ({
-      searchLabel: debounceSearchLabel,
-      status: selectedStatus,
-      priority: selectedPriority,
-      companies: selectedCompanies,
-    }),
-    [debounceSearchLabel, selectedStatus, selectedPriority, selectedCompanies],
-  );
+  const { filters, page, setPage } = useTicketsFiltersContext();
 
   const {
     data: tickets,
@@ -58,13 +39,6 @@ export default function TicketsPage() {
     refetch,
   } = useTickets({ filters, page });
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
-
-  const clearFilters = () => {
-    setSearchLabel('');
-    setSelectedCompanies([]);
-    setSelectedPriority(undefined);
-    setSelectedStatus(undefined);
-  };
 
   return (
     <div className="container mx-auto py-10">
@@ -79,18 +53,7 @@ export default function TicketsPage() {
             {user?.role === 'customer_manager' && <AddTicketDialog />}
           </PageHeader>
 
-          <TicketFilters
-            count={count ?? 0}
-            searchLabel={searchLabel}
-            setSearchLabel={setSearchLabel}
-            selectedCompanies={selectedCompanies}
-            setSelectedCompanies={setSelectedCompanies}
-            selectedPriority={selectedPriority}
-            setSelectedPriority={setSelectedPriority}
-            selectedStatus={selectedStatus}
-            setSelectedStatus={setSelectedStatus}
-            clearFilters={clearFilters}
-          />
+          <TicketFilters count={count ?? 0} />
 
           <div className="rounded-md border bg-card">
             {isPlaceholderData && <Placeholder />}
