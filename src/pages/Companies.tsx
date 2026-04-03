@@ -1,7 +1,6 @@
 import AddCompanyDialog from '@/components/companies/AddCompanyDialog';
 import { Pagination } from '@/components/Pagination';
 import { useState } from 'react';
-import { useCompanies } from '@/hooks/useCompanies';
 import { PAGE_SIZE } from '@/services/Companies';
 import CompaniesView from '@/components/companies/CompaniesView';
 import { InviteDialog } from '@/components/InviteDialog';
@@ -11,6 +10,7 @@ import { PageHeader } from '@/components/PageHeader';
 import ErrorView from '@/components/ErrorView';
 import PendingView from '@/components/PendingView';
 import { Placeholder } from '@/components/Placeholder';
+import { useCompaniesWithTickets } from '@/hooks/useCompaniesWithTickets';
 
 export default function CompaniesPage() {
   const [page, setPage] = useState<number>(0);
@@ -22,7 +22,7 @@ export default function CompaniesPage() {
     isPending,
     error,
     refetch,
-  } = useCompanies({ page });
+  } = useCompaniesWithTickets({ page });
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
   const { user } = useAuth();
 

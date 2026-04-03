@@ -1,9 +1,9 @@
-import { Company } from '@/types';
+import { Company, CompanyWithTickets } from '@/types';
 import CompanySummary from './CompanySummary';
 import { Accordion } from '../ui/accordion';
 
 interface CompaniesViewProps {
-  companies: Company[];
+  companies: CompanyWithTickets[];
   isPlaceholderData: boolean;
   isAdmin: boolean;
   onAssign: (company: Company) => void;

@@ -31,17 +31,21 @@ test.describe('Tickets Page', () => {
     await expect(page.getByText(uniqueSubject)).toBeVisible();
 
     await page.getByRole('combobox').filter({ hasText: 'Status' }).click();
-    await page.getByText('Resolved').click();
+    await page.getByRole('option', { name: 'Resolved' }).click();
     await expect(page.getByText(uniqueSubject)).not.toBeVisible();
-    await page.getByRole('combobox').filter({ hasText: 'Resolved' }).click();
-    await page.getByText('Open').click();
+    await page
+      .getByRole('combobox')
+      .filter({ hasText: 'Resolved' })
+      .first()
+      .click();
+    await page.getByRole('option', { name: 'Open' }).click();
     await expect(page.getByText(uniqueSubject)).toBeVisible();
 
     await page.getByRole('combobox').filter({ hasText: 'Priority' }).click();
-    await page.getByText('Low').click();
+    await page.getByRole('option', { name: 'Low' }).click();
     await expect(page.getByText(uniqueSubject)).not.toBeVisible();
     await page.getByRole('combobox').filter({ hasText: 'Low' }).click();
-    await page.getByText('High').click();
+    await page.getByRole('option', { name: 'High' }).click();
     await expect(page.getByText(uniqueSubject)).toBeVisible();
 
     // Add first message

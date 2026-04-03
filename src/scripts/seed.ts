@@ -2,7 +2,15 @@ import { faker } from '@faker-js/faker';
 import * as dotenvFlow from 'dotenv-flow';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from 'supabase/types';
-import { CustomerInsert, MessageInsert, TicketInsert } from '@/types';
+import {
+  CustomerInsert,
+  MessageInsert,
+  PRIORITY_MAP,
+  STATUS_MAP,
+  TicketInsert,
+  TicketPriority,
+  TicketStatus,
+} from '@/types';
 
 const NB_COMPANIES: number = 15;
 const NB_TICKETS: number = 15;
@@ -28,6 +36,9 @@ const supabase = createClient<Database>(SUPABASE_URL, SERVICE_ROLE_KEY, {
 });
 
 async function runSeed() {
+  const statusOptions = Object.keys(STATUS_MAP) as TicketStatus[];
+  const priorityOptions = Object.keys(PRIORITY_MAP) as TicketPriority[];
+
   // Clear users
   const {
     data: { users },
@@ -160,6 +171,9 @@ async function runSeed() {
           company_id: companyData?.id as number,
           customer_id: userData.user.id,
           contact_id: null,
+          status: faker.helpers.arrayElement(statusOptions),
+          priority: faker.helpers.arrayElement(priorityOptions),
+          created_at: faker.date.past({ years: 1 }).toISOString(),
         };
 
         const { data: ticketData, error } = await supabase

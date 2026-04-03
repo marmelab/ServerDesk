@@ -19,7 +19,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    company: { id: 1, name: 'acme', created_at: new Date().toISOString() },
+    company: {
+      id: 1,
+      name: 'acme',
+      created_at: new Date().toISOString(),
+      tickets: [{ status: 'open' }],
+    },
     onAssign: () => {},
     isAdmin: true,
   },

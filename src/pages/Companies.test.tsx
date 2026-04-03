@@ -3,10 +3,22 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import CompaniesPage from './Companies';
 import userEvent from '@testing-library/user-event';
+import { TicketStatus } from '@/types';
 
 const { mockSupabase, mockState, utils } = vi.hoisted(() => {
+  interface MockTicket {
+    status: TicketStatus;
+  }
+
   const internalState = {
-    companies: [{ id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' }],
+    companies: [
+      {
+        id: 1,
+        name: 'acme',
+        created_at: '2026-02-25T00:00:00Z',
+        tickets: [] as MockTicket[],
+      },
+    ],
     user: null as any,
   };
 
@@ -23,6 +35,7 @@ const { mockSupabase, mockState, utils } = vi.hoisted(() => {
         id: Math.random(),
         name: dataToInsert?.name || 'New Company',
         created_at: new Date().toISOString(),
+        tickets: [],
       };
       internalState.companies.push(newEntry);
       return this;
@@ -48,7 +61,12 @@ const { mockSupabase, mockState, utils } = vi.hoisted(() => {
     utils: {
       reset: () => {
         internalState.companies = [
-          { id: 1, name: 'acme', created_at: '2026-02-25T00:00:00Z' },
+          {
+            id: 1,
+            name: 'acme',
+            created_at: '2026-02-25T00:00:00Z',
+            tickets: [],
+          },
         ];
         internalState.user = null;
       },
@@ -154,5 +172,19 @@ describe('CompaniesPage', () => {
       name: /invite manager/i,
     });
     expect(inviteButton).not.toBeInTheDocument();
+  });
+
+  it('show correct status', async () => {
+    mockState.companies[0].tickets = [
+      { status: 'open' },
+      { status: 'open' },
+      { status: 'closed' },
+    ];
+
+    render(<CompaniesPage />, { wrapper: Wrapper });
+
+    const openBadge = await screen.findByText(/open/i);
+    expect(openBadge).toBeInTheDocument();
+    expect(screen.getByText('2')).toBeInTheDocument();
   });
 });
