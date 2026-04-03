@@ -18,6 +18,32 @@ test.describe('Tickets Page', () => {
     await page.getByRole('option', { name: 'High' }).click();
     await page.getByRole('button', { name: 'Add Ticket' }).click();
 
+    // Test filters
+    await page.getByRole('textbox', { name: 'Search...' }).click();
+    await page
+      .getByRole('textbox', { name: 'Search...' })
+      .fill('Test ticket description');
+    await expect(page.getByText(uniqueSubject)).toBeVisible();
+    await page.getByRole('textbox', { name: 'Search...' }).click();
+    await page.getByRole('textbox', { name: 'Search...' }).fill('blablabla');
+    await expect(page.getByText(uniqueSubject)).not.toBeVisible();
+    await page.getByRole('button', { name: 'Clear filters' }).click();
+    await expect(page.getByText(uniqueSubject)).toBeVisible();
+
+    await page.getByRole('combobox').filter({ hasText: 'Status' }).click();
+    await page.getByText('Resolved').click();
+    await expect(page.getByText(uniqueSubject)).not.toBeVisible();
+    await page.getByRole('combobox').filter({ hasText: 'Resolved' }).click();
+    await page.getByText('Open').click();
+    await expect(page.getByText(uniqueSubject)).toBeVisible();
+
+    await page.getByRole('combobox').filter({ hasText: 'Priority' }).click();
+    await page.getByText('Low').click();
+    await expect(page.getByText(uniqueSubject)).not.toBeVisible();
+    await page.getByRole('combobox').filter({ hasText: 'Low' }).click();
+    await page.getByText('High').click();
+    await expect(page.getByText(uniqueSubject)).toBeVisible();
+
     // Add first message
     await page.getByText(uniqueSubject).click();
     await expect(page.getByRole('dialog')).toBeVisible();

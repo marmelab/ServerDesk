@@ -25,17 +25,9 @@ export default function CompaniesPage() {
   } = useCompaniesWithTickets({ page });
   const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
   const { user } = useAuth();
-  if (isPending)
-    return <p className="text-muted-foreground p-10">Loading...</p>;
 
   return (
     <div className="container mx-auto py-10">
-      <PageHeader
-        title="Companies"
-        description="View and manage all companies."
-      >
-        <AddCompanyDialog />
-      </PageHeader>
       {error && (
         <ErrorView label="Failed to load companies" refetch={refetch} />
       )}
@@ -43,6 +35,12 @@ export default function CompaniesPage() {
       {isPlaceholderData && <Placeholder />}
       {!isPending && !error && (
         <div className="mx-auto max-w-7xl">
+          <PageHeader
+            title="Companies"
+            description="View and manage all companies."
+          >
+            <AddCompanyDialog />
+          </PageHeader>
           <CompaniesView
             companies={companies}
             isPlaceholderData={isPlaceholderData}
